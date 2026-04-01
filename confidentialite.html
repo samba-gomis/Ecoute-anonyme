@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Charte de confidentialité — Écoute Anonyme</title>
+  <meta name="description" content="Protection des données et charte de confidentialité d'Écoute Anonyme, conformément au RGPD." />
+  <link rel="icon" type="image" href="logo du site.png">
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ===== EN-TÊTE ===== */
+    .page-hero {
+      padding-top: calc(var(--nav-h) + 80px);
+      padding-bottom: 80px;
+      background: linear-gradient(155deg, var(--sage-pale) 0%, var(--cream) 55%);
+      border-bottom: 1px solid rgba(139,175,138,0.15);
+      text-align: center;
+    }
+
+    .page-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(34px, 5vw, 58px);
+      font-weight: 300;
+      line-height: 1.14;
+      color: var(--stone-dark);
+      margin-bottom: 20px;
+    }
+
+    .page-hero h1 em {
+      font-style: italic;
+      color: var(--sage-dark);
+    }
+
+    .page-hero .lead { max-width: 540px; margin: 0 auto 24px; }
+
+    .last-updated {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--mist);
+      background: var(--white);
+      border: 1px solid rgba(139,175,138,0.2);
+      padding: 6px 16px;
+      border-radius: var(--radius-pill);
+    }
+
+    /* ===== LAYOUT PRINCIPAL ===== */
+    .policy-layout {
+      padding: 80px 0 100px;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    /* Sidebar navigation */
+    .policy-nav {
+      position: sticky;
+      top: calc(var(--nav-h) + 24px);
+    }
+
+    .policy-nav-title {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--mist);
+      margin-bottom: 14px;
+    }
+
+    .policy-nav ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .policy-nav a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      color: var(--stone);
+      transition: background 0.15s, color 0.15s;
+      text-decoration: none;
+    }
+
+    .policy-nav a:hover {
+      background: var(--sage-pale);
+      color: var(--sage-dark);
+    }
+
+    .policy-nav a.active {
+      background: var(--sage-pale);
+      color: var(--sage-dark);
+      font-weight: 500;
+    }
+
+    .policy-nav a .nav-num {
+      font-family: var(--font-display);
+      font-size: 13px;
+      color: var(--mist);
+      min-width: 18px;
+    }
+
+    /* ===== CONTENU CHARTE ===== */
+    .policy-content {
+      min-width: 0;
+    }
+
+    /* Résumé rapide */
+    .quick-summary {
+      background: var(--sage-pale);
+      border: 1px solid rgba(139,175,138,0.25);
+      border-radius: var(--radius-lg);
+      padding: 32px 36px;
+      margin-bottom: 56px;
+    }
+
+    .quick-summary h2 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--sage-dark);
+      margin-bottom: 20px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .summary-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .summary-item .icon {
+      font-size: 16px;
+      margin-top: 1px;
+      min-width: 20px;
+    }
+
+    .summary-item p {
+      font-size: 13px;
+      color: var(--stone);
+      line-height: 1.6;
+    }
+
+    .summary-item strong {
+      color: var(--stone-dark);
+      font-weight: 500;
+      display: block;
+      margin-bottom: 2px;
+      font-size: 13px;
+    }
+
+    /* Section article */
+    .policy-section {
+      margin-bottom: 56px;
+      scroll-margin-top: calc(var(--nav-h) + 32px);
+    }
+
+    .policy-section:last-child { margin-bottom: 0; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(139,175,138,0.18);
+    }
+
+    .section-number {
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      border-radius: 50%;
+      background: var(--sage-pale);
+      border: 1px solid rgba(139,175,138,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 16px;
+      color: var(--sage-dark);
+    }
+
+    .section-header h2 {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 400;
+      color: var(--stone-dark);
+    }
+
+    .policy-section p {
+      font-size: 15px;
+      color: var(--stone);
+      line-height: 1.85;
+      margin-bottom: 14px;
+    }
+
+    .policy-section p:last-child { margin-bottom: 0; }
+
+    /* Liste de données */
+    .data-list {
+      background: var(--white);
+      border: 1px solid rgba(139,175,138,0.15);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin: 16px 0;
+    }
+
+    .data-list-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 20px;
+      font-size: 14px;
+      color: var(--stone);
+      border-bottom: 1px solid rgba(139,175,138,0.1);
+      transition: background 0.15s;
+    }
+
+    .data-list-item:last-child { border-bottom: none; }
+    .data-list-item:hover { background: var(--sage-pale); }
+
+    .data-list-item .check {
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      border-radius: 50%;
+      background: var(--sage-pale);
+      border: 1px solid rgba(139,175,138,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    .data-list-item .check.cross {
+      background: #FEF2F2;
+      border-color: rgba(220,38,38,0.2);
+    }
+
+    /* Badge droit RGPD */
+    .rights-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .right-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--white);
+      border: 1px solid rgba(139,175,138,0.2);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      font-size: 13px;
+      color: var(--stone-dark);
+      font-weight: 500;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .right-badge:hover {
+      border-color: var(--sage-light);
+      background: var(--sage-pale);
+    }
+
+    .right-badge .icon {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      border-radius: 8px;
+      background: var(--sage-pale);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    /* Note limite -->
+    .limit-note {
+      background: var(--warm-pale);
+      border: 1px solid rgba(196,168,130,0.3);
+      border-left: 3px solid var(--warm);
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      font-size: 14px;
+      color: var(--stone);
+      line-height: 1.7;
+      margin: 16px 0;
+    }
+
+    .limit-note strong { color: var(--stone-dark); font-weight: 500; }
+
+    /* ===== SECTION CONTACT ===== */
+    .contact-cta {
+      background: var(--white);
+      border: 1px solid rgba(139,175,138,0.2);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      margin-top: 48px;
+      text-align: center;
+    }
+
+    .contact-cta h3 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--stone-dark);
+      margin-bottom: 10px;
+    }
+
+    .contact-cta p {
+      font-size: 14px;
+      color: var(--stone);
+      margin-bottom: 24px;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 860px) {
+      .policy-layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .policy-nav {
+        position: static;
+        background: var(--white);
+        border: 1px solid rgba(139,175,138,0.15);
+        border-radius: var(--radius-md);
+        padding: 20px;
+      }
+
+      .summary-grid { grid-template-columns: 1fr; }
+      .rights-grid  { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="nav" id="navbar">
+    <a href="index.html" class="nav-logo">
+      <img src="logo%20du%20site.png" alt="Logo Écoute Anonyme" style="height:38px;width:auto;object-fit:contain;" />
+      Écoute Anonyme
+    </a>
+    <ul class="nav-links">
+      <li><a href="presentation.html">Le projet</a></li>
+      <li><a href="index.html#comment">Comment ça marche</a></li>
+      <li><a href="confidentialite.html" class="active">Confidentialité</a></li>
+      <li><a href="chat.html" class="btn-nav">Commencer à écrire</a></li>
+    </ul>
+
+    <!-- Hamburger mobile -->
+    <button class="nav-hamburger" id="hamburger" aria-label="Ouvrir le menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Panneau mobile -->
+  <div class="nav-mobile-overlay" id="mobileOverlay" onclick="toggleMenu()"></div>
+  <div class="nav-mobile-panel" id="mobilePanel">
+    <a href="index.html">Accueil</a>
+    <a href="presentation.html">Le projet</a>
+    <a href="index.html#comment">Comment ça marche</a>
+    <a href="confidentialite.html" class="active">Confidentialité</a>
+    <div class="nav-mobile-divider"></div>
+    <a href="chat.html" class="btn-mobile-cta">Commencer à écrire</a>
+  </div>
+    <div class="container-narrow">
+      <div class="breadcrumb">
+        <a href="index.html">Accueil</a>
+        <span class="sep">›</span>
+        <span>Confidentialité</span>
+      </div>
+      <span class="section-label">Protection des données</span>
+      <h1 class="anim-fade-up">Charte de <em>confidentialité</em></h1>
+      <p class="lead anim-fade-up delay-2">
+        Écoute Anonyme s'engage à respecter la réglementation en vigueur, notamment le Règlement Général sur la Protection des Données (RGPD).
+      </p>
+      <span class="last-updated">
+        🛡️ Conforme RGPD · Dernière mise à jour : 2025
+      </span>
+    </div>
+  </section>
+
+  <!-- ===== CORPS ===== -->
+  <div class="container">
+    <div class="policy-layout">
+
+      <!-- Sidebar -->
+      <aside class="policy-nav">
+        <p class="policy-nav-title">Sommaire</p>
+        <ul>
+          <li><a href="#article-1"><span class="nav-num">1.</span> Données collectées</a></li>
+          <li><a href="#article-2"><span class="nav-num">2.</span> Finalité</a></li>
+          <li><a href="#article-3"><span class="nav-num">3.</span> Durée de conservation</a></li>
+          <li><a href="#article-4"><span class="nav-num">4.</span> Sécurité</a></li>
+          <li><a href="#article-5"><span class="nav-num">5.</span> Partage des données</a></li>
+          <li><a href="#article-6"><span class="nav-num">6.</span> Vos droits</a></li>
+          <li><a href="#article-7"><span class="nav-num">7.</span> Limite & anonymat</a></li>
+          <li><a href="#article-8"><span class="nav-num">8.</span> Évolution</a></li>
+        </ul>
+      </aside>
+
+      <!-- Contenu -->
+      <div class="policy-content">
+
+        <!-- Résumé -->
+        <div class="quick-summary">
+          <h2>🔒 En résumé</h2>
+          <div class="summary-grid">
+            <div class="summary-item">
+              <span class="icon">🚫</span>
+              <p><strong>Aucune donnée obligatoire</strong>Pas de nom, d'email ni de téléphone requis.</p>
+            </div>
+            <div class="summary-item">
+              <span class="icon">🗑️</span>
+              <p><strong>Suppression immédiate</strong>Vos conversations effacées à tout moment sur demande.</p>
+            </div>
+            <div class="summary-item">
+              <span class="icon">🚷</span>
+              <p><strong>Zéro vente de données</strong>Aucune donnée vendue, cédée ou partagée avec des tiers.</p>
+            </div>
+            <div class="summary-item">
+              <span class="icon">⚖️</span>
+              <p><strong>Conforme RGPD</strong>Vos droits d'accès, rectification et effacement garantis.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Article 1 -->
+        <div class="policy-section" id="article-1">
+          <div class="section-header">
+            <span class="section-number">1</span>
+            <h2>Données collectées</h2>
+          </div>
+          <p>
+            Le service est conçu pour minimiser au maximum la collecte de données personnelles. Notre approche repose sur le principe de <em>privacy by design</em> : nous ne collectons que ce qui est strictement nécessaire au bon fonctionnement de l'écoute.
+          </p>
+          <p><strong style="color:var(--stone-dark)">Ce que nous ne demandons jamais :</strong></p>
+          <div class="data-list">
+            <div class="data-list-item">
+              <span class="check cross">✕</span>
+              Nom ou prénom réel
+            </div>
+            <div class="data-list-item">
+              <span class="check cross">✕</span>
+              Adresse email
+            </div>
+            <div class="data-list-item">
+              <span class="check cross">✕</span>
+              Numéro de téléphone
+            </div>
+            <div class="data-list-item">
+              <span class="check cross">✕</span>
+              Adresse postale ou toute donnée de localisation
+            </div>
+          </div>
+
+          <p style="margin-top:20px"><strong style="color:var(--stone-dark)">Les seules données susceptibles d'être traitées :</strong></p>
+          <div class="data-list">
+            <div class="data-list-item">
+              <span class="check">✓</span>
+              Pseudonyme librement choisi par l'utilisateur
+            </div>
+            <div class="data-list-item">
+              <span class="check">✓</span>
+              Contenu des échanges (uniquement si l'utilisateur choisit de les conserver)
+            </div>
+            <div class="data-list-item">
+              <span class="check">✓</span>
+              Avis anonymes laissés volontairement en fin d'échange
+            </div>
+          </div>
+        </div>
+
+        <!-- Article 2 -->
+        <div class="policy-section" id="article-2">
+          <div class="section-header">
+            <span class="section-number">2</span>
+            <h2>Finalité des données</h2>
+          </div>
+          <p>
+            Les données collectées sont utilisées <strong>exclusivement</strong> dans le cadre du service d'écoute. Aucune exploitation à des fins commerciales, publicitaires ou analytiques n'est réalisée.
+          </p>
+          <div class="data-list">
+            <div class="data-list-item">
+              <span class="check">✓</span>
+              Permettre les échanges entre utilisateurs et bénévoles
+            </div>
+            <div class="data-list-item">
+              <span class="check">✓</span>
+              Améliorer la qualité du service grâce aux avis anonymes
+            </div>
+          </div>
+        </div>
+
+        <!-- Article 3 -->
+        <div class="policy-section" id="article-3">
+          <div class="section-header">
+            <span class="section-number">3</span>
+            <h2>Durée de conservation</h2>
+          </div>
+          <p>
+            Vous avez un contrôle total sur la durée de conservation de vos données. Aucune rétention automatique prolongée n'est effectuée sans votre accord.
+          </p>
+          <div class="data-list">
+            <div class="data-list-item">
+              <span class="check">✓</span>
+              Conversations supprimées immédiatement si l'utilisateur le choisit
+            </div>
+            <div class="data-list-item">
+              <span class="check">✓</span>
+              Si conservées, accessibles uniquement aux personnes concernées
+            </div>
+            <div class="data-list-item">
+              <span class="check">✓</span>
+              Suppression totale possible à tout moment sur simple demande
+            </div>
+          </div>
+        </div>
+
+        <!-- Article 4 -->
+        <div class="policy-section" id="article-4">
+          <div class="section-header">
+            <span class="section-number">4</span>
+            <h2>Sécurité</h2>
+          </div>
+          <p>
+            Des mesures techniques appropriées sont mises en place pour protéger vos données contre tout accès, modification, divulgation ou destruction non autorisés.
+          </p>
+          <div class="data-list">
+            <div class="data-list-item">
+              <span class="check">✓</span>
+              Sécurisation des échanges (chiffrement en transit)
+            </div>
+            <div class="data-list-item">
+              <span class="check">✓</span>
+              Protection des données contre tout accès non autorisé
+            </div>
+            <div class="data-list-item">
+              <span class="check">✓</span>
+              Révision régulière des mesures de sécurité
+            </div>
+          </div>
+        </div>
+
+        <!-- Article 5 -->
+        <div class="policy-section" id="article-5">
+          <div class="section-header">
+            <span class="section-number">5</span>
+            <h2>Partage des données</h2>
+          </div>
+          <p>
+            Écoute Anonyme ne partage, ne vend et ne cède aucune donnée personnelle à des tiers, quelles que soient les circonstances.
+          </p>
+          <div class="data-list">
+            <div class="data-list-item">
+              <span class="check cross">✕</span>
+              Données jamais vendues à des tiers
+            </div>
+            <div class="data-list-item">
+              <span class="check cross">✕</span>
+              Données jamais cédées à des partenaires commerciaux
+            </div>
+            <div class="data-list-item">
+              <span class="check cross">✕</span>
+              Données jamais utilisées à des fins publicitaires
+            </div>
+          </div>
+        </div>
+
+        <!-- Article 6 -->
+        <div class="policy-section" id="article-6">
+          <div class="section-header">
+            <span class="section-number">6</span>
+            <h2>Vos droits</h2>
+          </div>
+          <p>
+            Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez des droits suivants sur vos données personnelles :
+          </p>
+          <div class="rights-grid">
+            <div class="right-badge">
+              <span class="icon">👁️</span>
+              Droit d'accès
+            </div>
+            <div class="right-badge">
+              <span class="icon">✏️</span>
+              Droit de rectification
+            </div>
+            <div class="right-badge">
+              <span class="icon">🗑️</span>
+              Droit à l'effacement
+            </div>
+            <div class="right-badge">
+              <span class="icon">⏸️</span>
+              Droit à la limitation
+            </div>
+          </div>
+          <p style="margin-top:16px">
+            Ces droits peuvent être exercés à tout moment, dans la limite du fonctionnement anonyme du service.
+          </p>
+        </div>
+
+        <!-- Article 7 -->
+        <div class="policy-section" id="article-7">
+          <div class="section-header">
+            <span class="section-number">7</span>
+            <h2>Limite liée à l'anonymat</h2>
+          </div>
+          <p>
+            En raison du fonctionnement intrinsèquement anonyme du service, certaines demandes liées à l'exercice de vos droits peuvent présenter des contraintes pratiques.
+          </p>
+          <div class="limit-note">
+            <strong>Note importante :</strong> Certaines demandes — par exemple la récupération de données sans identifiant ou pseudonyme — peuvent ne pas être techniquement réalisables. Ce fonctionnement est une conséquence directe de notre engagement envers votre anonymat.
+          </div>
+        </div>
+
+        <!-- Article 8 -->
+        <div class="policy-section" id="article-8">
+          <div class="section-header">
+            <span class="section-number">8</span>
+            <h2>Évolution de la politique</h2>
+          </div>
+          <p>
+            La présente politique de confidentialité peut être amenée à évoluer, notamment pour rester conforme aux obligations légales en vigueur ou pour intégrer de nouvelles bonnes pratiques.
+          </p>
+          <p>
+            En cas de modification substantielle, les utilisateurs actifs seront informés par un message visible lors de leur prochaine connexion. La date de dernière mise à jour est toujours indiquée en haut de ce document.
+          </p>
+        </div>
+
+        <!-- Contact -->
+        <div class="contact-cta">
+          <h3>Une question sur vos données ?</h3>
+          <p>Nous répondons à toute demande liée à la protection de vos données dans les meilleurs délais.</p>
+          <a href="#" class="btn btn-outline">Nous contacter</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-col">
+        <a href="index.html" style="display:flex;align-items:center;gap:10px;margin-bottom:12px;text-decoration:none;">
+          <img src="logo%20du%20site.png" alt="Logo Écoute Anonyme" style="height:36px;width:auto;filter:brightness(0) invert(1);opacity:0.85;" />
+          <span class="footer-logo" style="margin-bottom:0;">Écoute Anonyme</span>
+        </a>
+        <p class="footer-desc">
+          Un espace d'écoute bénévole, gratuit et confidentiel, ouvert à tous ceux qui en ressentent le besoin.
+        </p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="presentation.html">Le projet</a></li>
+          <li><a href="benevoles.html">Bénévoles</a></li>
+      <li><a href="confidentialite.html">Confidentialité</a></li>
+          <li><a href="#">Commencer</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="benevoles.html">Devenir bénévole</a></li>
+          <li><a href="#">Soutenir le projet</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Urgences : 3114</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Écoute Anonyme · Tous droits réservés</span>
+      <span class="footer-badge">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--sage);display:inline-block;"></span>
+        Service disponible
+      </span>
+    </div>
+  </footer>
+
+  <script>
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 30);
+    });
+
+    function toggleMenu() {
+      const open = document.getElementById('mobilePanel').classList.toggle('open');
+      document.getElementById('mobileOverlay').classList.toggle('open', open);
+      document.getElementById('hamburger').classList.toggle('open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+
+    // Active link in sidebar on scroll
+    const sections = document.querySelectorAll('.policy-section');
+    const navLinks = document.querySelectorAll('.policy-nav a');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+  </script>
+</body>
+</html>

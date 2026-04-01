@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Écoute Anonyme</title>
+  <link rel="icon" type="image" href="logo du site.png">
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body { background: #F0EEE9; }
+
+    /* ===== LOGIN ===== */
+    #login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .login-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 44px 40px;
+      max-width: 380px;
+      width: 100%;
+      box-shadow: 0 8px 40px rgba(61,58,56,0.1);
+      animation: fadeUp 0.4s ease forwards;
+    }
+    .login-card .login-logo {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 28px;
+    }
+    .login-card .login-logo img { height: 36px; width: auto; }
+    .login-card .login-logo span {
+      font-family: var(--font-display);
+      font-size: 18px; font-weight: 600; color: var(--stone-dark);
+    }
+    .login-card h2 {
+      font-family: var(--font-display);
+      font-size: 24px; font-weight: 300; color: var(--stone-dark);
+      margin-bottom: 6px;
+    }
+    .login-card .login-sub {
+      font-size: 13px; color: var(--mist); margin-bottom: 28px;
+    }
+    .login-field { margin-bottom: 14px; }
+    .login-field label {
+      display: block; font-size: 11px; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--stone); margin-bottom: 6px;
+    }
+    .login-field input {
+      width: 100%; padding: 12px 14px;
+      border: 1.5px solid rgba(139,175,138,0.25);
+      border-radius: var(--radius-md);
+      font-family: var(--font-body); font-size: 14px;
+      color: var(--stone-dark); background: var(--cream);
+      outline: none; transition: border-color 0.2s;
+    }
+    .login-field input:focus { border-color: var(--sage); background: var(--white); }
+    .login-error {
+      font-size: 13px; color: #DC3545;
+      background: #FEF2F2; border-radius: var(--radius-sm);
+      padding: 10px 14px; margin-bottom: 14px; display: none;
+    }
+    .login-btn {
+      width: 100%; padding: 14px;
+      background: var(--sage); color: var(--white);
+      border: none; border-radius: var(--radius-pill);
+      font-family: var(--font-body); font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .login-btn:hover { background: var(--sage-dark); }
+
+    /* ===== ADMIN PANEL ===== */
+    #admin-panel { display: none; min-height: 100vh; }
+
+    .admin-nav {
+      background: var(--stone-dark);
+      padding: 0 32px;
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .admin-nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--font-display); font-size: 17px; color: var(--white);
+    }
+    .admin-nav-logo img { height: 28px; filter: brightness(0) invert(1); opacity: 0.9; }
+    .admin-nav-badge {
+      font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; background: var(--sage);
+      color: var(--white); padding: 3px 10px; border-radius: var(--radius-pill);
+    }
+    .admin-logout {
+      font-size: 13px; color: rgba(255,255,255,0.5);
+      background: none; border: none; cursor: pointer;
+      transition: color 0.2s; font-family: var(--font-body);
+    }
+    .admin-logout:hover { color: var(--white); }
+
+    .admin-body {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* Stats rapides */
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .stat-card {
+      background: var(--white);
+      border-radius: var(--radius-md);
+      padding: 20px 22px;
+      border: 1px solid rgba(139,175,138,0.15);
+    }
+    .stat-card .stat-val {
+      font-family: var(--font-display);
+      font-size: 36px; font-weight: 300;
+      color: var(--stone-dark); line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-card .stat-lbl {
+      font-size: 12px; color: var(--mist);
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .stat-card.highlight .stat-val { color: var(--sage-dark); }
+    .stat-card.warn .stat-val { color: #E67E22; }
+    .stat-card.danger .stat-val { color: #DC3545; }
+
+    /* Sections */
+    .admin-section {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(139,175,138,0.15);
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    .admin-section-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(139,175,138,0.12);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .admin-section-header h2 {
+      font-family: var(--font-display);
+      font-size: 20px; font-weight: 400; color: var(--stone-dark);
+    }
+    .admin-section-header .count-badge {
+      font-size: 12px; font-weight: 500;
+      background: var(--sage-pale); color: var(--sage-dark);
+      padding: 4px 12px; border-radius: var(--radius-pill);
+    }
+    .admin-section-header .count-badge.warn {
+      background: #FFF3CD; color: #856404;
+    }
+
+    /* Table */
+    .admin-table { width: 100%; border-collapse: collapse; }
+    .admin-table th {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.07em;
+      text-transform: uppercase; color: var(--mist);
+      padding: 12px 24px; text-align: left;
+      border-bottom: 1px solid rgba(139,175,138,0.12);
+      background: var(--cream);
+    }
+    .admin-table td {
+      padding: 16px 24px;
+      border-bottom: 1px solid rgba(139,175,138,0.08);
+      font-size: 14px; color: var(--stone);
+      vertical-align: middle;
+    }
+    .admin-table tr:last-child td { border-bottom: none; }
+    .admin-table tr:hover td { background: #FAFAF8; }
+
+    .name-cell strong { display: block; color: var(--stone-dark); font-weight: 500; }
+    .name-cell span { font-size: 12px; color: var(--mist); }
+
+    .status-pill {
+      display: inline-block;
+      font-size: 11px; font-weight: 500;
+      padding: 4px 12px; border-radius: var(--radius-pill);
+    }
+    .pill-pending  { background: #FFF3CD; color: #856404; }
+    .pill-active   { background: var(--sage-pale); color: var(--sage-dark); }
+    .pill-banned   { background: #FEF2F2; color: #DC3545; }
+
+    /* Actions */
+    .action-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+    .a-btn {
+      font-size: 12px; font-weight: 500;
+      padding: 6px 14px; border-radius: var(--radius-pill);
+      border: none; cursor: pointer;
+      font-family: var(--font-body);
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .a-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+    .a-btn-approve { background: var(--sage); color: var(--white); }
+    .a-btn-reject  { background: #FEF2F2; color: #DC3545; border: 1px solid rgba(220,38,38,0.2); }
+    .a-btn-ban     { background: #DC3545; color: var(--white); }
+    .a-btn-unban   { background: var(--sage-pale); color: var(--sage-dark); border: 1px solid rgba(139,175,138,0.3); }
+    .a-btn-view    { background: var(--cream); color: var(--stone); border: 1px solid rgba(184,180,174,0.4); }
+
+    /* Signalements */
+    .report-row { background: #FFFBF0; }
+    .report-row td { border-left: 3px solid #FFC107; }
+    .report-row:first-child td:first-child { border-radius: 0; }
+    .report-reason {
+      font-size: 12px; color: #856404;
+      background: #FFF3CD; padding: 4px 10px;
+      border-radius: var(--radius-sm); display: inline-block;
+      margin-top: 4px;
+    }
+
+    /* Modal détail candidature */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(61,58,56,0.45); backdrop-filter: blur(4px); z-index: 600; display: none; align-items: center; justify-content: center; padding: 24px; }
+    .modal-overlay.open { display: flex; }
+    .modal-card { background: var(--white); border-radius: 20px; padding: 36px 32px; max-width: 520px; width: 100%; box-shadow: 0 16px 48px rgba(61,58,56,0.15); animation: fadeUp 0.25s ease forwards; max-height: 85vh; overflow-y: auto; }
+    .modal-card h3 { font-family: var(--font-display); font-size: 22px; font-weight: 400; color: var(--stone-dark); margin-bottom: 20px; }
+    .detail-row { display: flex; gap: 12px; margin-bottom: 12px; font-size: 14px; }
+    .detail-row .detail-lbl { min-width: 110px; color: var(--mist); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; padding-top: 1px; }
+    .detail-row .detail-val { color: var(--stone-dark); line-height: 1.6; }
+    .motivation-box { background: var(--sage-pale); border-radius: var(--radius-sm); padding: 14px 16px; font-size: 13px; color: var(--stone); line-height: 1.75; margin: 16px 0; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 24px; }
+    .modal-btn { flex: 1; padding: 12px; border-radius: var(--radius-pill); font-family: var(--font-body); font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: background 0.2s; }
+    .modal-btn-cancel { background: var(--cream); color: var(--stone); border: 1.5px solid rgba(184,180,174,0.4); }
+    .modal-btn-approve { background: var(--sage); color: var(--white); }
+    .modal-btn-reject { background: #DC3545; color: var(--white); }
+
+    /* Empty state */
+    .empty-state { padding: 48px 24px; text-align: center; color: var(--mist); font-size: 14px; }
+    .empty-state .empty-icon { font-size: 32px; margin-bottom: 12px; }
+
+    @media (max-width: 768px) {
+      .admin-stats { grid-template-columns: 1fr 1fr; }
+      .admin-table { font-size: 13px; }
+      .admin-table th, .admin-table td { padding: 12px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== CONNEXION ===== -->
+  <div id="login-screen">
+    <div class="login-card">
+      <div class="login-logo">
+        <img src="logo%20du%20site.png" alt="Logo" />
+        <span>Écoute Anonyme</span>
+      </div>
+      <h2>Espace administrateur</h2>
+      <p class="login-sub">Accès réservé à l'équipe de gestion.</p>
+      <div class="login-error" id="login-error">Identifiants incorrects. Veuillez réessayer.</div>
+      <div class="login-field">
+        <label>Identifiant</label>
+        <input type="text" id="login-user" placeholder="admin" />
+      </div>
+      <div class="login-field">
+        <label>Mot de passe</label>
+        <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()" />
+      </div>
+      <button class="login-btn" onclick="doLogin()">Se connecter</button>
+      <p style="margin-top:16px;font-size:12px;color:var(--mist);text-align:center;">
+        Demo : identifiant <strong>admin</strong> · mot de passe <strong>admin123</strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- ===== PANEL ADMIN ===== -->
+  <div id="admin-panel">
+
+    <!-- Nav admin -->
+    <div class="admin-nav">
+      <div class="admin-nav-logo">
+        <img src="logo%20du%20site.png" alt="Logo" />
+        Écoute Anonyme
+        <span class="admin-nav-badge">Admin</span>
+      </div>
+      <button class="admin-logout" onclick="doLogout()">Déconnexion →</button>
+    </div>
+
+    <div class="admin-body">
+
+      <!-- Stats -->
+      <div class="admin-stats">
+        <div class="stat-card highlight">
+          <div class="stat-val" id="stat-actifs">4</div>
+          <div class="stat-lbl">Bénévoles actifs</div>
+        </div>
+        <div class="stat-card warn">
+          <div class="stat-val" id="stat-attente">2</div>
+          <div class="stat-lbl">En attente</div>
+        </div>
+        <div class="stat-card danger">
+          <div class="stat-val" id="stat-signalements">1</div>
+          <div class="stat-lbl">Signalements</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="stat-bannis">0</div>
+          <div class="stat-lbl">Bannis</div>
+        </div>
+      </div>
+
+      <!-- Candidatures en attente -->
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <h2>📋 Candidatures en attente</h2>
+          <span class="count-badge warn" id="badge-attente">2 en attente</span>
+        </div>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Candidat·e</th>
+              <th>Email</th>
+              <th>Pseudo</th>
+              <th>Disponibilités</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="pending-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- Bénévoles actifs -->
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <h2>✅ Bénévoles actifs</h2>
+          <span class="count-badge" id="badge-actifs">4 actifs</span>
+        </div>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Bénévole</th>
+              <th>Email</th>
+              <th>Pseudo</th>
+              <th>Statut</th>
+              <th>Signalements</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="active-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- Signalements patients -->
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <h2>⚠️ Signalements patients</h2>
+          <span class="count-badge warn" id="badge-reports">1 signalement</span>
+        </div>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Bénévole signalé</th>
+              <th>Motif</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="reports-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- Bénévoles bannis -->
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <h2>🚫 Bénévoles bannis</h2>
+          <span class="count-badge" id="badge-bannis">0 banni</span>
+        </div>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Bénévole</th>
+              <th>Email</th>
+              <th>Raison</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="banned-tbody"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal détail candidature -->
+  <div class="modal-overlay" id="detail-modal">
+    <div class="modal-card">
+      <h3 id="modal-name">Candidature</h3>
+      <div id="modal-body"></div>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Fermer</button>
+        <button class="modal-btn modal-btn-reject" id="modal-reject-btn">Refuser</button>
+        <button class="modal-btn modal-btn-approve" id="modal-approve-btn">Valider</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== DONNÉES SIMULÉES =====
+    let pendingList = [
+      { id: 'p1', prenom: 'Julie', nom: 'Martin', email: 'julie@exemple.com', pseudo: 'Julie', dispo: 'Soir, Week-end', date: '28/05/2025', motivation: 'J\'ai accompagné un proche en difficulté pendant plusieurs années et je souhaite mettre cette expérience au service des autres. L\'écoute active me tient à cœur.', domaine: 'Solitude & isolement', description: 'Disponible le soir, je suis là pour vous écouter sans jugement.' },
+      { id: 'p2', prenom: 'Karim', nom: 'Benali', email: 'karim@exemple.com', pseudo: 'Karim', dispo: 'Matin, Après-midi', date: '29/05/2025', motivation: 'Étudiant en psychologie, je souhaite mettre mes connaissances au service de ceux qui en ont besoin, dans un cadre bienveillant.', domaine: 'Anxiété & stress', description: 'Étudiant passionné par la psychologie et l\'aide aux autres.' },
+    ];
+
+    let activeList = [
+      { id: 'a1', prenom: 'Marie', nom: 'Dupont', email: 'marie@exemple.com', pseudo: 'Marie', status: 'online', reports: 0 },
+      { id: 'a2', prenom: 'Thomas', nom: 'Bernard', email: 'thomas@exemple.com', pseudo: 'Thomas', status: 'away', reports: 1 },
+      { id: 'a3', prenom: 'Léa', nom: 'Rousseau', email: 'lea@exemple.com', pseudo: 'Léa', status: 'online', reports: 0 },
+      { id: 'a4', prenom: 'Samuel', nom: 'Girard', email: 'samuel@exemple.com', pseudo: 'Samuel', status: 'offline', reports: 0 },
+    ];
+
+    let reportsList = [
+      { id: 'r1', bénévoleId: 'a2', bénévole: 'Thomas', motif: 'A demandé mon numéro de téléphone', date: '27/05/2025' },
+    ];
+
+    let bannedList = [];
+
+    // ===== CONNEXION =====
+    function doLogin() {
+      const u = document.getElementById('login-user').value;
+      const p = document.getElementById('login-pass').value;
+      const err = document.getElementById('login-error');
+      if (u === 'admin' && p === 'admin123') {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('admin-panel').style.display = 'block';
+        renderAll();
+      } else {
+        err.style.display = 'block';
+        setTimeout(() => err.style.display = 'none', 3000);
+      }
+    }
+
+    function doLogout() {
+      document.getElementById('admin-panel').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'flex';
+    }
+
+    // ===== RENDU =====
+    function renderAll() {
+      renderPending();
+      renderActive();
+      renderReports();
+      renderBanned();
+      updateStats();
+    }
+
+    function updateStats() {
+      document.getElementById('stat-actifs').textContent = activeList.length;
+      document.getElementById('stat-attente').textContent = pendingList.length;
+      document.getElementById('stat-signalements').textContent = reportsList.length;
+      document.getElementById('stat-bannis').textContent = bannedList.length;
+      document.getElementById('badge-attente').textContent = pendingList.length + ' en attente';
+      document.getElementById('badge-actifs').textContent = activeList.length + ' actif' + (activeList.length > 1 ? 's' : '');
+      document.getElementById('badge-reports').textContent = reportsList.length + ' signalement' + (reportsList.length > 1 ? 's' : '');
+      document.getElementById('badge-bannis').textContent = bannedList.length + ' banni' + (bannedList.length > 1 ? 's' : '');
+    }
+
+    function statusDot(s) {
+      const col = s === 'online' ? '#4CAF50' : s === 'away' ? '#FFC107' : '#B8B4AE';
+      return `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${col};margin-right:6px;"></span>`;
+    }
+
+    function renderPending() {
+      const tbody = document.getElementById('pending-tbody');
+      if (!pendingList.length) {
+        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">📭</div>Aucune candidature en attente.</div></td></tr>`;
+        return;
+      }
+      tbody.innerHTML = pendingList.map(p => `
+        <tr>
+          <td class="name-cell"><strong>${p.prenom} ${p.nom}</strong><span>${p.domaine || '—'}</span></td>
+          <td>${p.email}</td>
+          <td>${p.pseudo}</td>
+          <td style="font-size:12px;color:var(--stone);">${p.dispo}</td>
+          <td style="font-size:12px;color:var(--mist);">${p.date}</td>
+          <td>
+            <div class="action-btns">
+              <button class="a-btn a-btn-view" onclick="openDetail('${p.id}')">Voir</button>
+              <button class="a-btn a-btn-approve" onclick="approve('${p.id}')">Valider</button>
+              <button class="a-btn a-btn-reject" onclick="reject('${p.id}')">Refuser</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderActive() {
+      const tbody = document.getElementById('active-tbody');
+      if (!activeList.length) {
+        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">👤</div>Aucun bénévole actif.</div></td></tr>`;
+        return;
+      }
+      tbody.innerHTML = activeList.map(a => `
+        <tr>
+          <td class="name-cell"><strong>${a.prenom} ${a.nom}</strong></td>
+          <td>${a.email}</td>
+          <td>${statusDot(a.status)}${a.pseudo}</td>
+          <td><span class="status-pill pill-active">Actif</span></td>
+          <td style="color:${a.reports > 0 ? '#E67E22' : 'var(--mist)'};">${a.reports} signalement${a.reports > 1 ? 's' : ''}</td>
+          <td>
+            <div class="action-btns">
+              <button class="a-btn a-btn-ban" onclick="ban('${a.id}')">Bannir</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderReports() {
+      const tbody = document.getElementById('reports-tbody');
+      if (!reportsList.length) {
+        tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><div class="empty-icon">✅</div>Aucun signalement en cours.</div></td></tr>`;
+        return;
+      }
+      tbody.innerHTML = reportsList.map(r => `
+        <tr class="report-row">
+          <td class="name-cell"><strong>${r.bénévole}</strong></td>
+          <td><span class="report-reason">⚠️ ${r.motif}</span></td>
+          <td style="font-size:12px;color:var(--mist);">${r.date}</td>
+          <td>
+            <div class="action-btns">
+              <button class="a-btn a-btn-ban" onclick="banFromReport('${r.id}')">Bannir le bénévole</button>
+              <button class="a-btn a-btn-reject" onclick="dismissReport('${r.id}')">Ignorer</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderBanned() {
+      const tbody = document.getElementById('banned-tbody');
+      if (!bannedList.length) {
+        tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">✅</div>Aucun bénévole banni.</div></td></tr>`;
+        return;
+      }
+      tbody.innerHTML = bannedList.map(b => `
+        <tr>
+          <td class="name-cell"><strong>${b.prenom} ${b.nom}</strong></td>
+          <td>${b.email}</td>
+          <td><span class="status-pill pill-banned">${b.raison}</span></td>
+          <td style="font-size:12px;color:var(--mist);">${b.date}</td>
+          <td>
+            <div class="action-btns">
+              <button class="a-btn a-btn-unban" onclick="unban('${b.id}')">Débannir</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // ===== ACTIONS =====
+    function approve(id) {
+      const idx = pendingList.findIndex(p => p.id === id);
+      if (idx === -1) return;
+      const p = pendingList.splice(idx, 1)[0];
+      activeList.push({ id: 'a' + Date.now(), prenom: p.prenom, nom: p.nom, email: p.email, pseudo: p.pseudo, status: 'offline', reports: 0 });
+      closeModal();
+      renderAll();
+    }
+
+    function reject(id) {
+      pendingList = pendingList.filter(p => p.id !== id);
+      closeModal();
+      renderAll();
+    }
+
+    function ban(id) {
+      if (!confirm('Confirmer le bannissement de ce bénévole ?')) return;
+      const idx = activeList.findIndex(a => a.id === id);
+      if (idx === -1) return;
+      const a = activeList.splice(idx, 1)[0];
+      bannedList.push({ ...a, raison: 'Banni manuellement', date: new Date().toLocaleDateString('fr-FR') });
+      // Supprimer ses signalements
+      reportsList = reportsList.filter(r => r.bénévoleId !== id);
+      renderAll();
+    }
+
+    function banFromReport(reportId) {
+      const report = reportsList.find(r => r.id === reportId);
+      if (!report) return;
+      if (!confirm(`Bannir ${report.bénévole} suite à ce signalement ?`)) return;
+      const aIdx = activeList.findIndex(a => a.pseudo === report.bénévole);
+      if (aIdx !== -1) {
+        const a = activeList.splice(aIdx, 1)[0];
+        bannedList.push({ ...a, raison: 'Signalement : ' + report.motif, date: new Date().toLocaleDateString('fr-FR') });
+      }
+      reportsList = reportsList.filter(r => r.id !== reportId);
+      renderAll();
+    }
+
+    function dismissReport(id) {
+      reportsList = reportsList.filter(r => r.id !== id);
+      renderAll();
+    }
+
+    function unban(id) {
+      bannedList = bannedList.filter(b => b.id !== id);
+      renderAll();
+    }
+
+    // ===== MODAL DETAIL =====
+    let currentDetailId = null;
+
+    function openDetail(id) {
+      const p = pendingList.find(x => x.id === id);
+      if (!p) return;
+      currentDetailId = id;
+      document.getElementById('modal-name').textContent = `Candidature — ${p.prenom} ${p.nom}`;
+      document.getElementById('modal-body').innerHTML = `
+        <div class="detail-row"><span class="detail-lbl">Email</span><span class="detail-val">${p.email}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Pseudo</span><span class="detail-val">${p.pseudo}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Domaine</span><span class="detail-val">${p.domaine || 'Non précisé'}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Disponibilités</span><span class="detail-val">${p.dispo}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Description</span><span class="detail-val">${p.description}</span></div>
+        <div class="detail-row"><span class="detail-lbl">Date</span><span class="detail-val">${p.date}</span></div>
+        <p style="font-size:12px;color:var(--mist);margin:16px 0 4px;text-transform:uppercase;letter-spacing:.05em;">Motivation</p>
+        <div class="motivation-box">${p.motivation}</div>
+      `;
+      document.getElementById('modal-approve-btn').onclick = () => approve(id);
+      document.getElementById('modal-reject-btn').onclick = () => reject(id);
+      document.getElementById('detail-modal').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('detail-modal').classList.remove('open');
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  </script>
+</body>
+</html>

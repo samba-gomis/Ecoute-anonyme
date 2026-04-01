@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Écoute Anonyme — Un espace pour s'exprimer</title>
+  <meta name="description" content="Un espace d'écoute, d'échange et de soutien, fondé sur le bénévolat, la confidentialité et le respect de chacun." />
+  <link rel="icon" type="image" href="logo du site.png">
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: calc(var(--nav-h) + 60px) 6% 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 55% 55% at 15% 85%, rgba(139,175,138,0.14) 0%, transparent 65%),
+        radial-gradient(ellipse 45% 50% at 85% 15%, rgba(196,168,130,0.10) 0%, transparent 65%),
+        var(--cream);
+      z-index: 0;
+    }
+
+    /* Décoration florale légère */
+    .hero-deco {
+      position: absolute;
+      width: 480px;
+      height: 480px;
+      border-radius: 50%;
+      border: 1px solid rgba(139,175,138,0.12);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+    }
+
+    .hero-deco::before {
+      content: '';
+      position: absolute;
+      inset: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(139,175,138,0.10);
+    }
+
+    .hero-deco::after {
+      content: '';
+      position: absolute;
+      inset: 80px;
+      border-radius: 50%;
+      border: 1px solid rgba(139,175,138,0.08);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      background: var(--sage-pale);
+      border: 1px solid rgba(139,175,138,0.25);
+      padding: 7px 18px;
+      border-radius: var(--radius-pill);
+      margin-bottom: 32px;
+    }
+
+    .hero-tag .pulse {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--sage);
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.75); }
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(44px, 7vw, 80px);
+      font-weight: 300;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: var(--stone-dark);
+      margin-bottom: 28px;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--sage-dark);
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      font-weight: 300;
+      color: var(--stone);
+      line-height: 1.8;
+      margin-bottom: 48px;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-note {
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--mist);
+      letter-spacing: 0.02em;
+    }
+
+    /* ===== VALEURS ===== */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: rgba(139,175,138,0.12);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-top: 64px;
+    }
+
+    .value-card {
+      background: var(--cream);
+      padding: 44px 36px;
+      transition: background 0.25s;
+    }
+
+    .value-card:hover { background: var(--white); }
+
+    .value-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--sage-pale);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 22px;
+    }
+
+    .value-card h3 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--stone-dark);
+      margin-bottom: 10px;
+    }
+
+    .value-card p {
+      font-size: 14px;
+      color: var(--stone);
+      line-height: 1.75;
+    }
+
+    /* ===== COMMENT ÇA MARCHE ===== */
+    .how-it-works {
+      background: var(--white);
+    }
+
+    .steps {
+      margin-top: 64px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      position: relative;
+    }
+
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 36px;
+      left: calc(12.5% + 20px);
+      right: calc(12.5% + 20px);
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--sage-light), var(--sage-light), transparent);
+      z-index: 0;
+    }
+
+    .step {
+      text-align: center;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-num {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--sage-pale);
+      border: 2px solid var(--sage-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 300;
+      color: var(--sage-dark);
+      transition: background 0.25s, border-color 0.25s;
+    }
+
+    .step:hover .step-num {
+      background: var(--sage);
+      border-color: var(--sage);
+      color: var(--white);
+    }
+
+    .step h4 {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--stone-dark);
+      margin-bottom: 8px;
+    }
+
+    .step p {
+      font-size: 13px;
+      color: var(--stone);
+      line-height: 1.7;
+    }
+
+    /* ===== ENGAGEMENTS ===== */
+    .engagements {
+      background: var(--sage-pale);
+    }
+
+    .engagements-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .engagements-text .section-title {
+      margin-bottom: 24px;
+    }
+
+    .engagements-text p {
+      font-size: 15px;
+      color: var(--stone);
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+
+    .engagements-text .btn {
+      margin-top: 16px;
+    }
+
+    .guarantees {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .guarantee {
+      background: var(--white);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      transition: box-shadow 0.2s;
+    }
+
+    .guarantee:hover {
+      box-shadow: 0 4px 20px rgba(139,175,138,0.15);
+    }
+
+    .guarantee-icon {
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      border-radius: 10px;
+      background: var(--sage-pale);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .guarantee-text h5 {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--stone-dark);
+      margin-bottom: 3px;
+    }
+
+    .guarantee-text p {
+      font-size: 13px;
+      color: var(--stone);
+      line-height: 1.6;
+    }
+
+    /* ===== BÉNÉVOLES ===== */
+    .benevoles {
+      background: var(--white);
+    }
+
+    .benevoles-inner {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .benevoles-inner .section-title {
+      margin-bottom: 20px;
+    }
+
+    .benevoles-inner .lead {
+      margin-bottom: 40px;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: center;
+      gap: 64px;
+      margin: 48px 0;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 300;
+      color: var(--sage-dark);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--mist);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ===== CTA FINAL ===== */
+    .cta-section {
+      background: var(--stone-dark);
+      padding: 100px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: rgba(139,175,138,0.07);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .cta-section h2 {
+      font-family: var(--font-display);
+      font-size: clamp(30px, 4.5vw, 52px);
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .cta-section h2 em {
+      font-style: italic;
+      color: var(--sage-light);
+    }
+
+    .cta-section p {
+      font-size: 16px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .cta-section .btn-primary {
+      position: relative;
+      background: var(--sage);
+      font-size: 15px;
+      padding: 16px 40px;
+    }
+
+    .cta-section .btn-primary:hover {
+      background: var(--sage-dark);
+    }
+
+    .cta-urgency {
+      position: relative;
+      margin-top: 20px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 900px) {
+      #reviews-grid { grid-template-columns: 1fr 1fr !important; }
+      .values-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr 1fr; gap: 40px; }
+      .steps::before { display: none; }
+      .engagements-inner { grid-template-columns: 1fr; gap: 48px; }
+      .stat-row { gap: 40px; }
+    }
+
+    @media (max-width: 600px) {
+      #reviews-grid { grid-template-columns: 1fr !important; }
+      .steps { grid-template-columns: 1fr; }
+      .stat-row { gap: 32px; }
+      .hero-actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="nav" id="navbar">
+    <a href="index.html" class="nav-logo">
+      <img src="logo%20du%20site.png" alt="Logo Écoute Anonyme" style="height:38px;width:auto;object-fit:contain;" />
+      Écoute Anonyme
+    </a>
+    <ul class="nav-links">
+      <li><a href="presentation.html">Le projet</a>
+    <a href="benevoles.html">Bénévóles</a></li>
+      <li><a href="benevoles.html">Bénévoles</a></li>
+      <li><a href="#comment">Comment ça marche</a></li>
+      <li><a href="confidentialite.html">Confidentialité</a></li>
+      <li><a href="chat.html" class="btn-nav">Commencer à écrire</a></li>
+    </ul>
+
+    <!-- Hamburger mobile -->
+    <button class="nav-hamburger" id="hamburger" aria-label="Ouvrir le menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Panneau mobile -->
+  <div class="nav-mobile-overlay" id="mobileOverlay" onclick="toggleMenu()"></div>
+  <div class="nav-mobile-panel" id="mobilePanel">
+    <a href="index.html" class="active">Accueil</a>
+    <a href="presentation.html">Le projet</a>
+    <a href="benevoles.html">Bénévóles</a>
+    <a href="index.html#comment">Comment ça marche</a>
+    <a href="confidentialite.html">Confidentialité</a>
+    <div class="nav-mobile-divider"></div>
+    <a href="chat.html" class="btn-mobile-cta">Commencer à écrire</a>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-deco"></div>
+
+    <div class="hero-content">
+      <div class="hero-tag anim-fade-up">
+        <span class="pulse"></span>
+        Service gratuit · 100 % anonyme
+      </div>
+
+      <h1 class="anim-fade-up delay-1">
+        Un espace pour<br>
+        <em>s'exprimer librement</em>
+      </h1>
+
+      <p class="hero-sub anim-fade-up delay-2">
+        Écoute Anonyme est un lieu sûr où vous pouvez parler sans jugement,
+        sans dévoiler votre identité, et sans aucune pression.
+        Des bénévoles attentifs sont là pour vous écouter.
+      </p>
+
+      <div class="hero-actions anim-fade-up delay-3">
+        <a href="chat.html" class="btn btn-primary">
+          Commencer à écrire
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="presentation.html" class="btn btn-secondary">En savoir plus</a>
+      </div>
+
+      <p class="hero-note anim-fade-up delay-4">
+        Aucune inscription requise · Aucune donnée personnelle collectée
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== VALEURS ===== -->
+  <section class="section">
+    <div class="container">
+      <div style="text-align:center; max-width: 540px; margin: 0 auto 8px;">
+        <span class="section-label">Nos fondements</span>
+        <h2 class="section-title">Trois piliers pour un <em>espace de confiance</em></h2>
+      </div>
+
+      <div class="values-grid">
+        <div class="value-card">
+          <div class="value-icon">🤝</div>
+          <h3>Bénévolat</h3>
+          <p>Des personnes engagées, humaines et bienveillantes, qui choisissent librement d'offrir leur temps et leur écoute.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🔒</div>
+          <h3>Confidentialité</h3>
+          <p>Aucune donnée personnelle exigée. Vos échanges vous appartiennent. Vous choisissez ce que vous partagez.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">💚</div>
+          <h3>Respect</h3>
+          <p>Un cadre bienveillant, sans jugement et sans pression. Chaque personne est accueillie telle qu'elle est.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COMMENT ÇA MARCHE ===== -->
+  <section class="section how-it-works" id="comment">
+    <div class="container">
+      <div style="text-align:center; margin-bottom: 8px;">
+        <span class="section-label">Le processus</span>
+        <h2 class="section-title">Simple, <em>discret, sans engagement</em></h2>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h4>Choisissez un pseudonyme</h4>
+          <p>Pas de nom réel, pas d'email, pas de numéro. Juste un pseudo de votre choix.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h4>Entamez la discussion</h4>
+          <p>Écrivez ce que vous ressentez, à votre rythme, dans le chat sécurisé.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h4>Un bénévole vous répond</h4>
+          <p>Une personne attentive prend le temps de lire et de vous accompagner.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <h4>Vous gardez le contrôle</h4>
+          <p>Conservez ou supprimez vos échanges à tout moment, comme vous le souhaitez.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ENGAGEMENTS ===== -->
+  <section class="section engagements">
+    <div class="container">
+      <div class="engagements-inner">
+        <div class="engagements-text">
+          <span class="section-label">Nos engagements</span>
+          <h2 class="section-title">Votre vie privée,<br><em>protégée avant tout</em></h2>
+          <p>Écoute Anonyme est conçu dès sa fondation pour minimiser la collecte de données. Vous n'avez besoin de rien dévoiler pour bénéficier du service.</p>
+          <p>Nous respectons le RGPD et nous allons au-delà de ses exigences : vous avez le droit d'accès, de rectification et d'effacement total de vos données.</p>
+          <a href="confidentialite.html" class="btn btn-outline">
+            Lire la charte complète
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 7h10M7.5 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="guarantees">
+          <div class="guarantee">
+            <div class="guarantee-icon">🚫</div>
+            <div class="guarantee-text">
+              <h5>Aucune donnée personnelle obligatoire</h5>
+              <p>Ni nom, ni email, ni téléphone. Un pseudonyme suffit.</p>
+            </div>
+          </div>
+          <div class="guarantee">
+            <div class="guarantee-icon">🗑️</div>
+            <div class="guarantee-text">
+              <h5>Suppression immédiate possible</h5>
+              <p>Vos conversations peuvent être effacées définitivement à tout moment.</p>
+            </div>
+          </div>
+          <div class="guarantee">
+            <div class="guarantee-icon">🚷</div>
+            <div class="guarantee-text">
+              <h5>Zéro exploitation commerciale</h5>
+              <p>Vos données ne sont jamais vendues, cédées ou partagées.</p>
+            </div>
+          </div>
+          <div class="guarantee">
+            <div class="guarantee-icon">🛡️</div>
+            <div class="guarantee-text">
+              <h5>Échanges sécurisés</h5>
+              <p>Des mesures techniques protègent vos conversations contre tout accès non autorisé.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BÉNÉVOLES ===== -->
+  <section class="section benevoles">
+    <div class="container">
+      <div class="benevoles-inner">
+        <span class="section-label">Les bénévoles</span>
+        <h2 class="section-title">Des humains derrière <em>chaque réponse</em></h2>
+        <p class="lead">
+          Les bénévoles d'Écoute Anonyme ne sont pas des thérapeutes, ni des professionnels de santé. Ce sont des personnes engagées, formées à l'écoute active, qui offrent une présence attentive et sans jugement.
+        </p>
+
+        <div class="stat-row">
+          <div class="stat">
+            <div class="stat-num">100%</div>
+            <div class="stat-label">Bénévoles</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">0€</div>
+            <div class="stat-label">Service gratuit</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">∞</div>
+            <div class="stat-label">Confidentialité</div>
+          </div>
+        </div>
+
+        <p class="body-text" style="margin-bottom:32px">
+          Écoute Anonyme <strong>n'est pas un service d'urgence</strong> ni un dispositif médical. En cas de situation de danger, contactez les services compétents (15, 17, 18 ou 3114).
+        </p>
+
+        <a href="presentation.html" class="btn btn-outline">Découvrir le projet en détail</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== AVIS VISITEURS ===== -->
+  <section class="section" style="background: var(--cream);">
+    <div class="container">
+      <div style="text-align:center;max-width:520px;margin:0 auto 52px;">
+        <span class="section-label">Témoignages</span>
+        <h2 class="section-title">Ce qu'ils ont <em>vécu</em></h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;" id="reviews-grid">
+        <!-- Avis générés en JS -->
+      </div>
+      <p style="text-align:center;margin-top:32px;font-size:12px;color:var(--mist);">
+        Avis anonymes laissés en fin d'échange · Non reliés à une identité
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== CTA FINAL ===== -->
+  <section class="cta-section">
+    <div class="container-narrow">
+      <h2>Prêt·e à <em>vous exprimer</em> ?</h2>
+      <p>Aucune inscription. Aucun engagement. Juste un espace pour vous.</p>
+      <a href="chat.html" class="btn btn-primary">Commencer maintenant</a>
+      <p class="cta-urgency">Service gratuit · Anonyme · Disponible maintenant</p>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-col">
+        <a href="index.html" style="display:flex;align-items:center;gap:10px;margin-bottom:12px;text-decoration:none;">
+          <img src="logo%20du%20site.png" alt="Logo Écoute Anonyme" style="height:36px;width:auto;filter:brightness(0) invert(1);opacity:0.85;" />
+          <span class="footer-logo" style="margin-bottom:0;">Écoute Anonyme</span>
+        </a>
+        <p class="footer-desc">
+          Un espace d'écoute bénévole, gratuit et confidentiel, ouvert à tous ceux qui en ressentent le besoin.
+        </p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="presentation.html">Le projet</a>
+    <a href="benevoles.html">Bénévóles</a></li>
+      <li><a href="benevoles.html">Bénévoles</a></li>
+          <li><a href="confidentialite.html">Confidentialité</a></li>
+          <li><a href="#">Commencer</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="benevoles.html">Devenir bénévole</a></li>
+          <li><a href="#">Soutenir le projet</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Urgences : 3114</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Écoute Anonyme · Tous droits réservés</span>
+      <span class="footer-badge">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--sage);display:inline-block;"></span>
+        Service disponible
+      </span>
+    </div>
+  </footer>
+
+  <script>
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 30);
+    });
+
+    function toggleMenu() {
+      const open = document.getElementById('mobilePanel').classList.toggle('open');
+      document.getElementById('mobileOverlay').classList.toggle('open', open);
+      document.getElementById('hamburger').classList.toggle('open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+
+    // Avis visiteurs
+    const reviews = [
+      { stars:5, text:'Je n\'osais pas en parler à mon entourage. Ici j\'ai pu tout dire sans peur du jugement. Ça m\'a vraiment aidé.', pseudo:'Anonyme', date:'Mai 2025' },
+      { stars:5, text:'La bénévole a été d\'une écoute exceptionnelle. Je me suis senti·e compris·e pour la première fois depuis longtemps.', pseudo:'Voyageur', date:'Avril 2025' },
+      { stars:4, text:'Un espace rare sur internet. Vrai, humain, sans artifice. Je reviendrai si j\'en ai besoin.', pseudo:'Fleur42', date:'Mai 2025' },
+      { stars:5, text:'Savoir que quelqu\'un est là, même à distance, ça change tout dans les moments difficiles.', pseudo:'Anonyme', date:'Mars 2025' },
+      { stars:4, text:'Simple, discret, efficace. Exactement ce dont j\'avais besoin ce soir-là. Merci.', pseudo:'Anonyme', date:'Avril 2025' },
+      { stars:5, text:'Le bénévole a pris le temps, sans me brusquer. Une expérience vraiment positive.', pseudo:'Lucie_M', date:'Mai 2025' },
+    ];
+    const grid = document.getElementById('reviews-grid');
+    if (grid) {
+      grid.innerHTML = reviews.map(r => `
+        <div style="background:var(--white);border-radius:16px;border:1px solid rgba(139,175,138,0.16);padding:24px 22px;display:flex;flex-direction:column;gap:12px;">
+          <div style="font-size:15px;">${'⭐'.repeat(r.stars)}</div>
+          <p style="font-size:14px;color:var(--stone);line-height:1.75;font-style:italic;margin:0;">"${r.text}"</p>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:auto;">
+            <span style="font-size:12px;font-weight:500;color:var(--sage-dark);">${r.pseudo}</span>
+            <span style="font-size:11px;color:var(--mist);">${r.date}</span>
+          </div>
+        </div>`).join('');
+    }
+  </script>
+</body>
+</html>
