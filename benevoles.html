@@ -413,7 +413,7 @@
     <div class="container-narrow">
       <div class="breadcrumb">
         <a href="index.html">Accueil</a>
-        <span class="sep">›</span>
+        <span class="sep"></span>
         <span>Bénévoles</span>
       </div>
       <span class="section-label">Espace bénévoles</span>
@@ -425,8 +425,8 @@
 
     <!-- Tabs -->
     <div class="tabs-bar">
-      <button class="tab-btn active" onclick="switchTab('liste', this)">👥 L'équipe actuelle</button>
-      <button class="tab-btn" onclick="switchTab('inscription', this)">✋ Devenir bénévole</button>
+      <button class="tab-btn active" onclick="switchTab('liste', this)"> L'équipe actuelle</button>
+      <button class="tab-btn" onclick="switchTab('inscription', this)"> Devenir bénévole</button>
     </div>
   </section>
 
@@ -594,7 +594,7 @@
     <div class="footer-inner">
       <div class="footer-col">
         <a href="index.html" style="display:flex;align-items:center;gap:10px;margin-bottom:12px;text-decoration:none;">
-          <img src="logo%20du%20site.png" alt="Logo" style="height:36px;width:auto;filter:brightness(0) invert(1);opacity:0.85;" />
+          <img src="logo du site.png" alt="Logo" style="height:36px;width:auto;filter:brightness(0) invert(1);opacity:0.85;" />
           <span class="footer-logo" style="margin-bottom:0;">Écoute Anonyme</span>
         </a>
         <p class="footer-desc">Un espace d'écoute bénévole, gratuit et confidentiel.</p>
@@ -723,7 +723,7 @@
         || !form.description.value.trim() || !document.getElementById('charte-check').checked) {
         status.className = 'form-status error';
         status.style.display = 'block';
-        status.textContent = '⚠️ Veuillez remplir tous les champs obligatoires et accepter la charte.';
+        status.textContent = ' Veuillez remplir tous les champs obligatoires et accepter la charte.';
         status.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
       }
@@ -733,7 +733,7 @@
       if (dispos.length === 0) {
         status.className = 'form-status error';
         status.style.display = 'block';
-        status.textContent = '⚠️ Veuillez sélectionner au moins une disponibilité.';
+        status.textContent = ' Veuillez sélectionner au moins une disponibilité.';
         return;
       }
 
@@ -746,7 +746,7 @@
         status.className = 'form-status success';
         status.style.display = 'block';
         status.innerHTML = `
-          ✅ <strong>Votre candidature a bien été envoyée !</strong><br>
+           <strong>Votre candidature a bien été envoyée !</strong><br>
           Notre équipe l'examinera dans un délai de 5 à 10 jours ouvrés. Vous recevrez une réponse à l'adresse <strong>${form.email.value}</strong>.
         `;
         form.reset();

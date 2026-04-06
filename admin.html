@@ -306,7 +306,7 @@
       <!-- Candidatures en attente -->
       <div class="admin-section">
         <div class="admin-section-header">
-          <h2>📋 Candidatures en attente</h2>
+          <h2> Candidatures en attente</h2>
           <span class="count-badge warn" id="badge-attente">2 en attente</span>
         </div>
         <table class="admin-table">
@@ -327,7 +327,7 @@
       <!-- Bénévoles actifs -->
       <div class="admin-section">
         <div class="admin-section-header">
-          <h2>✅ Bénévoles actifs</h2>
+          <h2> Bénévoles actifs</h2>
           <span class="count-badge" id="badge-actifs">4 actifs</span>
         </div>
         <table class="admin-table">
@@ -348,7 +348,7 @@
       <!-- Signalements patients -->
       <div class="admin-section">
         <div class="admin-section-header">
-          <h2>⚠️ Signalements patients</h2>
+          <h2> Signalements patients</h2>
           <span class="count-badge warn" id="badge-reports">1 signalement</span>
         </div>
         <table class="admin-table">
@@ -367,7 +367,7 @@
       <!-- Bénévoles bannis -->
       <div class="admin-section">
         <div class="admin-section-header">
-          <h2>🚫 Bénévoles bannis</h2>
+          <h2> Bénévoles bannis</h2>
           <span class="count-badge" id="badge-bannis">0 banni</span>
         </div>
         <table class="admin-table">
@@ -514,13 +514,13 @@
     function renderReports() {
       const tbody = document.getElementById('reports-tbody');
       if (!reportsList.length) {
-        tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><div class="empty-icon">✅</div>Aucun signalement en cours.</div></td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><div class="empty-icon"></div>Aucun signalement en cours.</div></td></tr>`;
         return;
       }
       tbody.innerHTML = reportsList.map(r => `
         <tr class="report-row">
           <td class="name-cell"><strong>${r.bénévole}</strong></td>
-          <td><span class="report-reason">⚠️ ${r.motif}</span></td>
+          <td><span class="report-reason"> ${r.motif}</span></td>
           <td style="font-size:12px;color:var(--mist);">${r.date}</td>
           <td>
             <div class="action-btns">
@@ -535,7 +535,7 @@
     function renderBanned() {
       const tbody = document.getElementById('banned-tbody');
       if (!bannedList.length) {
-        tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">✅</div>Aucun bénévole banni.</div></td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon"></div>Aucun bénévole banni.</div></td></tr>`;
         return;
       }
       tbody.innerHTML = bannedList.map(b => `

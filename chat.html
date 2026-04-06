@@ -174,7 +174,7 @@
   <div class="screen active" id="screen-pseudo">
     <div class="entry-card">
       <a href="index.html" class="entry-logo">
-        <img src="logo%20du%20site.png" alt="Logo" />
+        <img src="logo du site.png" alt="Logo" />
         <span>Écoute Anonyme</span>
       </a>
       <h1>Bienvenue.<br><em>Vous n'êtes pas seul·e.</em></h1>
@@ -187,7 +187,7 @@
         <button class="btn-enter" onclick="goToVolunteer()">Choisir un bénévole →</button>
         <button class="btn-enter-anon" onclick="setAnonAndGo()">Entrer sans pseudonyme</button>
       </div>
-      <p class="entry-notice">🔒 Anonymat total · Aucune donnée collectée<br>
+      <p class="entry-notice"> Anonymat total · Aucune donnée collectée<br>
         <a href="confidentialite.html" style="color:var(--sage);text-decoration:underline;text-underline-offset:2px;">Charte de confidentialité</a>
       </p>
     </div>
@@ -218,7 +218,7 @@
           Retour
         </a>
         <a href="index.html" class="chat-logo-link">
-          <img src="logo%20du%20site.png" alt="Logo" />
+          <img src="logo du site.png" alt="Logo" />
           <span>Écoute Anonyme</span>
         </a>
       </div>
@@ -245,10 +245,10 @@
             <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="4" r="1.2" fill="currentColor"/><circle cx="9" cy="9" r="1.2" fill="currentColor"/><circle cx="9" cy="14" r="1.2" fill="currentColor"/></svg>
           </button>
           <div class="dropdown-menu" id="dd-menu">
-            <button class="dropdown-item" onclick="openModal('review-modal');ddToggle()">⭐ Laisser un avis</button>
-            <button class="dropdown-item" onclick="openModal('end-modal');ddToggle()">✅ Terminer l'échange</button>
+            <button class="dropdown-item" onclick="openModal('review-modal');ddToggle()"> Laisser un avis</button>
+            <button class="dropdown-item" onclick="openModal('end-modal');ddToggle()"> Terminer l'échange</button>
             <div class="dd-sep"></div>
-            <button class="dropdown-item danger" onclick="openModal('delete-modal');ddToggle()">🗑️ Supprimer la conversation</button>
+            <button class="dropdown-item danger" onclick="openModal('delete-modal');ddToggle()"> Supprimer la conversation</button>
           </div>
         </div>
       </div>
@@ -281,7 +281,7 @@
   <!-- MODALE SUPPRIMER -->
   <div class="modal-overlay" id="delete-modal">
     <div class="modal-card">
-      <div class="m-icon" style="background:#FEF2F2;">🗑️</div>
+      <div class="m-icon" style="background:#FEF2F2;"></div>
       <h3>Supprimer la conversation ?</h3>
       <p>Action irréversible. Tous vos messages seront définitivement effacés.</p>
       <div class="m-actions">
@@ -294,7 +294,7 @@
   <!-- MODALE AVIS -->
   <div class="modal-overlay" id="review-modal">
     <div class="modal-card">
-      <div class="m-icon" style="background:#FFFBF0;">⭐</div>
+      <div class="m-icon" style="background:#FFFBF0;"></div>
       <h3>Laisser un avis anonyme</h3>
       <p>Jamais relié à votre identité. Aide à améliorer le service.</p>
       <div class="stars" id="stars">
@@ -311,7 +311,7 @@
   <!-- MODALE SIGNALEMENT -->
   <div class="modal-overlay" id="report-modal">
     <div class="modal-card">
-      <div class="m-icon" style="background:#FEF2F2;">⚠️</div>
+      <div class="m-icon" style="background:#FEF2F2;"></div>
       <h3>Signaler ce bénévole</h3>
       <p>Sélectionnez le motif. Notre équipe sera immédiatement alertée.</p>
       <div class="rep-opts">
@@ -331,7 +331,7 @@
   <!-- MODALE TERMINER -->
   <div class="modal-overlay" id="end-modal">
     <div class="modal-card">
-      <div class="m-icon" style="background:var(--sage-pale);">✅</div>
+      <div class="m-icon" style="background:var(--sage-pale);"></div>
       <h3>Terminer l'échange ?</h3>
       <div class="end-info">Vous pouvez conserver ou supprimer cette conversation avant de partir.</div>
       <!-- DON OPTIONNEL -->
@@ -357,7 +357,7 @@
   <!-- CONFIRMATION -->
   <div class="modal-overlay" id="confirm-modal">
     <div class="modal-card" style="text-align:center;">
-      <div class="m-icon" style="background:var(--sage-pale);margin:0 auto 16px;">✅</div>
+      <div class="m-icon" style="background:var(--sage-pale);margin:0 auto 16px;"></div>
       <h3>Conversation supprimée</h3>
       <p>Vos données ont été effacées définitivement. Merci de nous avoir fait confiance.</p>
       <a href="index.html" class="m-btn m-sage" style="display:block;text-decoration:none;">Retourner à l'accueil</a>
@@ -367,7 +367,7 @@
   <!-- CONFIRMATION SIGNALEMENT -->
   <div class="modal-overlay" id="report-ok-modal">
     <div class="modal-card" style="text-align:center;">
-      <div class="m-icon" style="background:#FEF2F2;margin:0 auto 16px;">📨</div>
+      <div class="m-icon" style="background:#FEF2F2;margin:0 auto 16px;"></div>
       <h3>Signalement envoyé</h3>
       <p>Notre équipe va examiner votre signalement dans les meilleurs délais. Merci.</p>
       <button class="m-btn m-sage" onclick="closeModal('report-ok-modal')" style="display:block;width:100%;">Fermer</button>
@@ -448,7 +448,7 @@
           </div>
           <div class="vol-tags">${v.tags.map(t => `<span class="vol-tag">${t}</span>`).join('')}</div>
           <p class="vol-desc">${v.desc}</p>
-          <p class="vol-dispo">🕐 ${v.dispo}</p>
+          <p class="vol-dispo"> ${v.dispo}</p>
           ${v.status !== 'offline'
             ? `<button class="vol-btn" onclick="event.stopPropagation();pickVolunteer(${v.id})">Choisir ${v.name}</button>`
             : `<p class="vol-offline-note">Non disponible actuellement</p>`}
