@@ -384,6 +384,73 @@
         </table>
       </div>
 
+      <!-- DONS -->
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <h2>Dons reçus</h2>
+          <span class="count-badge" id="badge-dons">4 dons</span>
+        </div>
+        <div style="padding:24px;">
+          <!-- Résumé visuel dons -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;">
+            <div style="background:var(--cream);border-radius:12px;padding:20px;text-align:center;border:1px solid rgba(196,168,130,0.2);">
+              <div style="font-family:var(--font-display);font-size:32px;font-weight:300;color:#C4A882;">47€</div>
+              <div style="font-size:12px;color:var(--mist);text-transform:uppercase;letter-spacing:.06em;margin-top:4px;">Total reçu</div>
+            </div>
+            <div style="background:var(--cream);border-radius:12px;padding:20px;text-align:center;border:1px solid rgba(196,168,130,0.2);">
+              <div style="font-family:var(--font-display);font-size:32px;font-weight:300;color:#C4A882;">4</div>
+              <div style="font-size:12px;color:var(--mist);text-transform:uppercase;letter-spacing:.06em;margin-top:4px;">Donateurs</div>
+            </div>
+            <div style="background:var(--cream);border-radius:12px;padding:20px;text-align:center;border:1px solid rgba(196,168,130,0.2);">
+              <div style="font-family:var(--font-display);font-size:32px;font-weight:300;color:#C4A882;">11,75€</div>
+              <div style="font-size:12px;color:var(--mist);text-transform:uppercase;letter-spacing:.06em;margin-top:4px;">Don moyen</div>
+            </div>
+          </div>
+          <!-- Barre de progression objectif -->
+          <div style="margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--stone);margin-bottom:8px;">
+              <span>Objectif mensuel</span>
+              <span style="font-weight:500;color:var(--stone-dark);">47€ / 100€</span>
+            </div>
+            <div style="height:8px;background:rgba(196,168,130,0.2);border-radius:4px;overflow:hidden;">
+              <div style="height:100%;width:47%;background:linear-gradient(90deg,#C4A882,#D4B892);border-radius:4px;"></div>
+            </div>
+            <p style="font-size:12px;color:var(--mist);margin-top:6px;">47% de l'objectif atteint ce mois-ci</p>
+          </div>
+          <!-- Liste dons -->
+          <table class="admin-table">
+            <thead><tr><th>Méthode</th><th>Montant</th><th>Date</th><th>Statut</th></tr></thead>
+            <tbody>
+              <tr><td>Carte bancaire</td><td style="font-weight:500;color:var(--stone-dark);">20€</td><td style="font-size:12px;color:var(--mist);">29/05/2025</td><td><span class="status-pill pill-active">Reçu</span></td></tr>
+              <tr><td>PayPal</td><td style="font-weight:500;color:var(--stone-dark);">10€</td><td style="font-size:12px;color:var(--mist);">27/05/2025</td><td><span class="status-pill pill-active">Reçu</span></td></tr>
+              <tr><td>Apple Pay</td><td style="font-weight:500;color:var(--stone-dark);">12€</td><td style="font-size:12px;color:var(--mist);">25/05/2025</td><td><span class="status-pill pill-active">Reçu</span></td></tr>
+              <tr><td>Carte bancaire</td><td style="font-weight:500;color:var(--stone-dark);">5€</td><td style="font-size:12px;color:var(--mist);">20/05/2025</td><td><span class="status-pill pill-active">Reçu</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- AVIS -->
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <h2>Avis des utilisateurs</h2>
+          <span class="count-badge" id="badge-avis">6 avis · Moy. 4.8/5</span>
+        </div>
+        <div style="padding:24px;">
+          <!-- Note globale -->
+          <div style="display:flex;align-items:center;gap:32px;margin-bottom:28px;padding:20px;background:var(--sage-pale);border-radius:12px;border:1px solid rgba(139,175,138,0.2);">
+            <div style="text-align:center;">
+              <div style="font-family:var(--font-display);font-size:52px;font-weight:300;color:var(--sage-dark);line-height:1;">4.8</div>
+              <div style="font-size:12px;color:var(--mist);margin-top:4px;">Note moyenne</div>
+            </div>
+            <div style="flex:1;" id="ratings-bars"></div>;
+            </div>
+          </div>
+          <!-- Liste avis -->
+          <div style="display:flex;flex-direction:column;gap:14px;" id="admin-reviews-list"></div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -631,6 +698,54 @@
     }
 
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    // Reviews
+    const adminReviews = [
+      { stars:5, text:'Je n\'osais pas en parler à mon entourage. Ici j\'ai pu tout dire sans peur du jugement.', pseudo:'Anonyme', date:'29/05/2025', vol:'Marie' },
+      { stars:5, text:'La bénévole a été d\'une écoute exceptionnelle. Je me suis senti·e compris·e pour la première fois.', pseudo:'Voyageur', date:'27/05/2025', vol:'Léa' },
+      { stars:4, text:'Un espace rare. Vrai, humain, sans artifice. Je reviendrai si j\'en ai besoin.', pseudo:'Fleur42', date:'26/05/2025', vol:'Marie' },
+      { stars:5, text:'Savoir que quelqu\'un est là, même à distance, ça change tout.', pseudo:'Anonyme', date:'24/05/2025', vol:'Thomas' },
+      { stars:4, text:'Simple, discret, efficace. Exactement ce dont j\'avais besoin.', pseudo:'Anonyme', date:'22/05/2025', vol:'Samuel' },
+      { stars:5, text:'Le bénévole a pris le temps, sans me brusquer. Très positive.', pseudo:'Lucie_M', date:'20/05/2025', vol:'Léa' },
+    ];
+
+    function renderAdminReviews() {
+      const list = document.getElementById('admin-reviews-list');
+      if (!list) return;
+      const stars = n => Array.from({length:5},(_,i)=>`<svg width="12" height="12" viewBox="0 0 24 24" fill="${i<n?'#8BAF8A':'none'}" stroke="${i<n?'#8BAF8A':'#B8B4AE'}" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`).join('');
+      list.innerHTML = adminReviews.map(r=>`
+        <div style="background:var(--cream);border-radius:10px;padding:16px 18px;border:1px solid rgba(139,175,138,0.12);display:flex;gap:14px;align-items:flex-start;">
+          <div>
+            <div style="display:flex;gap:2px;margin-bottom:6px;">${stars(r.stars)}</div>
+            <p style="font-size:13px;color:var(--stone);line-height:1.65;font-style:italic;margin-bottom:8px;">"${r.text}"</p>
+            <div style="display:flex;gap:16px;font-size:11px;color:var(--mist);">
+              <span>Pseudo : ${r.pseudo}</span>
+              <span>Bénévole : ${r.vol}</span>
+              <span>${r.date}</span>
+            </div>
+          </div>
+        </div>`).join('');
+    }
+
+    function renderRatings() {
+  const container = document.getElementById("ratings-bars");
+  if (!container) return;
+
+  const pcts = {5:70,4:20,3:7,2:2,1:1};
+
+  container.innerHTML = [5,4,3,2,1].map(n => `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+      <span style="font-size:12px;color:var(--stone);min-width:8px;">${n}</span>
+      <div style="flex:1;height:6px;background:rgba(139,175,138,0.15);border-radius:3px;overflow:hidden;">
+        <div style="height:100%;width:${pcts[n]}%;background:var(--sage);border-radius:3px;"></div>
+      </div>
+      <span style="font-size:12px;color:var(--mist);min-width:30px;">${pcts[n]}%</span>
+    </div>
+  `).join('');
+}
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (document.getElementById('admin-reviews-list')) renderAdminReviews(); renderRatings();
+    });
   </script>
 </body>
 </html>

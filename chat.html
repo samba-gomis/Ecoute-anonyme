@@ -8,163 +8,203 @@
   <link rel="stylesheet" href="styles.css" />
   <style>
     body { overflow: hidden; height: 100vh; }
-    .screen { position: fixed; inset: 0; z-index: 500; display: none; align-items: center; justify-content: center; padding: 24px; background: var(--cream); }
+
+    /* ===== ÉCRANS ===== */
+    .screen { position: fixed; inset: 0; z-index: 500; display: none; align-items: center; justify-content: center; padding: 24px; background: var(--cream); transition: background 0.3s; }
     .screen.active { display: flex; }
-
-    /* ÉCRAN 1 — PSEUDO */
-    .entry-card { background: var(--white); border-radius: 24px; border: 1px solid rgba(139,175,138,0.2); padding: 44px 40px; width: 100%; max-width: 460px; box-shadow: 0 8px 48px rgba(61,58,56,0.08); animation: fadeUp 0.45s ease forwards; }
-    .entry-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; text-decoration: none; }
-    .entry-logo img { height: 38px; width: auto; }
-    .entry-logo span { font-family: var(--font-display); font-size: 19px; font-weight: 600; color: var(--stone-dark); }
-    .entry-card h1 { font-family: var(--font-display); font-size: 28px; font-weight: 300; color: var(--stone-dark); line-height: 1.2; margin-bottom: 8px; }
-    .entry-card h1 em { font-style: italic; color: var(--sage-dark); }
-    .entry-desc { font-size: 14px; color: var(--stone); line-height: 1.7; margin-bottom: 28px; }
-    .entry-field label { display: block; font-size: 11px; font-weight: 500; color: var(--stone); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 7px; }
-    .entry-field input { width: 100%; padding: 13px 16px; border: 1.5px solid rgba(139,175,138,0.28); border-radius: var(--radius-md); font-family: var(--font-body); font-size: 15px; color: var(--stone-dark); background: var(--cream); outline: none; transition: border-color 0.2s, background 0.2s; margin-bottom: 20px; }
-    .entry-field input:focus { border-color: var(--sage); background: var(--white); }
-    .entry-field input::placeholder { color: var(--mist); }
-    .entry-actions { display: flex; flex-direction: column; gap: 10px; }
-    .btn-enter { width: 100%; padding: 15px; background: var(--sage); color: var(--white); border: none; border-radius: var(--radius-pill); font-family: var(--font-body); font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s, transform 0.15s; }
-    .btn-enter:hover { background: var(--sage-dark); transform: translateY(-1px); }
-    .btn-enter-anon { width: 100%; padding: 13px; background: transparent; color: var(--stone); border: 1.5px solid rgba(184,180,174,0.5); border-radius: var(--radius-pill); font-family: var(--font-body); font-size: 14px; cursor: pointer; transition: border-color 0.2s, color 0.2s; }
-    .btn-enter-anon:hover { border-color: var(--sage-light); color: var(--stone-dark); }
-    .entry-notice { margin-top: 20px; font-size: 12px; color: var(--mist); text-align: center; line-height: 1.6; }
-
-    /* ÉCRAN 2 — BÉNÉVOLE */
     #screen-volunteer { overflow-y: auto; align-items: flex-start; padding: 0; }
+
+    /* ===== ÉCRAN PSEUDO ===== */
+    .entry-card {
+      background: var(--bg-card); border-radius: 24px; border: 1px solid var(--border);
+      padding: 44px 40px; width: 100%; max-width: 460px;
+      box-shadow: var(--shadow); animation: fadeUp 0.45s ease forwards;
+      transition: background 0.3s;
+    }
+    .entry-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+    .entry-logo img { height: 36px; width: auto; }
+    .entry-logo span { font-family: var(--font-display); font-size: 18px; font-weight: 600; color: var(--stone-dark); }
+    .entry-card h1 { font-family: var(--font-display); font-size: 26px; font-weight: 300; color: var(--stone-dark); line-height: 1.2; margin-bottom: 8px; }
+    .entry-card h1 em { font-style: italic; color: var(--sage-dark); }
+    .entry-desc { font-size: 14px; color: var(--stone); line-height: 1.7; margin-bottom: 26px; }
+    .entry-label { display: block; font-size: 11px; font-weight: 500; color: var(--stone); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 7px; }
+    .entry-input {
+      width: 100%; padding: 12px 15px; margin-bottom: 20px;
+      border: 1.5px solid rgba(139,175,138,0.28); border-radius: var(--radius-md);
+      font-family: var(--font-body); font-size: 15px; color: var(--stone-dark);
+      background: var(--cream); outline: none; transition: border-color 0.2s, background 0.3s;
+    }
+    .entry-input:focus { border-color: var(--sage); background: var(--bg-card); }
+    .entry-input::placeholder { color: var(--mist); }
+    .entry-actions { display: flex; flex-direction: column; gap: 10px; }
+    .btn-enter {
+      width: 100%; padding: 14px; background: var(--sage); color: #fff;
+      border: none; border-radius: var(--radius-pill); font-family: var(--font-body);
+      font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s, transform 0.15s;
+    }
+    .btn-enter:hover { background: var(--sage-dark); transform: translateY(-1px); }
+    .btn-anon {
+      width: 100%; padding: 12px; background: transparent; color: var(--stone);
+      border: 1.5px solid rgba(184,180,174,0.45); border-radius: var(--radius-pill);
+      font-family: var(--font-body); font-size: 14px; cursor: pointer; transition: border-color 0.2s;
+    }
+    .btn-anon:hover { border-color: var(--sage-light); color: var(--stone-dark); }
+    .entry-notice { margin-top: 18px; font-size: 12px; color: var(--mist); text-align: center; line-height: 1.6; }
+    .entry-notice a { color: var(--sage); text-decoration: underline; text-underline-offset: 2px; }
+
+    /* ===== ÉCRAN BÉNÉVOLE ===== */
     .vol-wrap { width: 100%; max-width: 760px; margin: 0 auto; padding: 36px 24px 60px; }
-    .vol-header { text-align: center; margin-bottom: 32px; }
-    .vol-header h2 { font-family: var(--font-display); font-size: 30px; font-weight: 300; color: var(--stone-dark); margin-bottom: 8px; }
+    .vol-header { text-align: center; margin-bottom: 30px; }
+    .vol-header h2 { font-family: var(--font-display); font-size: 28px; font-weight: 300; color: var(--stone-dark); margin-bottom: 8px; }
     .vol-header h2 em { font-style: italic; color: var(--sage-dark); }
     .vol-header p { font-size: 14px; color: var(--stone); }
-    .vol-back { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--stone); cursor: pointer; background: none; border: none; font-family: var(--font-body); margin-bottom: 24px; transition: color 0.2s; padding: 0; }
+    .vol-back { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--stone); cursor: pointer; background: none; border: none; font-family: var(--font-body); margin-bottom: 22px; transition: color 0.2s; padding: 0; }
     .vol-back:hover { color: var(--sage-dark); }
-    .vol-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-    .vol-card { background: var(--white); border-radius: var(--radius-lg); border: 1.5px solid rgba(139,175,138,0.18); padding: 24px; cursor: pointer; transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s; }
-    .vol-card:hover:not(.vol-offline) { box-shadow: 0 6px 24px rgba(139,175,138,0.18); transform: translateY(-2px); border-color: var(--sage-light); }
-    .vol-offline { opacity: 0.6; cursor: default; }
+    .vol-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(255px,1fr)); gap: 16px; }
+    .vol-card {
+      background: var(--bg-card); border-radius: var(--radius-lg); border: 1.5px solid var(--border);
+      padding: 24px; cursor: pointer; transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s, background 0.3s;
+    }
+    .vol-card:hover:not(.vol-offline) { box-shadow: 0 6px 24px rgba(139,175,138,0.16); transform: translateY(-2px); border-color: var(--sage-light); }
+    .vol-offline { opacity: 0.55; cursor: default; }
     .vol-c-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-    .vol-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--sage-pale); border: 2px solid rgba(139,175,138,0.25); display: flex; align-items: center; justify-content: center; font-size: 22px; position: relative; }
-    .v-dot { position: absolute; bottom: 1px; right: 1px; width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--white); }
-    .v-online { background: #4CAF50; } .v-away { background: #FFC107; } .v-offline { background: var(--mist); }
+    .vol-avatar {
+      width: 46px; height: 46px; border-radius: 50%;
+      background: var(--sage-pale); border: 2px solid rgba(139,175,138,0.22);
+      display: flex; align-items: center; justify-content: center; position: relative;
+    }
+    .v-dot { position: absolute; bottom: 1px; right: 1px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--bg-card); }
+    .v-online { background: #48A868; } .v-away { background: #D4A017; } .v-offline { background: var(--mist); }
     .vol-c-meta h3 { font-family: var(--font-display); font-size: 17px; font-weight: 400; color: var(--stone-dark); }
-    .v-status { font-size: 12px; } .v-s-online { color: #4CAF50; } .v-s-away { color: #FFC107; } .v-s-off { color: var(--mist); }
+    .v-status { font-size: 12px; }
+    .v-s-online { color: #48A868; } .v-s-away { color: #D4A017; } .v-s-off { color: var(--mist); }
     .vol-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
     .vol-tag { font-size: 10px; padding: 3px 9px; border-radius: var(--radius-pill); background: var(--sage-pale); color: var(--sage-dark); font-weight: 500; }
     .vol-desc { font-size: 13px; color: var(--stone); line-height: 1.65; margin-bottom: 12px; }
-    .vol-dispo { font-size: 11px; color: var(--mist); }
+    .vol-dispo { font-size: 11px; color: var(--mist); display: flex; align-items: center; gap: 5px; }
     .vol-btn { width: 100%; margin-top: 14px; padding: 10px; background: var(--sage-pale); color: var(--sage-dark); border: 1.5px solid rgba(139,175,138,0.3); border-radius: var(--radius-pill); font-family: var(--font-body); font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
-    .vol-btn:hover { background: var(--sage); color: var(--white); border-color: var(--sage); }
+    .vol-btn:hover { background: var(--sage); color: #fff; border-color: var(--sage); }
     .vol-offline-note { font-size: 12px; color: var(--mist); text-align: center; margin-top: 10px; }
 
-    /* ÉCRAN 3 — CHAT */
+    /* ===== CHAT ===== */
     #chat-screen { display: none; height: 100vh; flex-direction: column; }
     #chat-screen.active { display: flex; }
-    .chat-topbar { height: 62px; min-height: 62px; background: var(--white); border-bottom: 1px solid rgba(139,175,138,0.15); display: flex; align-items: center; justify-content: space-between; padding: 0 14px; gap: 10px; }
+
+    .chat-topbar {
+      height: 60px; min-height: 60px; background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; padding: 0 14px; gap: 10px;
+      transition: background 0.3s;
+    }
     .chat-topbar-left { display: flex; align-items: center; gap: 8px; }
     .chat-back { display: flex; align-items: center; gap: 5px; font-size: 13px; color: var(--stone); text-decoration: none; padding: 6px 9px; border-radius: var(--radius-sm); transition: background 0.15s; }
     .chat-back:hover { background: var(--sage-pale); color: var(--sage-dark); }
     .chat-logo-link { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 15px; font-weight: 600; color: var(--stone-dark); text-decoration: none; }
-    .chat-logo-link img { height: 27px; }
+    .chat-logo-link img { height: 26px; }
     .chat-topbar-right { display: flex; align-items: center; gap: 7px; }
     .pseudo-badge { display: flex; align-items: center; gap: 5px; background: var(--sage-pale); border: 1px solid rgba(139,175,138,0.25); border-radius: var(--radius-pill); padding: 4px 11px; font-size: 11px; color: var(--sage-dark); font-weight: 500; }
     .vol-info { display: flex; align-items: center; gap: 8px; }
-    .vol-top-av { width: 32px; height: 32px; border-radius: 50%; background: var(--sage-pale); border: 1.5px solid rgba(139,175,138,0.3); display: flex; align-items: center; justify-content: center; font-size: 15px; position: relative; }
-    .vol-top-dot { position: absolute; bottom: 0; right: 0; width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--white); }
+    .vol-top-av { width: 30px; height: 30px; border-radius: 50%; background: var(--sage-pale); border: 1.5px solid rgba(139,175,138,0.25); display: flex; align-items: center; justify-content: center; position: relative; }
+    .vol-top-dot { position: absolute; bottom: 0; right: 0; width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--bg-card); }
     .vol-top-name { font-size: 13px; font-weight: 500; color: var(--stone-dark); }
-    .vol-top-status { font-size: 11px; color: #4CAF50; }
+    .vol-top-status { font-size: 11px; color: #48A868; }
     .topbar-btn { width: 32px; height: 32px; border-radius: var(--radius-sm); background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--stone); transition: background 0.15s, color 0.15s; }
     .topbar-btn:hover { background: var(--sage-pale); color: var(--sage-dark); }
-    .topbar-btn.report-btn:hover { background: #FEF2F2; color: #DC3545; }
+    .topbar-btn.report-btn:hover { background: var(--danger-pale); color: var(--danger); }
     .dropdown { position: relative; }
-    .dropdown-menu { position: absolute; top: calc(100% + 6px); right: 0; background: var(--white); border: 1px solid rgba(139,175,138,0.2); border-radius: var(--radius-md); box-shadow: 0 8px 24px rgba(61,58,56,0.1); min-width: 185px; padding: 6px; z-index: 100; display: none; }
+    .dropdown-menu { position: absolute; top: calc(100% + 6px); right: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow); min-width: 185px; padding: 6px; z-index: 100; display: none; transition: background 0.3s; }
     .dropdown-menu.open { display: block; }
     .dropdown-item { display: flex; align-items: center; gap: 9px; padding: 10px 12px; border-radius: var(--radius-sm); font-size: 13px; color: var(--stone); cursor: pointer; border: none; background: none; width: 100%; text-align: left; font-family: var(--font-body); transition: background 0.15s; }
     .dropdown-item:hover { background: var(--sage-pale); color: var(--stone-dark); }
-    .dropdown-item.danger { color: #DC3545; }
-    .dropdown-item.danger:hover { background: #FEF2F2; }
-    .dd-sep { height: 1px; background: rgba(139,175,138,0.15); margin: 4px 0; }
+    .dd-sep { height: 1px; background: var(--border); margin: 4px 0; }
 
     /* Messages */
-    .chat-messages { flex: 1; overflow-y: auto; padding: 18px 14px; display: flex; flex-direction: column; gap: 13px; background: var(--cream); scroll-behavior: smooth; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 18px 14px; display: flex; flex-direction: column; gap: 12px; background: var(--cream); scroll-behavior: smooth; transition: background 0.3s; }
     .chat-messages::-webkit-scrollbar { width: 4px; }
     .chat-messages::-webkit-scrollbar-thumb { background: rgba(139,175,138,0.3); border-radius: 2px; }
-    .date-sep { display: flex; align-items: center; gap: 12px; margin: 2px 0; }
-    .date-sep::before, .date-sep::after { content: ''; flex: 1; height: 1px; background: rgba(139,175,138,0.2); }
+    .date-sep { display: flex; align-items: center; gap: 12px; }
+    .date-sep::before, .date-sep::after { content:''; flex:1; height:1px; background:var(--border); }
     .date-sep span { font-size: 11px; color: var(--mist); white-space: nowrap; }
     .msg-group { display: flex; flex-direction: column; gap: 3px; max-width: 70%; }
     .msg-group.user { align-self: flex-end; align-items: flex-end; }
     .msg-group.vol { align-self: flex-start; align-items: flex-start; }
     .msg-sender { font-size: 11px; color: var(--mist); padding: 0 4px; }
     .msg-bubble { padding: 11px 15px; border-radius: 18px; font-size: 14px; line-height: 1.65; word-break: break-word; }
-    .msg-group.user .msg-bubble { background: var(--sage); color: var(--white); border-bottom-right-radius: 4px; }
-    .msg-group.vol .msg-bubble { background: var(--white); color: var(--stone-dark); border: 1px solid rgba(139,175,138,0.18); border-bottom-left-radius: 4px; }
+    .msg-group.user .msg-bubble { background: var(--sage); color: #fff; border-bottom-right-radius: 4px; }
+    .msg-group.vol .msg-bubble { background: var(--bg-card); color: var(--stone-dark); border: 1px solid var(--border); border-bottom-left-radius: 4px; transition: background 0.3s; }
     .msg-time { font-size: 10px; color: var(--mist); padding: 0 4px; }
     .msg-sys { text-align: center; font-size: 12px; color: var(--mist); background: rgba(139,175,138,0.09); border-radius: var(--radius-pill); padding: 6px 16px; align-self: center; max-width: 85%; line-height: 1.5; }
     .typing-ind { display: none; align-self: flex-start; }
     .typing-ind.on { display: flex; }
-    .typing-bub { background: var(--white); border: 1px solid rgba(139,175,138,0.18); border-radius: 18px; border-bottom-left-radius: 4px; padding: 12px 14px; display: flex; align-items: center; gap: 4px; }
+    .typing-bub { background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; border-bottom-left-radius: 4px; padding: 12px 14px; display: flex; align-items: center; gap: 4px; transition: background 0.3s; }
     .t-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--sage-light); animation: tb 1.2s ease-in-out infinite; }
-    .t-dot:nth-child(2) { animation-delay: .15s; } .t-dot:nth-child(3) { animation-delay: .3s; }
-    @keyframes tb { 0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-5px);opacity:1} }
+    .t-dot:nth-child(2){animation-delay:.15s}.t-dot:nth-child(3){animation-delay:.3s}
+    @keyframes tb{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-5px);opacity:1}}
 
     /* Saisie */
-    .chat-input-area { background: var(--white); border-top: 1px solid rgba(139,175,138,0.15); padding: 11px 13px; }
-    .input-row { display: flex; align-items: flex-end; gap: 9px; background: var(--cream); border: 1.5px solid rgba(139,175,138,0.25); border-radius: 22px; padding: 7px 7px 7px 14px; transition: border-color 0.2s; }
+    .chat-input-area { background: var(--bg-card); border-top: 1px solid var(--border); padding: 11px 13px; transition: background 0.3s; }
+    .input-row { display: flex; align-items: flex-end; gap: 9px; background: var(--cream); border: 1.5px solid rgba(139,175,138,0.25); border-radius: 22px; padding: 7px 7px 7px 14px; transition: border-color 0.2s, background 0.3s; }
     .input-row:focus-within { border-color: var(--sage); }
-    .input-row textarea { flex: 1; border: none; background: transparent; font-family: var(--font-body); font-size: 14px; color: var(--stone-dark); line-height: 1.5; resize: none; outline: none; min-height: 22px; max-height: 110px; padding: 2px 0; }
+    .input-row textarea { flex:1; border:none; background:transparent; font-family:var(--font-body); font-size:14px; color:var(--stone-dark); line-height:1.5; resize:none; outline:none; min-height:22px; max-height:110px; padding:2px 0; }
     .input-row textarea::placeholder { color: var(--mist); }
-    .send-btn { width: 33px; height: 33px; min-width: 33px; border-radius: 50%; background: var(--sage); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--white); transition: background 0.2s, transform 0.15s; }
-    .send-btn:hover { background: var(--sage-dark); transform: scale(1.06); }
-    .send-btn:active { transform: scale(0.95); }
-    .input-hint { text-align: center; font-size: 11px; color: var(--mist); margin-top: 7px; }
+    .send-btn { width:33px;height:33px;min-width:33px;border-radius:50%;background:var(--sage);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;transition:background 0.2s,transform 0.15s; }
+    .send-btn:hover{background:var(--sage-dark);transform:scale(1.06)}
+    .send-btn:active{transform:scale(0.95)}
+    .input-hint { text-align:center;font-size:11px;color:var(--mist);margin-top:7px; }
 
-    /* MODALES */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(61,58,56,0.42); backdrop-filter: blur(4px); z-index: 600; display: none; align-items: center; justify-content: center; padding: 24px; }
-    .modal-overlay.open { display: flex; }
-    .modal-card { background: var(--white); border-radius: 20px; padding: 30px 26px; max-width: 400px; width: 100%; box-shadow: 0 16px 48px rgba(61,58,56,0.14); animation: fadeUp 0.25s ease forwards; }
-    .m-icon { width: 46px; height: 46px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 21px; margin-bottom: 16px; }
-    .modal-card h3 { font-family: var(--font-display); font-size: 20px; font-weight: 400; color: var(--stone-dark); margin-bottom: 8px; }
-    .modal-card p { font-size: 14px; color: var(--stone); line-height: 1.7; margin-bottom: 18px; }
-    .m-actions { display: flex; gap: 9px; }
-    .m-btn { flex: 1; padding: 12px; border-radius: var(--radius-pill); font-family: var(--font-body); font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: background 0.2s, transform 0.15s; text-align: center; }
-    .m-btn:hover { transform: translateY(-1px); }
-    .m-cancel { background: var(--cream); color: var(--stone); border: 1.5px solid rgba(184,180,174,0.4); }
-    .m-cancel:hover { background: var(--sage-pale); }
-    .m-sage { background: var(--sage); color: var(--white); }
-    .m-sage:hover { background: var(--sage-dark); }
-    .m-red { background: #DC3545; color: var(--white); }
-    .m-red:hover { background: #B02A37; }
+    /* ===== MODALES ===== */
+    .modal-overlay { position:fixed;inset:0;background:rgba(61,58,56,0.42);backdrop-filter:blur(4px);z-index:600;display:none;align-items:center;justify-content:center;padding:24px; }
+    .modal-overlay.open { display:flex; }
+    .modal-card { background:var(--bg-card);border-radius:20px;padding:30px 26px;max-width:420px;width:100%;box-shadow:var(--shadow);animation:fadeUp 0.25s ease forwards;transition:background 0.3s; }
+    .m-icon { width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px; }
+    .modal-card h3 { font-family:var(--font-display);font-size:20px;font-weight:400;color:var(--stone-dark);margin-bottom:8px; }
+    .modal-card p { font-size:14px;color:var(--stone);line-height:1.7;margin-bottom:18px; }
+    .m-actions { display:flex;gap:9px; }
+    .m-btn { flex:1;padding:12px;border-radius:var(--radius-pill);font-family:var(--font-body);font-size:14px;font-weight:500;cursor:pointer;border:none;transition:background 0.2s,transform 0.15s;text-align:center; }
+    .m-btn:hover{transform:translateY(-1px)}
+    .m-cancel{background:var(--cream);color:var(--stone);border:1.5px solid rgba(184,180,174,0.4)}
+    .m-cancel:hover{background:var(--sage-pale)}
+    .m-sage{background:var(--sage);color:#fff}
+    .m-sage:hover{background:var(--sage-dark)}
+    .m-red{background:var(--danger);color:#fff}
+    .m-red:hover{background:#A83030}
 
-    /* Avis */
-    .stars { display: flex; gap: 8px; margin-bottom: 16px; }
-    .s-btn { font-size: 25px; background: none; border: none; cursor: pointer; transition: transform 0.15s; filter: grayscale(1); opacity: 0.35; }
-    .s-btn.on, .s-btn:hover { filter: grayscale(0); opacity: 1; transform: scale(1.15); }
-    .rev-ta { width: 100%; padding: 11px 14px; border: 1.5px solid rgba(139,175,138,0.28); border-radius: var(--radius-md); font-family: var(--font-body); font-size: 14px; color: var(--stone-dark); background: var(--cream); resize: none; outline: none; min-height: 80px; margin-bottom: 16px; transition: border-color 0.2s; }
-    .rev-ta:focus { border-color: var(--sage); }
+    /* Avis étoiles */
+    .stars { display:flex;gap:8px;margin-bottom:16px; }
+    .s-btn { width:28px;height:28px;background:none;border:none;cursor:pointer;transition:transform 0.15s;padding:0; }
+    .s-btn svg { width:26px;height:26px; }
+    .s-btn.on svg path { fill: var(--sage); stroke: var(--sage); }
+    .s-btn:hover { transform:scale(1.15); }
+    .rev-ta { width:100%;padding:11px 14px;border:1.5px solid rgba(139,175,138,0.28);border-radius:var(--radius-md);font-family:var(--font-body);font-size:14px;color:var(--stone-dark);background:var(--cream);resize:none;outline:none;min-height:80px;margin-bottom:16px;transition:border-color 0.2s,background 0.3s; }
+    .rev-ta:focus{border-color:var(--sage)}
+    .rev-ta::placeholder{color:var(--mist)}
 
     /* Signalement */
-    .rep-opts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
-    .rep-opt { display: flex; align-items: center; gap: 10px; padding: 10px 13px; border: 1.5px solid rgba(184,180,174,0.3); border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; color: var(--stone); transition: border-color 0.2s, background 0.2s; }
-    .rep-opt:hover { border-color: #DC3545; background: #FEF2F2; color: #DC3545; }
-    .rep-opt.sel { border-color: #DC3545; background: #FEF2F2; color: #DC3545; }
-    .rep-opt input { accent-color: #DC3545; }
+    .rep-opts { display:flex;flex-direction:column;gap:8px;margin-bottom:16px; }
+    .rep-opt { display:flex;align-items:center;gap:10px;padding:10px 13px;border:1.5px solid rgba(184,180,174,0.3);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;color:var(--stone);transition:border-color 0.2s,background 0.2s; }
+    .rep-opt:hover{border-color:var(--danger);background:var(--danger-pale);color:var(--danger)}
+    .rep-opt.sel{border-color:var(--danger);background:var(--danger-pale);color:var(--danger)}
+    .rep-opt input{accent-color:var(--danger)}
 
-    /* Don */
-    .don-box { background: linear-gradient(135deg, var(--sage-pale) 0%, var(--warm-pale) 100%); border-radius: var(--radius-md); padding: 18px; margin-bottom: 16px; text-align: center; }
-    .don-box .don-title { font-size: 13px; font-weight: 500; color: var(--stone-dark); margin-bottom: 4px; }
-    .don-box .don-sub { font-size: 12px; color: var(--stone); margin-bottom: 0; }
-    .don-amounts { display: flex; gap: 8px; justify-content: center; margin: 12px 0; flex-wrap: wrap; }
-    .d-amt { padding: 8px 16px; border: 1.5px solid rgba(139,175,138,0.3); border-radius: var(--radius-pill); font-size: 14px; font-weight: 500; color: var(--sage-dark); background: var(--white); cursor: pointer; transition: all 0.2s; }
-    .d-amt:hover, .d-amt.sel { background: var(--sage); color: var(--white); border-color: var(--sage); }
-    .don-note { font-size: 11px; color: var(--mist); }
-    .end-info { background: var(--sage-pale); border-radius: var(--radius-sm); padding: 12px 15px; font-size: 13px; color: var(--stone); line-height: 1.65; margin-bottom: 16px; border: 1px solid rgba(139,175,138,0.2); }
+    /* Don + fin de session */
+    .end-choices { display:flex;flex-direction:column;gap:10px;margin-top:8px; }
+    .end-choice-card {
+      background: var(--cream); border: 1.5px solid var(--border); border-radius: var(--radius-md);
+      padding: 16px 20px; cursor: pointer; transition: border-color 0.2s, background 0.2s;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .end-choice-card:hover { border-color: var(--sage-light); background: var(--sage-pale); }
+    .end-choice-card.selected { border-color: var(--sage); background: var(--sage-pale); }
+    .end-choice-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--sage-pale); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .end-choice-text h5 { font-size: 14px; font-weight: 500; color: var(--stone-dark); }
+    .end-choice-text p { font-size: 12px; color: var(--stone); line-height: 1.5; }
+    .end-info { background:var(--sage-pale);border-radius:var(--radius-sm);padding:12px 15px;font-size:13px;color:var(--stone);line-height:1.65;margin-bottom:14px;border:1px solid var(--border); }
 
-    @media (max-width: 600px) {
-      .entry-card { padding: 28px 20px; }
-      .msg-group { max-width: 88%; }
-      .chat-logo-link span, .vol-top-name, .pseudo-badge { display: none; }
-      .vol-grid { grid-template-columns: 1fr; }
+    @media (max-width:600px){
+      .entry-card{padding:28px 20px}
+      .msg-group{max-width:88%}
+      .chat-logo-link span,.vol-top-name,.pseudo-badge{display:none}
+      .vol-grid{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -179,22 +219,21 @@
       </a>
       <h1>Bienvenue.<br><em>Vous n'êtes pas seul·e.</em></h1>
       <p class="entry-desc">Choisissez un pseudonyme ou entrez anonymement. Aucune information personnelle n'est requise.</p>
-      <div class="entry-field">
-        <label>Votre pseudonyme (optionnel)</label>
-        <input type="text" id="pseudo-input" placeholder="Ex : Fleur, Anonyme42, Voyageur…" maxlength="30" autocomplete="off" />
-      </div>
+      <label class="entry-label">Votre pseudonyme (optionnel)</label>
+      <input type="text" class="entry-input" id="pseudo-input" placeholder="Ex : Fleur, Anonyme42, Voyageur…" maxlength="30" autocomplete="off" />
       <div class="entry-actions">
-        <button class="btn-enter" onclick="goToVolunteer()">Choisir un bénévole →</button>
-        <button class="btn-enter-anon" onclick="setAnonAndGo()">Entrer sans pseudonyme</button>
+        <button class="btn-enter" onclick="goToVolunteer()">Choisir un bénévole</button>
+        <button class="btn-anon" onclick="setAnonAndGo()">Entrer sans pseudonyme</button>
       </div>
-      <p class="entry-notice"> Anonymat total · Aucune donnée collectée<br>
-        <a href="confidentialite.html" style="color:var(--sage);text-decoration:underline;text-underline-offset:2px;">Charte de confidentialité</a>
+      <p class="entry-notice">
+        Anonymat total · Aucune donnée collectée<br>
+        <a href="confidentialite.html">Charte de confidentialité</a>
       </p>
     </div>
   </div>
 
-  <!-- ÉCRAN 2 — CHOIX BÉNÉVOLE -->
-  <div class="screen" id="screen-volunteer" style="overflow-y:auto;align-items:flex-start;padding:0;">
+  <!-- ÉCRAN 2 — BÉNÉVOLE -->
+  <div class="screen" id="screen-volunteer">
     <div class="vol-wrap">
       <button class="vol-back" onclick="backToPseudo()">
         <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -203,7 +242,7 @@
       <div class="vol-header">
         <span class="section-label" style="display:flex;justify-content:center;">Étape 2 / 2</span>
         <h2>Choisissez <em>votre bénévole</em></h2>
-        <p>Tous validés et engagés dans notre charte éthique. Choisissez avec qui vous vous sentez à l'aise.</p>
+        <p>Tous validés et engagés dans notre charte éthique.</p>
       </div>
       <div class="vol-grid" id="vol-grid"></div>
     </div>
@@ -218,18 +257,18 @@
           Retour
         </a>
         <a href="index.html" class="chat-logo-link">
-          <img src="logo du site.png" alt="Logo" />
+          <img src="logo_du_site.png" alt="Logo" />
           <span>Écoute Anonyme</span>
         </a>
       </div>
       <div class="chat-topbar-right">
         <div class="pseudo-badge">
-          <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="4" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 10.5c0-2.2 2-4 4.5-4s4.5 1.8 4.5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="4" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 10.5c0-2.2 2-4 4.5-4s4.5 1.8 4.5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
           <span id="pseudo-display">Anonyme</span>
         </div>
         <div class="vol-info">
           <div class="vol-top-av">
-            <span id="vol-emoji">🌿</span>
+            <svg id="vol-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
             <span class="vol-top-dot v-online" id="vol-status-dot"></span>
           </div>
           <div>
@@ -237,18 +276,24 @@
             <div class="vol-top-status" id="vol-status-txt">En ligne</div>
           </div>
         </div>
+        <!-- Signalement -->
         <button class="topbar-btn report-btn" onclick="openModal('report-modal')" title="Signaler ce bénévole">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v6M8 11v1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.2"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.5" fill="currentColor"/></svg>
         </button>
+        <!-- Options -->
         <div class="dropdown">
           <button class="topbar-btn" onclick="ddToggle()" title="Options">
-            <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="4" r="1.2" fill="currentColor"/><circle cx="9" cy="9" r="1.2" fill="currentColor"/><circle cx="9" cy="14" r="1.2" fill="currentColor"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
           </button>
           <div class="dropdown-menu" id="dd-menu">
-            <button class="dropdown-item" onclick="openModal('review-modal');ddToggle()"> Laisser un avis</button>
-            <button class="dropdown-item" onclick="openModal('end-modal');ddToggle()"> Terminer l'échange</button>
-            <div class="dd-sep"></div>
-            <button class="dropdown-item danger" onclick="openModal('delete-modal');ddToggle()"> Supprimer la conversation</button>
+            <button class="dropdown-item" onclick="openModal('review-modal');ddToggle()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Laisser un avis
+            </button>
+            <button class="dropdown-item" onclick="openModal('end-modal');ddToggle()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Terminer l'échange
+            </button>
           </div>
         </div>
       </div>
@@ -259,7 +304,7 @@
       <div class="msg-sys">Vous êtes connecté·e à un bénévole. Espace confidentiel et bienveillant.</div>
       <div class="msg-group vol">
         <span class="msg-sender" id="vol-sender">Marie · Bénévole</span>
-        <div class="msg-bubble" id="welcome-bubble">Bonjour, je suis là pour vous écouter. Prenez tout le temps qu'il vous faut. 🌿</div>
+        <div class="msg-bubble" id="welcome-bubble">Bonjour, je suis là pour vous écouter. Prenez tout le temps qu'il vous faut.</div>
         <span class="msg-time" id="welcome-time"></span>
       </div>
       <div class="typing-ind" id="typing">
@@ -278,27 +323,20 @@
     </div>
   </div>
 
-  <!-- MODALE SUPPRIMER -->
-  <div class="modal-overlay" id="delete-modal">
-    <div class="modal-card">
-      <div class="m-icon" style="background:#FEF2F2;"></div>
-      <h3>Supprimer la conversation ?</h3>
-      <p>Action irréversible. Tous vos messages seront définitivement effacés.</p>
-      <div class="m-actions">
-        <button class="m-btn m-cancel" onclick="closeModal('delete-modal')">Annuler</button>
-        <button class="m-btn m-red" onclick="deleteConvo()">Supprimer</button>
-      </div>
-    </div>
-  </div>
-
   <!-- MODALE AVIS -->
   <div class="modal-overlay" id="review-modal">
     <div class="modal-card">
-      <div class="m-icon" style="background:#FFFBF0;"></div>
+      <div class="m-icon" style="background:var(--sage-pale);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
       <h3>Laisser un avis anonyme</h3>
-      <p>Jamais relié à votre identité. Aide à améliorer le service.</p>
+      <p>Jamais relié à votre identité. Aide uniquement à améliorer le service.</p>
       <div class="stars" id="stars">
-        <button class="s-btn" onclick="setRating(1)">⭐</button><button class="s-btn" onclick="setRating(2)">⭐</button><button class="s-btn" onclick="setRating(3)">⭐</button><button class="s-btn" onclick="setRating(4)">⭐</button><button class="s-btn" onclick="setRating(5)">⭐</button>
+        <button class="s-btn" onclick="setRating(1)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--mist)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="s-btn" onclick="setRating(2)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--mist)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="s-btn" onclick="setRating(3)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--mist)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="s-btn" onclick="setRating(4)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--mist)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="s-btn" onclick="setRating(5)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--mist)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
       </div>
       <textarea class="rev-ta" placeholder="Un commentaire ? (optionnel)"></textarea>
       <div class="m-actions">
@@ -311,12 +349,14 @@
   <!-- MODALE SIGNALEMENT -->
   <div class="modal-overlay" id="report-modal">
     <div class="modal-card">
-      <div class="m-icon" style="background:#FEF2F2;"></div>
+      <div class="m-icon" style="background:var(--danger-pale);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.5" fill="var(--danger)"/></svg>
+      </div>
       <h3>Signaler ce bénévole</h3>
-      <p>Sélectionnez le motif. Notre équipe sera immédiatement alertée.</p>
+      <p>Notre équipe sera immédiatement alertée et examinera le signalement.</p>
       <div class="rep-opts">
         <label class="rep-opt"><input type="radio" name="rep" value="argent" onchange="pickRep(this)"> A demandé de l'argent</label>
-        <label class="rep-opt"><input type="radio" name="rep" value="info" onchange="pickRep(this)"> A demandé des infos personnelles</label>
+        <label class="rep-opt"><input type="radio" name="rep" value="info" onchange="pickRep(this)"> A demandé des informations personnelles</label>
         <label class="rep-opt"><input type="radio" name="rep" value="hors" onchange="pickRep(this)"> A proposé un contact hors plateforme</label>
         <label class="rep-opt"><input type="radio" name="rep" value="comportement" onchange="pickRep(this)"> Comportement inapproprié</label>
         <label class="rep-opt"><input type="radio" name="rep" value="autre" onchange="pickRep(this)"> Autre motif</label>
@@ -328,65 +368,81 @@
     </div>
   </div>
 
-  <!-- MODALE TERMINER -->
+  <!-- MODALE TERMINER — choix conserver / supprimer + don -->
   <div class="modal-overlay" id="end-modal">
     <div class="modal-card">
-      <div class="m-icon" style="background:var(--sage-pale);"></div>
-      <h3>Terminer l'échange ?</h3>
-      <div class="end-info">Vous pouvez conserver ou supprimer cette conversation avant de partir.</div>
-      <!-- DON OPTIONNEL -->
-      <div class="don-box">
-        <p class="don-title">💚 Soutenir l'association (optionnel)</p>
-        <p class="don-sub">Ce service est gratuit et bénévole. Votre soutien nous aide à continuer.</p>
-        <div class="don-amounts">
-          <span class="d-amt" onclick="pickDon(this,2)">2€</span>
-          <span class="d-amt" onclick="pickDon(this,5)">5€</span>
-          <span class="d-amt" onclick="pickDon(this,10)">10€</span>
-          <span class="d-amt" onclick="pickDon(this,0)">Autre</span>
-        </div>
-        <p class="don-note">Aucune obligation · 100% anonyme</p>
+      <div class="m-icon" style="background:var(--sage-pale);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
-      <div class="m-actions" style="flex-direction:column;gap:8px;">
-        <button class="m-btn m-sage" onclick="endKeep()">Terminer et conserver</button>
-        <button class="m-btn m-red" onclick="endDelete()">Terminer et supprimer</button>
+      <h3>Terminer l'échange</h3>
+      <div class="end-info">Souhaitez-vous conserver cette conversation ou la supprimer définitivement ?</div>
+      <div class="end-choices">
+        <div class="end-choice-card" id="choice-keep" onclick="selectEndChoice('keep')">
+          <div class="end-choice-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.5" stroke-linecap="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          </div>
+          <div class="end-choice-text">
+            <h5>Conserver la conversation</h5>
+            <p>Vos messages restent accessibles lors de vos prochaines visites.</p>
+          </div>
+        </div>
+        <div class="end-choice-card" id="choice-delete" onclick="selectEndChoice('delete')">
+          <div class="end-choice-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.5" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+          </div>
+          <div class="end-choice-text">
+            <h5>Supprimer définitivement</h5>
+            <p>Tous vos messages seront effacés de façon irréversible.</p>
+          </div>
+        </div>
+      </div>
+      <div class="m-actions" style="margin-top:14px;">
         <button class="m-btn m-cancel" onclick="closeModal('end-modal')">Annuler</button>
+        <button class="m-btn m-sage" id="end-confirm-btn" onclick="confirmEnd()" disabled>Continuer</button>
       </div>
     </div>
   </div>
 
-  <!-- CONFIRMATION -->
-  <div class="modal-overlay" id="confirm-modal">
-    <div class="modal-card" style="text-align:center;">
-      <div class="m-icon" style="background:var(--sage-pale);margin:0 auto 16px;"></div>
-      <h3>Conversation supprimée</h3>
-      <p>Vos données ont été effacées définitivement. Merci de nous avoir fait confiance.</p>
-      <a href="index.html" class="m-btn m-sage" style="display:block;text-decoration:none;">Retourner à l'accueil</a>
+  <!-- MODALE DON (optionnel) -->
+  <div class="modal-overlay" id="don-modal">
+    <div class="modal-card">
+      <div class="m-icon" style="background:var(--warm-pale);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warm)" stroke-width="1.5" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      </div>
+      <h3>Soutenir l'association</h3>
+      <p>Ce service est entièrement gratuit et bénévole. Si vous souhaitez contribuer à sa pérennité, c'est possible — mais absolument pas obligatoire.</p>
+      <div class="m-actions" style="flex-direction:column;gap:9px;">
+        <a href="soutenir.html" class="m-btn m-sage" style="text-decoration:none;display:block;text-align:center;">Faire un don</a>
+        <button class="m-btn m-cancel" onclick="skipDon()">Non merci, terminer</button>
+      </div>
     </div>
   </div>
 
   <!-- CONFIRMATION SIGNALEMENT -->
   <div class="modal-overlay" id="report-ok-modal">
     <div class="modal-card" style="text-align:center;">
-      <div class="m-icon" style="background:#FEF2F2;margin:0 auto 16px;"></div>
+      <div class="m-icon" style="background:var(--sage-pale);margin:0 auto 16px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
       <h3>Signalement envoyé</h3>
-      <p>Notre équipe va examiner votre signalement dans les meilleurs délais. Merci.</p>
+      <p>Notre équipe examinera votre signalement dans les meilleurs délais. Merci.</p>
       <button class="m-btn m-sage" onclick="closeModal('report-ok-modal')" style="display:block;width:100%;">Fermer</button>
     </div>
   </div>
 
+  <script src="shared-ui.js"></script>
   <script>
-    // ====== DONNÉES ======
     const volunteers = [
-      { id:1, emoji:'🌿', name:'Marie',  status:'online',  tags:['Anxiété','Solitude'],  desc:'Disponible pour une écoute douce et sans jugement. Je crois en la puissance des mots pour traverser les moments difficiles.', dispo:'Soir & week-end',    reply:'Bonjour, je suis Marie. Je suis là pour vous écouter, à votre rythme. 🌿' },
-      { id:2, emoji:'🌊', name:'Thomas', status:'away',    tags:['Relations','Travail'],  desc:'Passionné par l\'écoute active. Je suis là pour vous accompagner, sans jamais vous juger.', dispo:'Matin & après-midi',  reply:'Bonjour, c\'est Thomas. Dites-moi ce qui vous amène, je suis tout ouïe. 🌊' },
-      { id:3, emoji:'🌸', name:'Léa',    status:'online',  tags:['Deuil','Général'],      desc:'Formée à l\'écoute active, je vous offre un espace de parole bienveillant. Chaque personne mérite d\'être entendue.', dispo:'Après-midi & soir',  reply:'Bonjour, je suis Léa. Cet espace vous appartient, partagez à votre rythme. 🌸' },
-      { id:4, emoji:'🍃', name:'Samuel', status:'offline', tags:['Général'],              desc:'Je suis là pour vous écouter, sans filtres. Votre vécu mérite toute mon attention.', dispo:'Week-end',             reply:'Bonjour, c\'est Samuel. Qu\'est-ce qui vous pèse aujourd\'hui ? 🍃' },
+      { id:1, name:'Marie',  status:'online',  tags:['Anxiété','Solitude'],  desc:'Disponible pour une écoute douce et sans jugement. Je crois en la puissance des mots pour traverser les moments difficiles.', dispo:'Soir et week-end',   reply:'Bonjour, je suis Marie. Je suis là pour vous écouter, à votre rythme.' },
+      { id:2, name:'Thomas', status:'away',    tags:['Relations','Travail'],  desc:'Passionné par l\'écoute active. Je suis là pour vous accompagner, sans jamais vous juger.', dispo:'Matin et après-midi', reply:'Bonjour, c\'est Thomas. Dites-moi ce qui vous amène, je suis tout ouïe.' },
+      { id:3, name:'Léa',    status:'online',  tags:['Deuil','Général'],      desc:'Formée à l\'écoute active, je vous offre un espace bienveillant. Chaque personne mérite d\'être entendue.', dispo:'Après-midi et soir', reply:'Bonjour, je suis Léa. Cet espace vous appartient, partagez à votre rythme.' },
+      { id:4, name:'Samuel', status:'offline', tags:['Général'],              desc:'Je suis là pour vous écouter, sans filtres. Votre vécu mérite toute mon attention.', dispo:'Week-end',           reply:'Bonjour, c\'est Samuel. Comment puis-je vous accompagner aujourd\'hui ?' },
     ];
     const statusTxt = { online:'En ligne', away:'Disponible bientôt', offline:'Hors ligne' };
-    const statusClass = { online:'v-s-online', away:'v-s-away', offline:'v-s-off' };
-    const dotClass = { online:'v-online', away:'v-away', offline:'v-offline' };
+    const statusCls = { online:'v-s-online', away:'v-s-away', offline:'v-s-off' };
+    const dotCls    = { online:'v-online', away:'v-away', offline:'v-offline' };
 
-    let pseudo = 'Anonyme', selVol = null, rating = 0, msgN = 0;
+    let pseudo='Anonyme', selVol=null, rating=0, msgN=0, endChoice=null;
 
     const replies = [
       'Je vous entends. Pouvez-vous m\'en dire un peu plus ?',
@@ -397,113 +453,136 @@
       'Je suis là, je vous lis. Continuez si vous le souhaitez.',
     ];
 
-    // ====== NAVIGATION ======
+    /* NAVIGATION */
     function showScreen(id) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      const s = document.getElementById(id);
-      if (s) { s.classList.add('active'); s.scrollTop = 0; }
+      document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+      const s=document.getElementById(id);
+      if(s){s.classList.add('active');s.scrollTop=0;}
+    }
+    function goToVolunteer(){pseudo=document.getElementById('pseudo-input').value.trim()||'Anonyme';renderVols();showScreen('screen-volunteer');}
+    function setAnonAndGo(){pseudo='Anonyme';renderVols();showScreen('screen-volunteer');}
+    function backToPseudo(){showScreen('screen-pseudo');}
+
+    function pickVolunteer(id){
+      const v=volunteers.find(x=>x.id===id);
+      if(!v||v.status==='offline')return;
+      selVol=v;
+      document.getElementById('pseudo-display').textContent=pseudo;
+      document.getElementById('vol-name-top').textContent=v.name;
+      document.getElementById('vol-status-txt').textContent=statusTxt[v.status];
+      document.getElementById('vol-status-txt').className='vol-top-status '+statusCls[v.status];
+      document.getElementById('vol-status-dot').className='vol-top-dot '+dotCls[v.status];
+      document.getElementById('vol-sender').textContent=v.name+' · Bénévole';
+      document.getElementById('welcome-bubble').textContent=v.reply;
+      document.getElementById('welcome-time').textContent=fmtTime(new Date());
+      document.getElementById('today-label').textContent=fmtDate(new Date());
+      document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+      const cs=document.getElementById('chat-screen');
+      cs.classList.add('active');cs.style.display='flex';
+      setTimeout(()=>document.getElementById('msg-input').focus(),100);
     }
 
-    function goToVolunteer() {
-      pseudo = document.getElementById('pseudo-input').value.trim() || 'Anonyme';
-      renderVols(); showScreen('screen-volunteer');
-    }
-
-    function setAnonAndGo() {
-      pseudo = 'Anonyme'; renderVols(); showScreen('screen-volunteer');
-    }
-
-    function backToPseudo() { showScreen('screen-pseudo'); }
-
-    function pickVolunteer(id) {
-      const v = volunteers.find(x => x.id === id);
-      if (!v || v.status === 'offline') return;
-      selVol = v;
-      document.getElementById('pseudo-display').textContent = pseudo;
-      document.getElementById('vol-emoji').textContent = v.emoji;
-      document.getElementById('vol-name-top').textContent = v.name;
-      document.getElementById('vol-status-txt').textContent = statusTxt[v.status];
-      document.getElementById('vol-status-txt').className = 'vol-top-status ' + statusClass[v.status];
-      document.getElementById('vol-status-dot').className = 'vol-top-dot ' + dotClass[v.status];
-      document.getElementById('vol-sender').textContent = v.name + ' · Bénévole';
-      document.getElementById('welcome-bubble').textContent = v.reply;
-      document.getElementById('welcome-time').textContent = fmtTime(new Date());
-      document.getElementById('today-label').textContent = fmtDate(new Date());
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      const cs = document.getElementById('chat-screen');
-      cs.classList.add('active'); cs.style.display = 'flex';
-      setTimeout(() => document.getElementById('msg-input').focus(), 100);
-    }
-
-    // ====== BÉNÉVOLES ======
-    function renderVols() {
-      document.getElementById('vol-grid').innerHTML = volunteers.map(v => `
-        <div class="vol-card ${v.status === 'offline' ? 'vol-offline' : ''}" onclick="pickVolunteer(${v.id})">
+    /* BÉNÉVOLES */
+    function renderVols(){
+      document.getElementById('vol-grid').innerHTML=volunteers.map(v=>`
+        <div class="vol-card ${v.status==='offline'?'vol-offline':''}" onclick="pickVolunteer(${v.id})">
           <div class="vol-c-header">
-            <div class="vol-avatar">${v.emoji}<span class="v-dot v-${v.status}"></span></div>
+            <div class="vol-avatar">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+              <span class="v-dot ${dotCls[v.status]}"></span>
+            </div>
             <div class="vol-c-meta">
               <h3>${v.name}</h3>
-              <span class="v-status ${statusClass[v.status]}">${statusTxt[v.status]}</span>
+              <span class="v-status ${statusCls[v.status]}">${statusTxt[v.status]}</span>
             </div>
           </div>
-          <div class="vol-tags">${v.tags.map(t => `<span class="vol-tag">${t}</span>`).join('')}</div>
+          <div class="vol-tags">${v.tags.map(t=>`<span class="vol-tag">${t}</span>`).join('')}</div>
           <p class="vol-desc">${v.desc}</p>
-          <p class="vol-dispo"> ${v.dispo}</p>
-          ${v.status !== 'offline'
-            ? `<button class="vol-btn" onclick="event.stopPropagation();pickVolunteer(${v.id})">Choisir ${v.name}</button>`
-            : `<p class="vol-offline-note">Non disponible actuellement</p>`}
+          <p class="vol-dispo">
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M6 3v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            ${v.dispo}
+          </p>
+          ${v.status!=='offline'
+            ?`<button class="vol-btn" onclick="event.stopPropagation();pickVolunteer(${v.id})">Choisir ${v.name}</button>`
+            :`<p class="vol-offline-note">Non disponible actuellement</p>`
+          }
         </div>`).join('');
     }
 
-    // ====== CHAT ======
-    function handleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); } }
-    function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 110) + 'px'; }
+    /* CHAT */
+    function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}
+    function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,110)+'px';}
 
-    function sendMsg() {
-      const inp = document.getElementById('msg-input');
-      const txt = inp.value.trim(); if (!txt) return;
-      addMsg(txt, 'user'); inp.value = ''; inp.style.height = 'auto'; inp.focus(); msgN++;
-      const typing = document.getElementById('typing');
-      typing.classList.add('on'); scrollBot();
-      setTimeout(() => { typing.classList.remove('on'); addMsg(replies[msgN % replies.length], 'vol'); }, 1800 + Math.random() * 1200);
+    function sendMsg(){
+      const inp=document.getElementById('msg-input');
+      const txt=inp.value.trim();if(!txt)return;
+      addMsg(txt,'user');inp.value='';inp.style.height='auto';inp.focus();msgN++;
+      const t=document.getElementById('typing');t.classList.add('on');scrollBot();
+      setTimeout(()=>{t.classList.remove('on');addMsg(replies[msgN%replies.length],'vol');},1800+Math.random()*1200);
     }
 
-    function addMsg(txt, type) {
-      const c = document.getElementById('chat-messages'), t = document.getElementById('typing');
-      const g = document.createElement('div'); g.className = `msg-group ${type}`;
-      if (type === 'vol') { const s = document.createElement('span'); s.className = 'msg-sender'; s.textContent = (selVol ? selVol.name : 'Bénévole') + ' · Bénévole'; g.appendChild(s); }
-      const b = document.createElement('div'); b.className = 'msg-bubble'; b.textContent = txt; g.appendChild(b);
-      const tm = document.createElement('span'); tm.className = 'msg-time'; tm.textContent = fmtTime(new Date()); g.appendChild(tm);
-      c.insertBefore(g, t); scrollBot();
+    function addMsg(txt,type){
+      const c=document.getElementById('chat-messages'),t=document.getElementById('typing');
+      const g=document.createElement('div');g.className=`msg-group ${type}`;
+      if(type==='vol'){const s=document.createElement('span');s.className='msg-sender';s.textContent=(selVol?selVol.name:'Bénévole')+' · Bénévole';g.appendChild(s);}
+      const b=document.createElement('div');b.className='msg-bubble';b.textContent=txt;g.appendChild(b);
+      const tm=document.createElement('span');tm.className='msg-time';tm.textContent=fmtTime(new Date());g.appendChild(tm);
+      c.insertBefore(g,t);scrollBot();
     }
 
-    function scrollBot() { const c = document.getElementById('chat-messages'); c.scrollTop = c.scrollHeight; }
-    function fmtTime(d) { return d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }); }
-    function fmtDate(d) { const t = new Date(); return d.toDateString() === t.toDateString() ? 'Aujourd\'hui' : d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }); }
+    function scrollBot(){const c=document.getElementById('chat-messages');c.scrollTop=c.scrollHeight;}
+    function fmtTime(d){return d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
+    function fmtDate(d){const t=new Date();return d.toDateString()===t.toDateString()?'Aujourd\'hui':d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});}
 
-    // ====== MODALES ======
-    function openModal(id) { document.getElementById(id).classList.add('open'); }
-    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-    function ddToggle() { document.getElementById('dd-menu').classList.toggle('open'); }
-    document.addEventListener('click', e => { if (!e.target.closest('.dropdown')) document.getElementById('dd-menu').classList.remove('open'); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') ['delete-modal','review-modal','report-modal','end-modal','confirm-modal','report-ok-modal'].forEach(closeModal); });
+    /* MODALES */
+    function openModal(id){document.getElementById(id).classList.add('open');}
+    function closeModal(id){document.getElementById(id).classList.remove('open');}
+    function ddToggle(){document.getElementById('dd-menu').classList.toggle('open');}
+    document.addEventListener('click',e=>{if(!e.target.closest('.dropdown'))document.getElementById('dd-menu').classList.remove('open');});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')['review-modal','report-modal','end-modal','don-modal','report-ok-modal'].forEach(closeModal);});
 
-    function deleteConvo() { closeModal('delete-modal'); document.getElementById('chat-messages').innerHTML = ''; openModal('confirm-modal'); }
-
-    function setRating(n) { rating = n; document.querySelectorAll('.s-btn').forEach((b, i) => b.classList.toggle('on', i < n)); }
-    function submitReview() {
+    /* AVIS */
+    function setRating(n){
+      rating=n;
+      document.querySelectorAll('.s-btn').forEach((b,i)=>{
+        b.classList.toggle('on',i<n);
+        const svg=b.querySelector('svg');
+        svg.setAttribute('fill',i<n?'var(--sage)':'none');
+        svg.setAttribute('stroke',i<n?'var(--sage)':'var(--mist)');
+      });
+    }
+    function submitReview(){
       closeModal('review-modal');
-      const c = document.getElementById('chat-messages'), t = document.getElementById('typing');
-      const s = document.createElement('div'); s.className = 'msg-sys'; s.textContent = '✨ Merci pour votre avis anonyme !';
-      c.insertBefore(s, t); scrollBot();
+      const c=document.getElementById('chat-messages'),t=document.getElementById('typing');
+      const s=document.createElement('div');s.className='msg-sys';s.textContent='Merci pour votre avis anonyme. Il nous aide à améliorer le service.';
+      c.insertBefore(s,t);scrollBot();
     }
 
-    function pickRep(el) { document.querySelectorAll('.rep-opt').forEach(o => o.classList.remove('sel')); el.closest('.rep-opt').classList.add('sel'); document.getElementById('rep-btn').disabled = false; }
-    function submitReport() { closeModal('report-modal'); openModal('report-ok-modal'); }
+    /* SIGNALEMENT */
+    function pickRep(el){document.querySelectorAll('.rep-opt').forEach(o=>o.classList.remove('sel'));el.closest('.rep-opt').classList.add('sel');document.getElementById('rep-btn').disabled=false;}
+    function submitReport(){closeModal('report-modal');openModal('report-ok-modal');}
 
-    function pickDon(el, amt) { document.querySelectorAll('.d-amt').forEach(d => d.classList.remove('sel')); el.classList.add('sel'); }
-    function endKeep() { closeModal('end-modal'); window.location.href = 'index.html'; }
-    function endDelete() { closeModal('end-modal'); document.getElementById('chat-messages').innerHTML = ''; openModal('confirm-modal'); }
+    /* FIN DE SESSION */
+    function selectEndChoice(choice){
+      endChoice=choice;
+      document.querySelectorAll('.end-choice-card').forEach(c=>c.classList.remove('selected'));
+      document.getElementById('choice-'+choice).classList.add('selected');
+      document.getElementById('end-confirm-btn').disabled=false;
+    }
+
+    function confirmEnd(){
+      closeModal('end-modal');
+      if(endChoice==='delete'){
+        document.getElementById('chat-messages').innerHTML='';
+      }
+      // Dans tous les cas, proposer le don
+      setTimeout(()=>openModal('don-modal'),200);
+    }
+
+    function skipDon(){
+      closeModal('don-modal');
+      window.location.href='index.html';
+    }
   </script>
 </body>
 </html>
