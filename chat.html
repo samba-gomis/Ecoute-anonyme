@@ -4,15 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chat — Écoute Anonyme</title>
-  <link rel="icon" type="image" href="logo du site.png">
+  <link rel="icon" type="image" href="logo_du_site.png">
   <link rel="stylesheet" href="styles.css" />
   <style>
     body { overflow: hidden; height: 100vh; }
 
     /* ===== ÉCRANS ===== */
-    .screen { position: fixed; inset: 0; z-index: 500; display: none; align-items: center; justify-content: center; padding: 24px; background: var(--cream); transition: background 0.3s; }
+    /* Util-bar sits at z-index 400, screens must be below it or account for it */
+    .screen { position: fixed; inset: 0; z-index: 300; display: none; align-items: center; justify-content: center; padding: calc(var(--util-h) + 24px) 24px 24px; background: var(--cream); transition: background 0.3s; }
     .screen.active { display: flex; }
-    #screen-volunteer { overflow-y: auto; align-items: flex-start; padding: 0; }
+    #screen-volunteer { overflow-y: auto; align-items: flex-start; padding: 0; padding-top: var(--util-h); }
 
     /* ===== ÉCRAN PSEUDO ===== */
     .entry-card {
@@ -87,7 +88,7 @@
     .vol-offline-note { font-size: 12px; color: var(--mist); text-align: center; margin-top: 10px; }
 
     /* ===== CHAT ===== */
-    #chat-screen { display: none; height: 100vh; flex-direction: column; }
+    #chat-screen { display: none; height: 100vh; flex-direction: column; padding-top: var(--util-h); }
     #chat-screen.active { display: flex; }
 
     .chat-topbar {
@@ -214,7 +215,7 @@
   <div class="screen active" id="screen-pseudo">
     <div class="entry-card">
       <a href="index.html" class="entry-logo">
-        <img src="logo du site.png" alt="Logo" />
+        <img src="logo_du_site.png" alt="Logo" />
         <span>Écoute Anonyme</span>
       </a>
       <h1>Bienvenue.<br><em>Vous n'êtes pas seul·e.</em></h1>

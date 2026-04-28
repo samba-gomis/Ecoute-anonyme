@@ -316,6 +316,11 @@ body.dark .footer { background: #0F0E0D; }
   transition: background 0.3s;
 }
 
+/* Nav fixed below util-bar on all pages */
+.nav {
+  top: var(--util-h);
+}
+
 .page-hero .container-narrow { text-align: center; }
 
 .breadcrumb {
