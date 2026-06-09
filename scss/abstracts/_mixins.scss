@@ -1,0 +1,49 @@
+// ============================================
+//   ABSTRACTS — Mixins
+// ============================================
+@use 'variables' as v;
+
+// --- Responsive ---
+@mixin respond-to($bp) {
+  @if $bp == sm {
+    @media (max-width: v.$bp-sm)  { @content; }
+  } @else if $bp == md {
+    @media (max-width: v.$bp-md)  { @content; }
+  } @else if $bp == lg {
+    @media (max-width: v.$bp-lg)  { @content; }
+  } @else if $bp == xl {
+    @media (max-width: v.$bp-xl)  { @content; }
+  }
+}
+
+// --- Flex utilitaire ---
+@mixin flex($align: center, $justify: flex-start, $gap: 0) {
+  display: flex;
+  align-items: $align;
+  justify-content: $justify;
+  @if $gap != 0 { gap: $gap; }
+}
+
+// --- Texte tronqué ---
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// --- Focus accessible ---
+@mixin focus-ring($color: var(--sage)) {
+  &:focus-visible {
+    outline: 2px solid $color;
+    outline-offset: 2px;
+  }
+}
+
+// --- Transition douce ---
+@mixin transition($props...) {
+  $list: ();
+  @each $p in $props {
+    $list: append($list, $p 0.2s ease, comma);
+  }
+  transition: $list;
+}

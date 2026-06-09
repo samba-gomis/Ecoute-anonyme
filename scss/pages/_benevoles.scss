@@ -1,0 +1,419 @@
+// ============================================
+//   PAGES — Bénévoles (benevoles.html)
+// ============================================
+@use '../abstracts/mixins' as m;
+
+// --- Tabs ---
+.tabs-bar {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  padding: 40px 0 0;
+}
+
+.tab-btn {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 11px 28px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid rgba(139, 175, 138, 0.25);
+  background: transparent;
+  color: var(--stone);
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &.active {
+    background: var(--sage);
+    color: var(--white);
+    border-color: var(--sage);
+  }
+
+  &:not(.active):hover {
+    background: var(--sage-pale);
+    color: var(--sage-dark);
+  }
+}
+
+.tab-content {
+  display: none;
+  padding: 60px 0 100px;
+
+  &.active { display: block; }
+}
+
+// --- Liste bénévoles ---
+.volunteers-intro {
+  text-align: center;
+  max-width: 560px;
+  margin: 0 auto 48px;
+}
+
+.volunteers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+
+  @include m.respond-to(sm) { grid-template-columns: 1fr; }
+}
+
+.volunteer-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(139, 175, 138, 0.18);
+  padding: 28px;
+  transition: box-shadow 0.2s, transform 0.2s;
+
+  &:hover {
+    box-shadow: 0 6px 28px rgba(139, 175, 138, 0.15);
+    transform: translateY(-2px);
+  }
+}
+
+.vol-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.vol-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--sage-pale);
+  border: 2px solid rgba(139, 175, 138, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  position: relative;
+}
+
+.vol-online-dot {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--white);
+}
+
+.online  { background: #4CAF50; }
+.away    { background: #FFC107; }
+.offline { background: var(--mist); }
+
+.vol-info {
+  h3 {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--stone-dark);
+  }
+
+  .vol-since {
+    font-size: 12px;
+    color: var(--mist);
+  }
+}
+
+.vol-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.vol-tag {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--sage-pale);
+  color: var(--sage-dark);
+  font-weight: 500;
+}
+
+.vol-desc {
+  font-size: 13px;
+  color: var(--stone);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.vol-dispo {
+  font-size: 12px;
+  color: var(--mist);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  svg { opacity: 0.5; }
+}
+
+// --- Étapes processus ---
+.process-steps {
+  display: flex;
+  gap: 0;
+  margin: 48px 0 64px;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 24px;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: var(--sage-light);
+  }
+
+  @include m.respond-to(sm) {
+    flex-direction: column;
+    gap: 24px;
+
+    &::before { display: none; }
+  }
+}
+
+.process-step {
+  flex: 1;
+  text-align: center;
+  padding: 0 16px;
+  position: relative;
+  z-index: 1;
+
+  h4 {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--stone-dark);
+    margin-bottom: 6px;
+  }
+
+  p {
+    font-size: 12px;
+    color: var(--stone);
+    line-height: 1.6;
+  }
+}
+
+.p-step-num {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--sage-pale);
+  border: 2px solid var(--sage-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--sage-dark);
+}
+
+// --- Formulaire candidature ---
+.form-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(139, 175, 138, 0.18);
+  padding: 44px 48px;
+  max-width: 660px;
+  margin: 0 auto;
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--stone-dark);
+    margin-bottom: 8px;
+
+    em { font-style: italic; color: var(--sage-dark); }
+  }
+
+  .form-intro {
+    font-size: 14px;
+    color: var(--stone);
+    line-height: 1.7;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(139, 175, 138, 0.15);
+  }
+
+  @include m.respond-to(sm) { padding: 28px 20px; }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+  @include m.respond-to(sm) { grid-template-columns: 1fr; }
+}
+
+.form-group {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--stone);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+
+    .required { color: var(--sage); margin-left: 2px; }
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid rgba(139, 175, 138, 0.25);
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--stone-dark);
+    background: var(--cream);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+
+    &:focus {
+      border-color: var(--sage);
+      background: var(--white);
+    }
+
+    &::placeholder { color: var(--mist); }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 110px;
+    line-height: 1.6;
+  }
+
+  select { cursor: pointer; }
+}
+
+// Disponibilités checkboxes
+.dispo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+
+  @include m.respond-to(sm) { grid-template-columns: 1fr; }
+}
+
+.dispo-option {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid rgba(139, 175, 138, 0.2);
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--stone);
+  transition: border-color 0.2s, background 0.2s;
+  user-select: none;
+
+  &:hover { background: var(--sage-pale); }
+
+  input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: var(--sage);
+    cursor: pointer;
+    padding: 0;
+    border: none;
+    background: none;
+  }
+
+  &.checked {
+    border-color: var(--sage);
+    background: var(--sage-pale);
+    color: var(--sage-dark);
+  }
+}
+
+// Charte bénévole
+.charte-box {
+  background: var(--sage-pale);
+  border: 1px solid rgba(139, 175, 138, 0.25);
+  border-radius: var(--radius-md);
+  padding: 20px 22px;
+  margin-bottom: 16px;
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 13px;
+  color: var(--stone);
+  line-height: 1.75;
+
+  &::-webkit-scrollbar       { width: 4px; }
+  &::-webkit-scrollbar-thumb { background: var(--sage-light); border-radius: 2px; }
+
+  h4 {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--stone-dark);
+    margin-bottom: 10px;
+  }
+
+  ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    li::before {
+      content: '· ';
+      color: var(--sage);
+      font-weight: 700;
+    }
+  }
+}
+
+.charte-accept {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--stone-dark);
+  cursor: pointer;
+  line-height: 1.5;
+
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    accent-color: var(--sage);
+    cursor: pointer;
+    margin-top: 1px;
+  }
+}
+
+// Statut soumission
+.form-status {
+  display: none;
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+
+  &.success {
+    background: var(--sage-pale);
+    border: 1px solid rgba(139, 175, 138, 0.3);
+    color: var(--sage-dark);
+  }
+
+  &.error {
+    background: #FEF2F2;
+    border: 1px solid rgba(220, 38, 38, 0.2);
+    color: #DC3545;
+  }
+}

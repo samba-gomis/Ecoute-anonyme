@@ -1,0 +1,72 @@
+// ============================================
+//   COMPONENTS — Boutons
+// ============================================
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s, background 0.2s, color 0.2s;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+
+  &:hover  { transform: translateY(-2px); }
+  &:active { transform: translateY(0); }
+}
+
+.btn-primary {
+  background: var(--sage);
+  color: #fff;
+  font-size: 15px;
+  padding: 14px 34px;
+
+  &:hover { background: var(--sage-dark); }
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--stone);
+  font-size: 14px;
+  padding: 13px 30px;
+  border: 1.5px solid var(--mist);
+
+  &:hover {
+    border-color: var(--sage-light);
+    color: var(--stone-dark);
+  }
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--sage-dark);
+  font-size: 14px;
+  padding: 11px 26px;
+  border: 1.5px solid var(--sage-light);
+
+  &:hover { background: var(--sage-pale); }
+}
+
+// Bouton de navigation (dans la nav)
+.btn-nav {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--sage);
+  color: #fff !important;
+  padding: 9px 20px;
+  border-radius: var(--radius-pill);
+  transition: background 0.2s, transform 0.15s !important;
+  letter-spacing: 0.01em !important;
+  text-transform: none !important;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--sage-dark) !important;
+    transform: translateY(-1px);
+  }
+}

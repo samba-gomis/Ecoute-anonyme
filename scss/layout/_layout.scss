@@ -1,0 +1,51 @@
+// ============================================
+//   LAYOUT — Conteneurs, sections, hero de page
+// ============================================
+
+// --- Conteneurs ---
+.container {
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.container-narrow {
+  width: 90%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+// --- Sections ---
+.section    { padding: 100px 0; }
+.section-sm { padding: 60px 0; }
+
+// --- Hero de page (pages intérieures) ---
+.page-hero {
+  padding-top: calc(var(--util-h) + var(--nav-h) + 80px);
+  padding-bottom: 80px;
+  background: linear-gradient(160deg, var(--sage-pale) 0%, var(--cream) 60%);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s;
+
+  .container-narrow {
+    text-align: center;
+  }
+}
+
+// --- Fil d'Ariane ---
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--mist);
+  margin-bottom: 32px;
+  justify-content: center;
+
+  a {
+    color: var(--sage);
+    transition: color 0.2s;
+
+    &:hover { color: var(--sage-dark); }
+  }
+}

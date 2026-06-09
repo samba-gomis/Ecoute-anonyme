@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Le projet — Écoute Anonyme</title>
   <meta name="description" content="Découvrez la vision et les valeurs d'Écoute Anonyme, un espace d'écoute bénévole et confidentiel." />
-  <link rel="icon" type="image" href="logo_du_site.png">
+  <link rel="icon" type="image" href="logo du site.png">
   <link rel="stylesheet" href="styles.css" />
   <style>
     /* ===== EN-TÊTE PAGE ===== */
@@ -264,7 +264,7 @@
   <!-- ===== NAVIGATION ===== -->
   <nav class="nav" id="navbar">
     <a href="index.html" class="nav-logo">
-      <img src="logo_du_site.png" alt="Logo Écoute Anonyme" style="height:38px;width:auto;object-fit:contain;" />
+      <img src="logo du site.png" alt="Logo Écoute Anonyme" style="height:38px;width:auto;object-fit:contain;" />
       Écoute Anonyme
     </a>
     <ul class="nav-links">
@@ -274,14 +274,11 @@
       <li><a href="confidentialite.html" data-i18n="nav_confidentialite">Confidentialité</a></li>
       <li><a href="chat.html" class="btn-nav" data-i18n="nav_cta">Commencer à écrire</a></li>
     </ul>
-
-    <!-- Hamburger mobile -->
     <button class="nav-hamburger" id="hamburger" aria-label="Ouvrir le menu" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
   </nav>
 
-  <!-- Panneau mobile -->
   <div class="nav-mobile-overlay" id="mobileOverlay" onclick="toggleMenu()"></div>
   <div class="nav-mobile-panel" id="mobilePanel">
     <a href="index.html" data-i18n="footer_home">Accueil</a>
@@ -291,13 +288,19 @@
     <div class="nav-mobile-divider"></div>
     <a href="chat.html" class="btn-mobile-cta" data-i18n="nav_cta">Commencer à écrire</a>
   </div>
-          <a href="index.html">Accueil</a>
+
+  <!-- ===== EN-TÊTE ===== -->
+  <section class="page-hero">
+    <div class="container-narrow">
+      <div class="page-hero-inner">
+        <div class="breadcrumb">
+          <a href="index.html" data-i18n="bc_home">Accueil</a>
           <span class="sep"></span>
-          <span>Le projet</span>
+          <span data-i18n="bc_project">Le projet</span>
         </div>
-        <span class="section-label">Présentation</span>
-        <h1 class="anim-fade-up">Un espace pour<br><em>ceux qui en ont besoin</em></h1>
-        <p class="lead anim-fade-up delay-2">
+        <span class="section-label" data-i18n="page_pres_label">Présentation</span>
+        <h1 class="anim-fade-up" data-i18n-html="page_pres_h1">Un espace pour<br><em>ceux qui en ont besoin</em></h1>
+        <p class="lead anim-fade-up delay-2" data-i18n="page_pres_lead">
           Écoute Anonyme est né d'une conviction simple : tout le monde mérite d'être entendu, sans conditions ni jugement.
         </p>
       </div>
@@ -312,15 +315,15 @@
       <div class="container">
         <div class="content-split">
           <div class="content-text">
-            <span class="section-label">Notre vision</span>
-            <h2>Un lieu sûr pour<br><em>s'exprimer librement</em></h2>
-            <p>
+            <span class="section-label" data-i18n="vis_label">Notre vision</span>
+            <h2 data-i18n-html="vis_title">Un lieu sûr pour<br><em>s'exprimer librement</em></h2>
+            <p data-i18n="vis_p1">
               Écoute Anonyme est un espace d'écoute, d'échange et de soutien, fondé sur le bénévolat, la confidentialité et le respect de chacun.
             </p>
-            <p>
+            <p data-i18n="vis_p2">
               Ce projet a pour objectif d'offrir à toute personne qui en ressent le besoin un lieu sûr où elle peut s'exprimer librement, sans jugement, et en toute discrétion.
             </p>
-            <p>
+            <p data-i18n="vis_p3">
               Les échanges se font exclusivement par écrit, via un système de chat, permettant à l'utilisateur de rester anonyme grâce à l'utilisation d'un pseudonyme.
             </p>
           </div>
@@ -329,22 +332,22 @@
           <div class="visual-card sage-bg">
             <div style="display:flex;flex-direction:column;gap:12px;">
               <div>
-                <div class="chat-bubble">
+                <div class="chat-bubble" data-i18n="demo_bubble1">
                   Je n'ose pas en parler autour de moi, j'ai peur d'être jugé·e…
                 </div>
-                <div class="chat-meta">Utilisateur · via pseudonyme</div>
+                <div class="chat-meta" data-i18n="demo_meta1">Utilisateur · via pseudonyme</div>
               </div>
               <div>
-                <div class="chat-bubble right">
+                <div class="chat-bubble right" data-i18n="demo_bubble2">
                   Je suis là pour vous écouter, sans aucun jugement. Vous pouvez me dire ce que vous ressentez.
                 </div>
-                <div class="chat-meta right">Bénévole</div>
+                <div class="chat-meta right" data-i18n="demo_meta2">Bénévole</div>
               </div>
               <div>
-                <div class="chat-bubble">
+                <div class="chat-bubble" data-i18n="demo_bubble3">
                   Merci… ça m'aide juste de savoir que quelqu'un est là.
                 </div>
-                <div class="chat-meta">Utilisateur</div>
+                <div class="chat-meta" data-i18n="demo_meta3">Utilisateur</div>
               </div>
             </div>
           </div>
@@ -357,36 +360,36 @@
       <div class="container">
         <div class="content-split reverse">
           <div class="content-text">
-            <span class="section-label">Notre rôle</span>
-            <h2>De l'écoute, pas<br><em>de la thérapie</em></h2>
-            <p>
+            <span class="section-label" data-i18n="role_label">Notre rôle</span>
+            <h2 data-i18n-html="role_title">De l'écoute, pas<br><em>de la thérapie</em></h2>
+            <p data-i18n="role_p1">
               Chacun est libre de partager uniquement les informations qu'il souhaite, dans un cadre bienveillant et respectueux.
             </p>
-            <p>
+            <p data-i18n-html="role_p2">
               Les personnes qui répondent sont des <strong>bénévoles engagés</strong> dans une démarche d'écoute, avec pour rôle d'accompagner, soutenir et offrir une présence attentive — sans jugement ni pression.
             </p>
 
-            <div class="alert-box">
+            <div class="alert-box" data-i18n-html="role_alert">
               <strong>Important :</strong> Écoute Anonyme n'est pas un service d'urgence, ni un dispositif médical ou thérapeutique. En cas de situation de danger ou d'urgence, contactez le <strong>15</strong>, <strong>17</strong>, <strong>18</strong> ou le <strong>3114</strong> (numéro national de prévention du suicide).
             </div>
           </div>
 
           <div class="visual-card">
-            <h4 style="font-family:var(--font-display);font-size:18px;font-weight:400;color:var(--stone-dark);margin-bottom:16px;">Ce que propose le service</h4>
+            <h4 style="font-family:var(--font-display);font-size:18px;font-weight:400;color:var(--stone-dark);margin-bottom:16px;" data-i18n="role_list_title">Ce que propose le service</h4>
             <ul class="styled-list">
-              <li>Un espace d'écoute bienveillant et sans jugement</li>
-              <li>Des échanges écrits avec un bénévole humain</li>
-              <li>Un anonymat total grâce à l'usage d'un pseudonyme</li>
-              <li>La liberté de partager ce que vous voulez, quand vous voulez</li>
-              <li>Un avis anonyme possible pour améliorer le service</li>
+              <li data-i18n="role_l1">Un espace d'écoute bienveillant et sans jugement</li>
+              <li data-i18n="role_l2">Des échanges écrits avec un bénévole humain</li>
+              <li data-i18n="role_l3">Un anonymat total grâce à l'usage d'un pseudonyme</li>
+              <li data-i18n="role_l4">La liberté de partager ce que vous voulez, quand vous voulez</li>
+              <li data-i18n="role_l5">Un avis anonyme possible pour améliorer le service</li>
             </ul>
 
             <div style="margin-top:24px;padding-top:24px;border-top:1px solid rgba(139,175,138,0.18);">
-              <h4 style="font-family:var(--font-display);font-size:18px;font-weight:400;color:var(--stone-dark);margin-bottom:16px;">Ce que le service n'est pas</h4>
+              <h4 style="font-family:var(--font-display);font-size:18px;font-weight:400;color:var(--stone-dark);margin-bottom:16px;" data-i18n="role_nl_title">Ce que le service n'est pas</h4>
               <ul class="styled-list">
-                <li style="color:var(--stone);">Un service d'urgence psychologique</li>
-                <li style="color:var(--stone);">Un dispositif médical ou thérapeutique</li>
-                <li style="color:var(--stone);">Un remplacement à un professionnel de santé</li>
+                <li style="color:var(--stone);" data-i18n="role_nl1">Un service d'urgence psychologique</li>
+                <li style="color:var(--stone);" data-i18n="role_nl2">Un dispositif médical ou thérapeutique</li>
+                <li style="color:var(--stone);" data-i18n="role_nl3">Un remplacement à un professionnel de santé</li>
               </ul>
             </div>
           </div>
@@ -399,19 +402,19 @@
       <div class="container">
         <div class="content-split">
           <div class="content-text">
-            <span class="section-label">Confidentialité</span>
-            <h2>Un haut niveau de<br><em>protection des données</em></h2>
-            <p>
+            <span class="section-label" data-i18n="conf2_label">Confidentialité</span>
+            <h2 data-i18n-html="conf2_title">Un haut niveau de<br><em>protection des données</em></h2>
+            <p data-i18n="conf2_p1">
               Écoute Anonyme garantit un niveau de confidentialité exceptionnel. Aucune donnée personnelle n'est exigée pour accéder au service.
             </p>
-            <p>
+            <p data-i18n="conf2_p2">
               Les conversations ne sont pas exploitées à des fins commerciales. L'utilisateur garde le contrôle total sur ses échanges, avec la possibilité de les supprimer définitivement ou de les conserver.
             </p>
-            <p>
+            <p data-i18n="conf2_p3">
               À la fin de chaque échange, un avis anonyme peut être laissé pour contribuer à l'amélioration du service — sans jamais être relié à votre identité ou à votre conversation.
             </p>
             <a href="confidentialite.html" class="btn btn-outline" style="margin-top:20px;">
-              Lire la charte complète
+              <span data-i18n="conf2_btn">Lire la charte complète</span>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <path d="M2 7h10M7.5 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
@@ -423,29 +426,29 @@
               <div style="display:flex;align-items:center;gap:14px;">
                 <div style="width:40px;height:40px;background:rgba(196,168,130,0.3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;"></div>
                 <div>
-                  <div style="font-size:14px;font-weight:500;color:var(--stone-dark);">Aucune donnée personnelle</div>
-                  <div style="font-size:13px;color:var(--stone);">Pas de nom, d'email ou de téléphone requis</div>
+                  <div style="font-size:14px;font-weight:500;color:var(--stone-dark);" data-i18n="vis_d1_title">Aucune donnée personnelle</div>
+                  <div style="font-size:13px;color:var(--stone);" data-i18n="vis_d1_text">Pas de nom, d'email ou de téléphone requis</div>
                 </div>
               </div>
               <div style="display:flex;align-items:center;gap:14px;">
                 <div style="width:40px;height:40px;background:rgba(196,168,130,0.3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;"></div>
                 <div>
-                  <div style="font-size:14px;font-weight:500;color:var(--stone-dark);">Suppression à la demande</div>
-                  <div style="font-size:13px;color:var(--stone);">Vos données effacées immédiatement sur demande</div>
+                  <div style="font-size:14px;font-weight:500;color:var(--stone-dark);" data-i18n="vis_d2_title">Suppression à la demande</div>
+                  <div style="font-size:13px;color:var(--stone);" data-i18n="vis_d2_text">Vos données effacées immédiatement sur demande</div>
                 </div>
               </div>
               <div style="display:flex;align-items:center;gap:14px;">
                 <div style="width:40px;height:40px;background:rgba(196,168,130,0.3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;"></div>
                 <div>
-                  <div style="font-size:14px;font-weight:500;color:var(--stone-dark);">Échanges sécurisés</div>
-                  <div style="font-size:13px;color:var(--stone);">Protection technique contre tout accès non autorisé</div>
+                  <div style="font-size:14px;font-weight:500;color:var(--stone-dark);" data-i18n="vis_d3_title">Échanges sécurisés</div>
+                  <div style="font-size:13px;color:var(--stone);" data-i18n="vis_d3_text">Protection technique contre tout accès non autorisé</div>
                 </div>
               </div>
               <div style="display:flex;align-items:center;gap:14px;">
                 <div style="width:40px;height:40px;background:rgba(196,168,130,0.3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;"></div>
                 <div>
-                  <div style="font-size:14px;font-weight:500;color:var(--stone-dark);">Conformité RGPD</div>
-                  <div style="font-size:13px;color:var(--stone);">Droits d'accès, de rectification et d'effacement garantis</div>
+                  <div style="font-size:14px;font-weight:500;color:var(--stone-dark);" data-i18n="vis_d4_title">Conformité RGPD</div>
+                  <div style="font-size:13px;color:var(--stone);" data-i18n="vis_d4_text">Droits d'accès, de rectification et d'effacement garantis</div>
                 </div>
               </div>
             </div>
@@ -457,14 +460,14 @@
     <!-- Bloc 4 : Soutenir -->
     <div class="support-section">
       <div class="support-inner">
-        <span class="section-label">Soutenir le projet</span>
-        <h2>Gratuit, mais pas <em>sans effort</em></h2>
-        <p>
+        <span class="section-label" data-i18n="sout2_label">Soutenir le projet</span>
+        <h2 data-i18n-html="sout2_title">Gratuit, mais pas <em>sans effort</em></h2>
+        <p data-i18n="sout2_p">
           Le service est entièrement gratuit. Une option facultative permet à ceux qui le souhaitent de contribuer à la pérennité du projet — sans aucune obligation ni contrepartie.
         </p>
         <div class="support-options">
-          <a href="chat.html" class="btn btn-primary">Faire un don</a>
-          <a href="#" class="btn btn-secondary">Devenir bénévole</a>
+          <a href="soutenir.html" class="btn btn-primary" data-i18n="sout2_btn1">Faire un don</a>
+          <a href="benevoles.html" class="btn btn-secondary" data-i18n="sout2_btn2">Devenir bénévole</a>
         </div>
       </div>
     </div>
@@ -474,9 +477,9 @@
   <!-- ===== CTA FINAL ===== -->
   <section class="page-cta">
     <div class="container-narrow">
-      <h2>Vous avez besoin<br>d'<em>être écouté·e</em> ?</h2>
-      <p>Rejoignez la conversation, en toute discrétion et sans engagement.</p>
-      <a href="chat.html" class="btn btn-primary">Commencer maintenant</a>
+      <h2 data-i18n-html="pres_cta_h2">Vous avez besoin<br>d'<em>être écouté·e</em> ?</h2>
+      <p data-i18n="pres_cta_p">Rejoignez la conversation, en toute discrétion et sans engagement.</p>
+      <a href="chat.html" class="btn btn-primary" data-i18n="pres_cta_btn">Commencer maintenant</a>
     </div>
   </section>
 
@@ -485,38 +488,35 @@
     <div class="footer-inner">
       <div class="footer-col">
         <a href="index.html" style="display:flex;align-items:center;gap:10px;margin-bottom:12px;text-decoration:none;">
-          <img src="logo_du_site.png" alt="Logo Écoute Anonyme" style="height:36px;width:auto;filter:brightness(0) invert(1);opacity:0.85;" />
+          <img src="logo du site.png" alt="Logo Écoute Anonyme" style="height:36px;width:auto;filter:brightness(0) invert(1);opacity:0.85;" />
           <span class="footer-logo" style="margin-bottom:0;">Écoute Anonyme</span>
         </a>
-        <p class="footer-desc">
-          Un espace d'écoute bénévole, gratuit et confidentiel, ouvert à tous ceux qui en ressentent le besoin.
-        </p>
+        <p class="footer-desc" data-i18n="footer_desc">Un espace d'écoute bénévole, gratuit et confidentiel.</p>
       </div>
       <div class="footer-col">
         <h4 data-i18n="footer_nav">Navigation</h4>
         <ul>
-          <li><a href="index.html">Accueil</a></li>
-          <li><a href="presentation.html">Le projet</a></li>
-          <li><a href="benevoles.html">Bénévoles</a></li>
-      <li><a href="confidentialite.html">Confidentialité</a></li>
-          <li><a href="#">Commencer</a></li>
+          <li><a href="index.html" data-i18n="footer_home">Accueil</a></li>
+          <li><a href="presentation.html" data-i18n="nav_projet">Le projet</a></li>
+          <li><a href="benevoles.html" data-i18n="nav_benevoles">Bénévoles</a></li>
+          <li><a href="confidentialite.html" data-i18n="nav_confidentialite">Confidentialité</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4 data-i18n="footer_info">Informations</h4>
         <ul>
-          <li><a href="benevoles.html">Devenir bénévole</a></li>
-          <li><a href="#">Soutenir le projet</a></li>
-          <li><a href="#">Contact</a></li>
-          <li><a href="#">Urgences : 3114</a></li>
+          <li><a href="benevoles.html" data-i18n="footer_volunteer">Devenir bénévole</a></li>
+          <li><a href="soutenir.html" data-i18n="footer_support">Soutenir le projet</a></li>
+          <li><a href="mailto:ecoute.anonyme26@gmail.com" data-i18n="footer_contact">Contact</a></li>
+          <li><a href="tel:3114" data-i18n="footer_emergency">Urgences : 3114</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2025 Écoute Anonyme · Tous droits réservés</span>
+      <span data-i18n="footer_copy">© 2025 Écoute Anonyme · Tous droits réservés</span>
       <span class="footer-badge">
-        <span style="width:6px;height:6px;border-radius:50%;background:var(--sage);display:inline-block;"></span>
-        Service disponible
+        <span class="status-dot-sm"></span>
+        <span data-i18n="footer_available">Service disponible</span>
       </span>
     </div>
   </footer>

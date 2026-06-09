@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Charte de confidentialité — Écoute Anonyme</title>
   <meta name="description" content="Protection des données et charte de confidentialité d'Écoute Anonyme, conformément au RGPD." />
-  <link rel="icon" type="image" href="logo_du_site.png">
+  <link rel="icon" type="image" href="logo du site.png">
   <link rel="stylesheet" href="styles.css" />
   <style>
     /* ===== EN-TÊTE ===== */
@@ -288,7 +288,7 @@
       font-size: 16px;
     }
 
-    /* Note limite -->
+    /* Note limite */
     .limit-note {
       background: var(--warm-pale);
       border: 1px solid rgba(196,168,130,0.3);
@@ -352,45 +352,45 @@
   <!-- ===== NAVIGATION ===== -->
   <nav class="nav" id="navbar">
     <a href="index.html" class="nav-logo">
-      <img src="logo_du_site.png" alt="Logo Écoute Anonyme" style="height:38px;width:auto;object-fit:contain;" />
+      <img src="logo du site.png" alt="Logo Écoute Anonyme" style="height:38px;width:auto;object-fit:contain;" />
       Écoute Anonyme
     </a>
     <ul class="nav-links">
       <li><a href="presentation.html" data-i18n="nav_projet">Le projet</a></li>
-      <li><a href="index.html#comment">Comment ça marche</a></li>
+      <li><a href="index.html#comment" data-i18n="nav_comment">Comment ça marche</a></li>
       <li><a href="confidentialite.html" class="active" data-i18n="nav_confidentialite">Confidentialité</a></li>
       <li><a href="chat.html" class="btn-nav" data-i18n="nav_cta">Commencer à écrire</a></li>
     </ul>
-
-    <!-- Hamburger mobile -->
     <button class="nav-hamburger" id="hamburger" aria-label="Ouvrir le menu" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
   </nav>
 
-  <!-- Panneau mobile -->
   <div class="nav-mobile-overlay" id="mobileOverlay" onclick="toggleMenu()"></div>
   <div class="nav-mobile-panel" id="mobilePanel">
-    <a href="index.html">Accueil</a>
-    <a href="presentation.html">Le projet</a>
-    <a href="index.html#comment">Comment ça marche</a>
-    <a href="confidentialite.html" class="active">Confidentialité</a>
+    <a href="index.html" data-i18n="footer_home">Accueil</a>
+    <a href="presentation.html" data-i18n="nav_projet">Le projet</a>
+    <a href="index.html#comment" data-i18n="nav_comment">Comment ça marche</a>
+    <a href="confidentialite.html" class="active" data-i18n="nav_confidentialite">Confidentialité</a>
     <div class="nav-mobile-divider"></div>
-    <a href="chat.html" class="btn-mobile-cta">Commencer à écrire</a>
+    <a href="chat.html" class="btn-mobile-cta" data-i18n="nav_cta">Commencer à écrire</a>
   </div>
+
+  <!-- ===== EN-TÊTE ===== -->
+  <section class="page-hero">
     <div class="container-narrow">
       <div class="breadcrumb">
-        <a href="index.html">Accueil</a>
+        <a href="index.html" data-i18n="bc_home">Accueil</a>
         <span class="sep"></span>
-        <span>Confidentialité</span>
+        <span data-i18n="bc_privacy">Confidentialité</span>
       </div>
-      <span class="section-label">Protection des données</span>
-      <h1 class="anim-fade-up">Charte de <em>confidentialité</em></h1>
-      <p class="lead anim-fade-up delay-2">
+      <span class="section-label" data-i18n="page_conf_label">Protection des données</span>
+      <h1 class="anim-fade-up" data-i18n-html="page_conf_h1">Charte de <em>confidentialité</em></h1>
+      <p class="lead anim-fade-up delay-2" data-i18n="page_conf_lead">
         Écoute Anonyme s'engage à respecter la réglementation en vigueur, notamment le Règlement Général sur la Protection des Données (RGPD).
       </p>
-      <span class="last-updated">
-         Conforme RGPD · Dernière mise à jour : 2025
+      <span class="last-updated" data-i18n="conf_updated">
+        Conforme RGPD · Dernière mise à jour : 2025
       </span>
     </div>
   </section>
@@ -401,16 +401,16 @@
 
       <!-- Sidebar -->
       <aside class="policy-nav">
-        <p class="policy-nav-title">Sommaire</p>
+        <p class="policy-nav-title" data-i18n="conf_toc">Sommaire</p>
         <ul>
-          <li><a href="#article-1"><span class="nav-num">1.</span> Données collectées</a></li>
-          <li><a href="#article-2"><span class="nav-num">2.</span> Finalité</a></li>
-          <li><a href="#article-3"><span class="nav-num">3.</span> Durée de conservation</a></li>
-          <li><a href="#article-4"><span class="nav-num">4.</span> Sécurité</a></li>
-          <li><a href="#article-5"><span class="nav-num">5.</span> Partage des données</a></li>
-          <li><a href="#article-6"><span class="nav-num">6.</span> Vos droits</a></li>
-          <li><a href="#article-7"><span class="nav-num">7.</span> Limite & anonymat</a></li>
-          <li><a href="#article-8"><span class="nav-num">8.</span> Évolution</a></li>
+          <li><a href="#article-1"><span class="nav-num">1.</span> <span data-i18n="conf_nav1">Données collectées</span></a></li>
+          <li><a href="#article-2"><span class="nav-num">2.</span> <span data-i18n="conf_nav2">Finalité</span></a></li>
+          <li><a href="#article-3"><span class="nav-num">3.</span> <span data-i18n="conf_nav3">Durée de conservation</span></a></li>
+          <li><a href="#article-4"><span class="nav-num">4.</span> <span data-i18n="conf_nav4">Sécurité</span></a></li>
+          <li><a href="#article-5"><span class="nav-num">5.</span> <span data-i18n="conf_nav5">Partage des données</span></a></li>
+          <li><a href="#article-6"><span class="nav-num">6.</span> <span data-i18n="conf_nav6">Vos droits</span></a></li>
+          <li><a href="#article-7"><span class="nav-num">7.</span> <span data-i18n="conf_nav7">Limite &amp; anonymat</span></a></li>
+          <li><a href="#article-8"><span class="nav-num">8.</span> <span data-i18n="conf_nav8">Évolution</span></a></li>
         </ul>
       </aside>
 
@@ -419,23 +419,23 @@
 
         <!-- Résumé -->
         <div class="quick-summary">
-          <h2> En résumé</h2>
+          <h2 data-i18n="conf_summary_title"> En résumé</h2>
           <div class="summary-grid">
             <div class="summary-item">
               <span class="icon"></span>
-              <p><strong>Aucune donnée obligatoire</strong>Pas de nom, d'email ni de téléphone requis.</p>
+              <p><strong data-i18n="conf_sum1_title">Aucune donnée obligatoire</strong><span data-i18n="conf_sum1_text">Pas de nom, d'email ni de téléphone requis.</span></p>
             </div>
             <div class="summary-item">
               <span class="icon"></span>
-              <p><strong>Suppression immédiate</strong>Vos conversations effacées à tout moment sur demande.</p>
+              <p><strong data-i18n="conf_sum2_title">Suppression immédiate</strong><span data-i18n="conf_sum2_text">Vos conversations effacées à tout moment sur demande.</span></p>
             </div>
             <div class="summary-item">
               <span class="icon"></span>
-              <p><strong>Zéro vente de données</strong>Aucune donnée vendue, cédée ou partagée avec des tiers.</p>
+              <p><strong data-i18n="conf_sum3_title">Zéro vente de données</strong><span data-i18n="conf_sum3_text">Aucune donnée vendue, cédée ou partagée avec des tiers.</span></p>
             </div>
             <div class="summary-item">
               <span class="icon"></span>
-              <p><strong>Conforme RGPD</strong>Vos droits d'accès, rectification et effacement garantis.</p>
+              <p><strong data-i18n="conf_sum4_title">Conforme RGPD</strong><span data-i18n="conf_sum4_text">Vos droits d'accès, rectification et effacement garantis.</span></p>
             </div>
           </div>
         </div>
@@ -444,45 +444,24 @@
         <div class="policy-section" id="article-1">
           <div class="section-header">
             <span class="section-number">1</span>
-            <h2>Données collectées</h2>
+            <h2 data-i18n="conf_art1_title">Données collectées</h2>
           </div>
-          <p>
+          <p data-i18n-html="conf_art1_p1">
             Le service est conçu pour minimiser au maximum la collecte de données personnelles. Notre approche repose sur le principe de <em>privacy by design</em> : nous ne collectons que ce qui est strictement nécessaire au bon fonctionnement de l'écoute.
           </p>
-          <p><strong style="color:var(--stone-dark)">Ce que nous ne demandons jamais :</strong></p>
+          <p><strong style="color:var(--stone-dark)" data-i18n="conf_never">Ce que nous ne demandons jamais :</strong></p>
           <div class="data-list">
-            <div class="data-list-item">
-              <span class="check cross"></span>
-              Nom ou prénom réel
-            </div>
-            <div class="data-list-item">
-              <span class="check cross"></span>
-              Adresse email
-            </div>
-            <div class="data-list-item">
-              <span class="check cross"></span>
-              Numéro de téléphone
-            </div>
-            <div class="data-list-item">
-              <span class="check cross"></span>
-              Adresse postale ou toute donnée de localisation
-            </div>
+            <div class="data-list-item"><span class="check cross"></span> Nom ou prénom réel</div>
+            <div class="data-list-item"><span class="check cross"></span> Adresse email</div>
+            <div class="data-list-item"><span class="check cross"></span> Numéro de téléphone</div>
+            <div class="data-list-item"><span class="check cross"></span> Adresse postale ou toute donnée de localisation</div>
           </div>
 
-          <p style="margin-top:20px"><strong style="color:var(--stone-dark)">Les seules données susceptibles d'être traitées :</strong></p>
+          <p style="margin-top:20px"><strong style="color:var(--stone-dark)" data-i18n="conf_only">Les seules données susceptibles d'être traitées :</strong></p>
           <div class="data-list">
-            <div class="data-list-item">
-              <span class="check"></span>
-              Pseudonyme librement choisi par l'utilisateur
-            </div>
-            <div class="data-list-item">
-              <span class="check"></span>
-              Contenu des échanges (uniquement si l'utilisateur choisit de les conserver)
-            </div>
-            <div class="data-list-item">
-              <span class="check"></span>
-              Avis anonymes laissés volontairement en fin d'échange
-            </div>
+            <div class="data-list-item"><span class="check"></span> Pseudonyme librement choisi par l'utilisateur</div>
+            <div class="data-list-item"><span class="check"></span> Contenu des échanges (uniquement si l'utilisateur choisit de les conserver)</div>
+            <div class="data-list-item"><span class="check"></span> Avis anonymes laissés volontairement en fin d'échange</div>
           </div>
         </div>
 
@@ -490,20 +469,14 @@
         <div class="policy-section" id="article-2">
           <div class="section-header">
             <span class="section-number">2</span>
-            <h2>Finalité des données</h2>
+            <h2 data-i18n="conf_art2_title">Finalité des données</h2>
           </div>
-          <p>
+          <p data-i18n-html="conf_art2_p1">
             Les données collectées sont utilisées <strong>exclusivement</strong> dans le cadre du service d'écoute. Aucune exploitation à des fins commerciales, publicitaires ou analytiques n'est réalisée.
           </p>
           <div class="data-list">
-            <div class="data-list-item">
-              <span class="check"></span>
-              Permettre les échanges entre utilisateurs et bénévoles
-            </div>
-            <div class="data-list-item">
-              <span class="check"></span>
-              Améliorer la qualité du service grâce aux avis anonymes
-            </div>
+            <div class="data-list-item"><span class="check"></span> Permettre les échanges entre utilisateurs et bénévoles</div>
+            <div class="data-list-item"><span class="check"></span> Améliorer la qualité du service grâce aux avis anonymes</div>
           </div>
         </div>
 
@@ -511,24 +484,15 @@
         <div class="policy-section" id="article-3">
           <div class="section-header">
             <span class="section-number">3</span>
-            <h2>Durée de conservation</h2>
+            <h2 data-i18n="conf_art3_title">Durée de conservation</h2>
           </div>
-          <p>
+          <p data-i18n="conf_art3_p1">
             Vous avez un contrôle total sur la durée de conservation de vos données. Aucune rétention automatique prolongée n'est effectuée sans votre accord.
           </p>
           <div class="data-list">
-            <div class="data-list-item">
-              <span class="check"></span>
-              Conversations supprimées immédiatement si l'utilisateur le choisit
-            </div>
-            <div class="data-list-item">
-              <span class="check"></span>
-              Si conservées, accessibles uniquement aux personnes concernées
-            </div>
-            <div class="data-list-item">
-              <span class="check"></span>
-              Suppression totale possible à tout moment sur simple demande
-            </div>
+            <div class="data-list-item"><span class="check"></span> Conversations supprimées immédiatement si l'utilisateur le choisit</div>
+            <div class="data-list-item"><span class="check"></span> Si conservées, accessibles uniquement aux personnes concernées</div>
+            <div class="data-list-item"><span class="check"></span> Suppression totale possible à tout moment sur simple demande</div>
           </div>
         </div>
 
@@ -536,24 +500,15 @@
         <div class="policy-section" id="article-4">
           <div class="section-header">
             <span class="section-number">4</span>
-            <h2>Sécurité</h2>
+            <h2 data-i18n="conf_art4_title">Sécurité</h2>
           </div>
-          <p>
+          <p data-i18n="conf_art4_p1">
             Des mesures techniques appropriées sont mises en place pour protéger vos données contre tout accès, modification, divulgation ou destruction non autorisés.
           </p>
           <div class="data-list">
-            <div class="data-list-item">
-              <span class="check"></span>
-              Sécurisation des échanges (chiffrement en transit)
-            </div>
-            <div class="data-list-item">
-              <span class="check"></span>
-              Protection des données contre tout accès non autorisé
-            </div>
-            <div class="data-list-item">
-              <span class="check"></span>
-              Révision régulière des mesures de sécurité
-            </div>
+            <div class="data-list-item"><span class="check"></span> Sécurisation des échanges (chiffrement en transit)</div>
+            <div class="data-list-item"><span class="check"></span> Protection des données contre tout accès non autorisé</div>
+            <div class="data-list-item"><span class="check"></span> Révision régulière des mesures de sécurité</div>
           </div>
         </div>
 
@@ -561,24 +516,15 @@
         <div class="policy-section" id="article-5">
           <div class="section-header">
             <span class="section-number">5</span>
-            <h2>Partage des données</h2>
+            <h2 data-i18n="conf_art5_title">Partage des données</h2>
           </div>
-          <p>
+          <p data-i18n="conf_art5_p1">
             Écoute Anonyme ne partage, ne vend et ne cède aucune donnée personnelle à des tiers, quelles que soient les circonstances.
           </p>
           <div class="data-list">
-            <div class="data-list-item">
-              <span class="check cross"></span>
-              Données jamais vendues à des tiers
-            </div>
-            <div class="data-list-item">
-              <span class="check cross"></span>
-              Données jamais cédées à des partenaires commerciaux
-            </div>
-            <div class="data-list-item">
-              <span class="check cross"></span>
-              Données jamais utilisées à des fins publicitaires
-            </div>
+            <div class="data-list-item"><span class="check cross"></span> Données jamais vendues à des tiers</div>
+            <div class="data-list-item"><span class="check cross"></span> Données jamais cédées à des partenaires commerciaux</div>
+            <div class="data-list-item"><span class="check cross"></span> Données jamais utilisées à des fins publicitaires</div>
           </div>
         </div>
 
@@ -586,30 +532,30 @@
         <div class="policy-section" id="article-6">
           <div class="section-header">
             <span class="section-number">6</span>
-            <h2>Vos droits</h2>
+            <h2 data-i18n="conf_art6_title">Vos droits</h2>
           </div>
-          <p>
+          <p data-i18n="conf_art6_p1">
             Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez des droits suivants sur vos données personnelles :
           </p>
           <div class="rights-grid">
             <div class="right-badge">
               <span class="icon"></span>
-              Droit d'accès
+              <span data-i18n="conf_right1">Droit d'accès</span>
             </div>
             <div class="right-badge">
               <span class="icon"></span>
-              Droit de rectification
+              <span data-i18n="conf_right2">Droit de rectification</span>
             </div>
             <div class="right-badge">
               <span class="icon"></span>
-              Droit à l'effacement
+              <span data-i18n="conf_right3">Droit à l'effacement</span>
             </div>
             <div class="right-badge">
               <span class="icon"></span>
-              Droit à la limitation
+              <span data-i18n="conf_right4">Droit à la limitation</span>
             </div>
           </div>
-          <p style="margin-top:16px">
+          <p style="margin-top:16px" data-i18n="conf_art6_p2">
             Ces droits peuvent être exercés à tout moment, dans la limite du fonctionnement anonyme du service.
           </p>
         </div>
@@ -618,12 +564,12 @@
         <div class="policy-section" id="article-7">
           <div class="section-header">
             <span class="section-number">7</span>
-            <h2>Limite liée à l'anonymat</h2>
+            <h2 data-i18n="conf_art7_title">Limite liée à l'anonymat</h2>
           </div>
-          <p>
+          <p data-i18n="conf_art7_p1">
             En raison du fonctionnement intrinsèquement anonyme du service, certaines demandes liées à l'exercice de vos droits peuvent présenter des contraintes pratiques.
           </p>
-          <div class="limit-note">
+          <div class="limit-note" data-i18n-html="conf_limit">
             <strong>Note importante :</strong> Certaines demandes — par exemple la récupération de données sans identifiant ou pseudonyme — peuvent ne pas être techniquement réalisables. Ce fonctionnement est une conséquence directe de notre engagement envers votre anonymat.
           </div>
         </div>
@@ -632,21 +578,21 @@
         <div class="policy-section" id="article-8">
           <div class="section-header">
             <span class="section-number">8</span>
-            <h2>Évolution de la politique</h2>
+            <h2 data-i18n="conf_art8_title">Évolution de la politique</h2>
           </div>
-          <p>
+          <p data-i18n="conf_art8_p1">
             La présente politique de confidentialité peut être amenée à évoluer, notamment pour rester conforme aux obligations légales en vigueur ou pour intégrer de nouvelles bonnes pratiques.
           </p>
-          <p>
+          <p data-i18n="conf_art8_p2">
             En cas de modification substantielle, les utilisateurs actifs seront informés par un message visible lors de leur prochaine connexion. La date de dernière mise à jour est toujours indiquée en haut de ce document.
           </p>
         </div>
 
         <!-- Contact -->
         <div class="contact-cta">
-          <h3>Une question sur vos données ?</h3>
-          <p>Nous répondons à toute demande liée à la protection de vos données dans les meilleurs délais.</p>
-          <a href="#" class="btn btn-outline">Nous contacter</a>
+          <h3 data-i18n="conf_contact_h3">Une question sur vos données ?</h3>
+          <p data-i18n="conf_contact_p">Nous répondons à toute demande liée à la protection de vos données dans les meilleurs délais.</p>
+          <a href="mailto:ecoute.anonyme26@gmail.com" class="btn btn-outline" data-i18n="conf_contact_btn">Nous contacter</a>
         </div>
 
       </div>
@@ -658,55 +604,40 @@
     <div class="footer-inner">
       <div class="footer-col">
         <a href="index.html" style="display:flex;align-items:center;gap:10px;margin-bottom:12px;text-decoration:none;">
-          <img src="logo_du_site.png" alt="Logo Écoute Anonyme" style="height:36px;width:auto;filter:brightness(0) invert(1);opacity:0.85;" />
+          <img src="logo du site.png" alt="Logo Écoute Anonyme" style="height:36px;width:auto;filter:brightness(0) invert(1);opacity:0.85;" />
           <span class="footer-logo" style="margin-bottom:0;">Écoute Anonyme</span>
         </a>
-        <p class="footer-desc">
-          Un espace d'écoute bénévole, gratuit et confidentiel, ouvert à tous ceux qui en ressentent le besoin.
-        </p>
+        <p class="footer-desc" data-i18n="footer_desc">Un espace d'écoute bénévole, gratuit et confidentiel.</p>
       </div>
       <div class="footer-col">
         <h4 data-i18n="footer_nav">Navigation</h4>
         <ul>
-          <li><a href="index.html">Accueil</a></li>
-          <li><a href="presentation.html">Le projet</a></li>
+          <li><a href="index.html" data-i18n="footer_home">Accueil</a></li>
+          <li><a href="presentation.html" data-i18n="nav_projet">Le projet</a></li>
           <li><a href="benevoles.html" data-i18n="nav_benevoles">Bénévoles</a></li>
-      <li><a href="confidentialite.html">Confidentialité</a></li>
-          <li><a href="#">Commencer</a></li>
+          <li><a href="confidentialite.html" data-i18n="nav_confidentialite">Confidentialité</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4 data-i18n="footer_info">Informations</h4>
         <ul>
-          <li><a href="benevoles.html">Devenir bénévole</a></li>
-          <li><a href="#">Soutenir le projet</a></li>
-          <li><a href="#">Contact</a></li>
-          <li><a href="#">Urgences : 3114</a></li>
+          <li><a href="benevoles.html" data-i18n="footer_volunteer">Devenir bénévole</a></li>
+          <li><a href="soutenir.html" data-i18n="footer_support">Soutenir le projet</a></li>
+          <li><a href="mailto:ecoute.anonyme26@gmail.com" data-i18n="footer_contact">Contact</a></li>
+          <li><a href="tel:3114" data-i18n="footer_emergency">Urgences : 3114</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2025 Écoute Anonyme · Tous droits réservés</span>
+      <span data-i18n="footer_copy">© 2025 Écoute Anonyme · Tous droits réservés</span>
       <span class="footer-badge">
-        <span style="width:6px;height:6px;border-radius:50%;background:var(--sage);display:inline-block;"></span>
-        Service disponible
+        <span class="status-dot-sm"></span>
+        <span data-i18n="footer_available">Service disponible</span>
       </span>
     </div>
   </footer>
 
   <script>
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 30);
-    });
-
-    function toggleMenu() {
-      const open = document.getElementById('mobilePanel').classList.toggle('open');
-      document.getElementById('mobileOverlay').classList.toggle('open', open);
-      document.getElementById('hamburger').classList.toggle('open', open);
-      document.body.style.overflow = open ? 'hidden' : '';
-    }
-
     // Active link in sidebar on scroll
     const sections = document.querySelectorAll('.policy-section');
     const navLinks = document.querySelectorAll('.policy-nav a');

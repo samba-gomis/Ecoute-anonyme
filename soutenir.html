@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Soutenir le projet — Écoute Anonyme</title>
-  <link rel="icon" type="image" href="logo_du_site.png">
+  <link rel="icon" type="image" href="logo du site.png">
   <link rel="stylesheet" href="styles.css" />
   <style>
     .page-hero { padding-top: calc(var(--util-h) + var(--nav-h) + 80px); padding-bottom: 80px; background: linear-gradient(155deg, var(--warm-pale) 0%, var(--cream) 55%); border-bottom: 1px solid rgba(196,168,130,0.2); text-align: center; }
@@ -129,13 +129,13 @@
   <!-- NAV -->
   <nav class="nav" id="navbar">
     <a href="index.html" class="nav-logo">
-      <img src="logo_du_site.png" alt="Écoute Anonyme" />
+      <img src="logo du site.png" alt="Écoute Anonyme" />
       Écoute Anonyme
     </a>
     <ul class="nav-links">
-      <li><a href="presentation.html" data-i18n="nav_projet" data-i18n="nav_projet">Le projet</a></li>
-      <li><a href="benevoles.html" data-i18n="nav_benevoles" data-i18n="nav_benevoles">Bénévoles</a></li>
-      <li><a href="confidentialite.html" data-i18n="nav_confidentialite" data-i18n="nav_confidentialite">Confidentialité</a></li>
+      <li><a href="presentation.html" data-i18n="nav_projet">Le projet</a></li>
+      <li><a href="benevoles.html" data-i18n="nav_benevoles">Bénévoles</a></li>
+      <li><a href="confidentialite.html" data-i18n="nav_confidentialite">Confidentialité</a></li>
       <li><a href="chat.html" class="btn-nav" data-i18n="nav_cta">Commencer</a></li>
     </ul>
     <button class="nav-hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
@@ -156,13 +156,13 @@
   <section class="page-hero">
     <div class="container-narrow">
       <div class="breadcrumb">
-        <a href="index.html">Accueil</a>
+        <a href="index.html" data-i18n="bc_home">Accueil</a>
         <span>›</span>
-        <span>Soutenir</span>
+        <span data-i18n="bc_support">Soutenir</span>
       </div>
-      <span class="section-label">Faire un don</span>
-      <h1 class="anim-fade-up">Soutenir <em>Écoute Anonyme</em></h1>
-      <p class="lead anim-fade-up delay-2">
+      <span class="section-label" data-i18n="page_sout_label">Faire un don</span>
+      <h1 class="anim-fade-up" data-i18n-html="page_sout_h1">Soutenir <em>Écoute Anonyme</em></h1>
+      <p class="lead anim-fade-up delay-2" data-i18n="page_sout_lead">
         Le service est 100 % gratuit. Votre soutien aide à couvrir les frais techniques et à pérenniser l'initiative. Aucune obligation.
       </p>
     </div>
@@ -175,7 +175,7 @@
 
         <!-- Formulaire gauche -->
         <div>
-          <span class="section-label">Choisir un montant</span>
+          <span class="section-label" data-i18n="don_amount_label">Choisir un montant</span>
           <div class="amount-selector" id="amount-selector">
             <button class="amt-btn" onclick="pickAmt(this, 2)">2€</button>
             <button class="amt-btn selected" onclick="pickAmt(this, 5)">5€</button>
@@ -183,17 +183,17 @@
             <button class="amt-btn" onclick="pickAmt(this, 20)">20€</button>
             <button class="amt-btn" onclick="pickAmt(this, 50)">50€</button>
           </div>
-          <input type="number" class="custom-amount" id="custom-input" placeholder="Montant personnalisé (€)" min="1" oninput="customAmt(this.value)" />
+          <input type="number" class="custom-amount" id="custom-input" data-i18n-placeholder="don_custom_pl" placeholder="Montant personnalisé (€)" min="1" oninput="customAmt(this.value)" />
 
-          <span class="section-label">Méthode de paiement</span>
+          <span class="section-label" data-i18n="don_method_label">Méthode de paiement</span>
           <div class="pay-methods">
             <label class="pay-method" onclick="pickMethod('card')">
               <div class="pay-method-icon" style="color:#1A56DB;letter-spacing:0;">
                 <svg width="28" height="18" viewBox="0 0 28 18" fill="none"><rect x="0.5" y="0.5" width="27" height="17" rx="2.5" fill="white" stroke="#E0E0E0"/><rect y="4" width="28" height="5" fill="#1A56DB"/><rect x="3" y="12" width="7" height="2.5" rx="0.5" fill="#D0D0D0"/></svg>
               </div>
               <div class="pay-method-info">
-                <h5>Carte bancaire</h5>
-                <p>Visa, Mastercard, CB</p>
+                <h5 data-i18n="don_m1_title">Carte bancaire</h5>
+                <p data-i18n="don_m1_sub">Visa, Mastercard, CB</p>
               </div>
               <input type="radio" name="pay" class="pay-radio" id="radio-card" />
             </label>
@@ -203,8 +203,8 @@
                 <svg width="26" height="14" viewBox="0 0 26 14" fill="none"><text x="2" y="11" font-family="Arial" font-size="9" font-weight="bold" fill="#009CDE">Pay</text><text x="13" y="11" font-family="Arial" font-size="9" font-weight="bold" fill="white">Pal</text></svg>
               </div>
               <div class="pay-method-info">
-                <h5>PayPal</h5>
-                <p>Payer avec votre compte PayPal</p>
+                <h5 data-i18n="don_m2_title">PayPal</h5>
+                <p data-i18n="don_m2_sub">Payer avec votre compte PayPal</p>
               </div>
               <input type="radio" name="pay" class="pay-radio" id="radio-paypal" />
             </label>
@@ -214,25 +214,25 @@
                 <svg width="22" height="14" viewBox="0 0 22 14" fill="none"><text x="2" y="11" font-family="-apple-system, sans-serif" font-size="8" font-weight="600" fill="white">Pay</text></svg>
               </div>
               <div class="pay-method-info">
-                <h5>Apple Pay</h5>
-                <p>Paiement rapide et sécurisé</p>
+                <h5 data-i18n="don_m3_title">Apple Pay</h5>
+                <p data-i18n="don_m3_sub">Paiement rapide et sécurisé</p>
               </div>
               <input type="radio" name="pay" class="pay-radio" id="radio-applepay" />
             </label>
           </div>
 
-          <!-- Formulaire carte (visible uniquement si carte) -->
+          <!-- Formulaire carte -->
           <div class="card-form" id="card-form">
-            <label class="form-label">Numéro de carte</label>
-            <input type="text" class="form-input" placeholder="1234 5678 9012 3456" maxlength="19" id="card-num" oninput="formatCard(this)" />
+            <label class="form-label" data-i18n="don_card_num">Numéro de carte</label>
+            <input type="text" class="form-input" data-i18n-placeholder="don_card_num_pl" placeholder="1234 5678 9012 3456" maxlength="19" id="card-num" oninput="formatCard(this)" />
             <div class="form-row">
               <div>
-                <label class="form-label">Date d'expiration</label>
-                <input type="text" class="form-input" placeholder="MM / AA" maxlength="7" id="card-exp" oninput="formatExp(this)" />
+                <label class="form-label" data-i18n="don_card_exp">Date d'expiration</label>
+                <input type="text" class="form-input" data-i18n-placeholder="don_card_exp_pl" placeholder="MM / AA" maxlength="7" id="card-exp" oninput="formatExp(this)" />
               </div>
               <div>
-                <label class="form-label">Code de sécurité</label>
-                <input type="text" class="form-input" placeholder="CVV" maxlength="4" />
+                <label class="form-label" data-i18n="don_card_cvv">Code de sécurité</label>
+                <input type="text" class="form-input" data-i18n-placeholder="don_card_cvv_pl" placeholder="CVV" maxlength="4" />
               </div>
             </div>
           </div>
@@ -240,34 +240,36 @@
           <div class="privacy-badges">
             <span class="priv-badge">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-              Paiement sécurisé
+              <span data-i18n="priv_b1">Paiement sécurisé</span>
             </span>
             <span class="priv-badge">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-              Données non conservées
+              <span data-i18n="priv_b2">Données non conservées</span>
             </span>
             <span class="priv-badge">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Anonyme
+              <span data-i18n="priv_b3">Anonyme</span>
             </span>
           </div>
         </div>
 
         <!-- Résumé droite -->
         <div class="don-summary">
-          <h3>Votre don</h3>
-          <div class="summary-line"><span>Montant</span><strong id="summary-amount">5€</strong></div>
-          <div class="summary-line"><span>Méthode</span><strong id="summary-method">Non sélectionnée</strong></div>
-          <div class="summary-line"><span>Frais</span><strong>0€</strong></div>
+          <h3 data-i18n="don_sum_title">Votre don</h3>
+          <div class="summary-line"><span data-i18n="don_sum_amount">Montant</span><strong id="summary-amount">5€</strong></div>
+          <div class="summary-line"><span data-i18n="don_sum_method">Méthode</span><strong id="summary-method" data-i18n="don_sum_method_none">Non sélectionnée</strong></div>
+          <div class="summary-line"><span data-i18n="don_sum_fees">Frais</span><strong data-i18n="don_sum_fees_val">0€</strong></div>
           <div class="summary-total">
-            <span>Total</span>
+            <span data-i18n="don_sum_total">Total</span>
             <span class="total-amount" id="summary-total">5€</span>
           </div>
-          <div class="don-note">
+          <div class="don-note" data-i18n="don_note">
             Vos coordonnées bancaires ne sont jamais stockées sur nos serveurs. Le paiement est traité par un prestataire certifié PCI-DSS. Vous pouvez faire un don de façon totalement anonyme.
           </div>
-          <button class="btn-don" id="pay-btn" onclick="processDon()">Valider le don</button>
-          <p style="text-align:center;margin-top:12px;font-size:12px;color:var(--mist);">Sans engagement · Remboursable sur demande</p>
+          <button class="btn-don" id="pay-btn" onclick="processDon()">
+            <span id="pay-btn-label" data-i18n="don_btn">Valider le don</span>
+          </button>
+          <p style="text-align:center;margin-top:12px;font-size:12px;color:var(--mist);" data-i18n="don_no_engage">Sans engagement · Remboursable sur demande</p>
         </div>
 
       </div>
@@ -275,8 +277,8 @@
       <!-- Impact -->
       <div style="margin-top:64px;">
         <div style="text-align:center;margin-bottom:8px;">
-          <span class="section-label">Impact de votre don</span>
-          <h2 class="section-title">Ce que vous <em>rendez possible</em></h2>
+          <span class="section-label" data-i18n="don_impact_label">Impact de votre don</span>
+          <h2 class="section-title" data-i18n-html="don_impact_title">Ce que vous <em>rendez possible</em></h2>
         </div>
         <div class="impact-grid">
           <div class="impact-card">
@@ -284,21 +286,21 @@
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warm)" stroke-width="1.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             </div>
             <div class="impact-num">5€</div>
-            <p class="impact-desc">Couvre 1 mois d'hébergement sécurisé pour la plateforme</p>
+            <p class="impact-desc" data-i18n="impact_1_text">Couvre 1 mois d'hébergement sécurisé pour la plateforme</p>
           </div>
           <div class="impact-card">
             <div class="impact-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warm)" stroke-width="1.5" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
             </div>
             <div class="impact-num">10€</div>
-            <p class="impact-desc">Finance la formation continue de 2 bénévoles</p>
+            <p class="impact-desc" data-i18n="impact_2_text">Finance la formation continue de 2 bénévoles</p>
           </div>
           <div class="impact-card">
             <div class="impact-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warm)" stroke-width="1.5" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
             </div>
             <div class="impact-num">20€</div>
-            <p class="impact-desc">Permet d'accueillir 50 nouvelles personnes sur la plateforme</p>
+            <p class="impact-desc" data-i18n="impact_3_text">Permet d'accueillir 50 nouvelles personnes sur la plateforme</p>
           </div>
         </div>
       </div>
@@ -311,7 +313,7 @@
     <div class="footer-inner">
       <div class="footer-col">
         <a href="index.html" style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-          <img src="logo_du_site.png" alt="Logo" style="height:30px;filter:brightness(0) invert(1);opacity:0.8;" />
+          <img src="logo du site.png" alt="Logo" style="height:30px;filter:brightness(0) invert(1);opacity:0.8;" />
           <span class="footer-logo" style="margin-bottom:0;">Écoute Anonyme</span>
         </a>
         <p class="footer-desc" data-i18n="footer_desc">Un espace d'écoute bénévole, gratuit et confidentiel.</p>
@@ -347,9 +349,9 @@
       <div style="width:56px;height:56px;border-radius:50%;background:var(--sage-pale);border:2px solid var(--sage-light);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
-      <h2>Merci pour votre soutien !</h2>
-      <p>Votre don a bien été pris en compte. Il contribue directement à maintenir ce service gratuit et accessible à tous.</p>
-      <a href="index.html" class="btn btn-primary" style="width:100%;justify-content:center;">Retourner à l'accueil</a>
+      <h2 data-i18n="confirm_title">Merci pour votre soutien !</h2>
+      <p data-i18n="confirm_p">Votre don a bien été pris en compte. Il contribue directement à maintenir ce service gratuit et accessible à tous.</p>
+      <a href="index.html" class="btn btn-primary" style="width:100%;justify-content:center;" data-i18n="confirm_btn">Retourner à l'accueil</a>
     </div>
   </div>
 
@@ -378,7 +380,12 @@
       event.currentTarget.classList.add('selected');
       document.getElementById('radio-' + method).checked = true;
       document.getElementById('card-form').classList.toggle('visible', method === 'card');
-      const names = { card: 'Carte bancaire', paypal: 'PayPal', applepay: 'Apple Pay' };
+      const lang = window.currentLang || 'fr';
+      const names = {
+        card:     LANG[lang].don_m1_title,
+        paypal:   LANG[lang].don_m2_title,
+        applepay: LANG[lang].don_m3_title
+      };
       document.getElementById('summary-method').textContent = names[method] || '';
     }
 
@@ -400,16 +407,38 @@
     }
 
     function processDon() {
-      if (!selectedMethod) { alert('Veuillez sélectionner une méthode de paiement.'); return; }
-      if (selectedAmt <= 0) { alert('Veuillez sélectionner ou saisir un montant.'); return; }
-      // Simulation — dans la réalité, appeler l'API Stripe/PayPal ici
+      const lang = window.currentLang || 'fr';
+      if (!selectedMethod) {
+        alert(lang === 'en' ? 'Please select a payment method.' : 'Veuillez sélectionner une méthode de paiement.');
+        return;
+      }
+      if (selectedAmt <= 0) {
+        alert(lang === 'en' ? 'Please select or enter an amount.' : 'Veuillez sélectionner ou saisir un montant.');
+        return;
+      }
       const btn = document.getElementById('pay-btn');
-      btn.disabled = true; btn.textContent = 'Traitement en cours…';
+      const lbl = document.getElementById('pay-btn-label');
+      btn.disabled = true;
+      if (lbl) lbl.textContent = lang === 'en' ? 'Processing…' : 'Traitement en cours…';
       setTimeout(() => {
-        btn.disabled = false; btn.textContent = 'Valider le don';
+        btn.disabled = false;
+        if (lbl) lbl.textContent = LANG[lang].don_btn;
         document.getElementById('confirm-overlay').classList.add('open');
       }, 1800);
     }
+
+    // Re-update summary method label on language change
+    window.onLangChange = function() {
+      if (selectedMethod) {
+        const lang = window.currentLang || 'fr';
+        const names = {
+          card:     LANG[lang].don_m1_title,
+          paypal:   LANG[lang].don_m2_title,
+          applepay: LANG[lang].don_m3_title
+        };
+        document.getElementById('summary-method').textContent = names[selectedMethod] || '';
+      }
+    };
   </script>
 </body>
 </html>

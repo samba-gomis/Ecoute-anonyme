@@ -1,0 +1,53 @@
+// ============================================
+//   ABSTRACTS — Variables
+// ============================================
+
+// --- Palette sage ---
+$sage:        #8BAF8A;
+$sage-dark:   #6A9169;
+$sage-light:  #C5D9C4;
+$sage-pale:   #EDF3EC;
+
+// --- Palette warm ---
+$warm:        #C4A882;
+$warm-light:  #E8D9C4;
+$warm-pale:   #F5EFE6;
+
+// --- Neutres ---
+$cream:       #FAF8F5;
+$stone:       #6B6660;
+$stone-dark:  #3D3A38;
+$mist:        #B8B4AE;
+$white:       #FFFFFF;
+
+// --- États ---
+$danger:      #C94040;
+$danger-pale: #FAEAEA;
+
+// --- Typographie ---
+$font-display: 'Cormorant Garamond', Georgia, serif;
+$font-body:    'DM Sans', system-ui, sans-serif;
+
+// --- Espacements ---
+$nav-h:        68px;
+$util-h:       36px;
+
+// --- Rayons ---
+$radius-sm:    8px;
+$radius-md:    16px;
+$radius-lg:    28px;
+$radius-pill:  999px;
+
+// --- Breakpoints ---
+$bp-sm:   600px;
+$bp-md:   768px;
+$bp-lg:   860px;
+$bp-xl:   900px;
+
+// --- Z-index ---
+$z-util:  400;
+$z-nav:   200;
+$z-modal: 600;
+
+// --- CSS custom properties (runtime — nécessaires pour le thème sombre) ---
+// Ces variables sont injectées dans :root via _reset.scss

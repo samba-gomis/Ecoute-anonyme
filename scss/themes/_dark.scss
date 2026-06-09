@@ -1,0 +1,41 @@
+// ============================================
+//   THEMES — Mode sombre
+// ============================================
+
+body.dark {
+  --cream:       #181715;
+  --white:       #222120;
+  --stone-dark:  #E4DFD9;
+  --stone:       #9A9690;
+  --mist:        #5C5A57;
+  --sage-pale:   #1C281C;
+  --sage-light:  #2E4A2D;
+  --warm-pale:   #251E14;
+  --warm-light:  #362C1C;
+
+  --bg-primary:    #181715;
+  --bg-card:       #242220;
+  --bg-subtle:     #1C281C;
+  --text-primary:  #E4DFD9;
+  --text-secondary:#9A9690;
+  --text-muted:    #5C5A57;
+  --border:        rgba(139, 175, 138, 0.14);
+  --shadow:        0 4px 28px rgba(0, 0, 0, 0.35);
+
+  .util-bar {
+    background: #111010;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .nav {
+    background: rgba(24, 23, 21, 0.95);
+  }
+
+  .footer {
+    background: #0F0E0D;
+  }
+
+  .cta-section {
+    background: #111010;
+  }
+}

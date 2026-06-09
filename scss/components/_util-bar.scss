@@ -1,0 +1,96 @@
+// ============================================
+//   COMPONENTS — Barre utilitaire (dark mode + langue)
+// ============================================
+
+.util-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-util, 400);
+  height: var(--util-h);
+  background: #2A2826;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 5%;
+  gap: 6px;
+  transition: background 0.3s;
+}
+
+.util-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  font-family: var(--font-body);
+  white-space: nowrap;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.13);
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  &.active-lang {
+    background: var(--sage-dark);
+    color: #fff;
+    border-color: transparent;
+  }
+}
+
+.util-sep {
+  width: 1px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 0 3px;
+}
+
+.util-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+  font-family: var(--font-body);
+  letter-spacing: 0.02em;
+}
+
+// Toggle dark/light
+.dark-toggle {
+  width: 38px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s;
+  flex-shrink: 0;
+
+  &.on {
+    background: var(--sage);
+    border-color: var(--sage);
+  }
+}
+
+.dark-toggle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  transition: transform 0.3s, background 0.3s;
+
+  .dark-toggle.on & {
+    transform: translateX(18px);
+    background: #fff;
+  }
+}

@@ -4,13 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chat — Écoute Anonyme</title>
-  <link rel="icon" type="image" href="logo_du_site.png">
+  <link rel="icon" type="image" href="logo du site.png">
   <link rel="stylesheet" href="styles.css" />
   <style>
     body { overflow: hidden; height: 100vh; }
 
-    /* ===== ÉCRANS ===== */
-    /* Util-bar sits at z-index 400, screens must be below it or account for it */
     .screen { position: fixed; inset: 0; z-index: 300; display: none; align-items: center; justify-content: center; padding: calc(var(--util-h) + 24px) 24px 24px; background: var(--cream); transition: background 0.3s; }
     .screen.active { display: flex; }
     #screen-volunteer { overflow-y: auto; align-items: flex-start; padding: 0; padding-top: var(--util-h); }
@@ -215,20 +213,20 @@
   <div class="screen active" id="screen-pseudo">
     <div class="entry-card">
       <a href="index.html" class="entry-logo">
-        <img src="logo_du_site.png" alt="Logo" />
+        <img src="logo du site.png" alt="Logo" />
         <span>Écoute Anonyme</span>
       </a>
-      <h1>Bienvenue.<br><em>Vous n'êtes pas seul·e.</em></h1>
-      <p class="entry-desc">Choisissez un pseudonyme ou entrez anonymement. Aucune information personnelle n'est requise.</p>
-      <label class="entry-label">Votre pseudonyme (optionnel)</label>
-      <input type="text" class="entry-input" id="pseudo-input" placeholder="Ex : Fleur, Anonyme42, Voyageur…" maxlength="30" autocomplete="off" />
+      <h1 data-i18n-html="chat_entry_h1">Bienvenue.<br><em>Vous n'êtes pas seul·e.</em></h1>
+      <p class="entry-desc" data-i18n="chat_entry_desc">Choisissez un pseudonyme ou entrez anonymement. Aucune information personnelle n'est requise.</p>
+      <label class="entry-label" data-i18n="chat_entry_label">Votre pseudonyme (optionnel)</label>
+      <input type="text" class="entry-input" id="pseudo-input" data-i18n-placeholder="chat_entry_pl" placeholder="Ex : Fleur, Anonyme42, Voyageur…" maxlength="30" autocomplete="off" />
       <div class="entry-actions">
-        <button class="btn-enter" onclick="goToVolunteer()">Choisir un bénévole</button>
-        <button class="btn-anon" onclick="setAnonAndGo()">Entrer sans pseudonyme</button>
+        <button class="btn-enter" onclick="goToVolunteer()" data-i18n="chat_btn_vol">Choisir un bénévole</button>
+        <button class="btn-anon" onclick="setAnonAndGo()" data-i18n="chat_btn_anon">Entrer sans pseudonyme</button>
       </div>
       <p class="entry-notice">
-        Anonymat total · Aucune donnée collectée<br>
-        <a href="confidentialite.html">Charte de confidentialité</a>
+        <span data-i18n="chat_notice">Anonymat total · Aucune donnée collectée</span><br>
+        <a href="confidentialite.html" data-i18n="chat_notice_link">Charte de confidentialité</a>
       </p>
     </div>
   </div>
@@ -238,12 +236,12 @@
     <div class="vol-wrap">
       <button class="vol-back" onclick="backToPseudo()">
         <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Retour
+        <span data-i18n="chat_back">Retour</span>
       </button>
       <div class="vol-header">
-        <span class="section-label" style="display:flex;justify-content:center;">Étape 2 / 2</span>
-        <h2>Choisissez <em>votre bénévole</em></h2>
-        <p>Tous validés et engagés dans notre charte éthique.</p>
+        <span class="section-label" style="display:flex;justify-content:center;" data-i18n="chat_step_label">Étape 2 / 2</span>
+        <h2 data-i18n-html="chat_vol_h2">Choisissez <em>votre bénévole</em></h2>
+        <p data-i18n="chat_vol_p">Tous validés et engagés dans notre charte éthique.</p>
       </div>
       <div class="vol-grid" id="vol-grid"></div>
     </div>
@@ -255,10 +253,10 @@
       <div class="chat-topbar-left">
         <a href="index.html" class="chat-back">
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Retour
+          <span data-i18n="chat_back">Retour</span>
         </a>
         <a href="index.html" class="chat-logo-link">
-          <img src="logo_du_site.png" alt="Logo" />
+          <img src="logo du site.png" alt="Logo" />
           <span>Écoute Anonyme</span>
         </a>
       </div>
@@ -277,11 +275,9 @@
             <div class="vol-top-status" id="vol-status-txt">En ligne</div>
           </div>
         </div>
-        <!-- Signalement -->
         <button class="topbar-btn report-btn" onclick="openModal('report-modal')" title="Signaler ce bénévole">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.5" fill="currentColor"/></svg>
         </button>
-        <!-- Options -->
         <div class="dropdown">
           <button class="topbar-btn" onclick="ddToggle()" title="Options">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
@@ -289,11 +285,11 @@
           <div class="dropdown-menu" id="dd-menu">
             <button class="dropdown-item" onclick="openModal('review-modal');ddToggle()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              Laisser un avis
+              <span data-i18n="dd_review">Laisser un avis</span>
             </button>
             <button class="dropdown-item" onclick="openModal('end-modal');ddToggle()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
-              Terminer l'échange
+              <span data-i18n="dd_end">Terminer l'échange</span>
             </button>
           </div>
         </div>
@@ -302,7 +298,7 @@
 
     <div class="chat-messages" id="chat-messages">
       <div class="date-sep"><span id="today-label">Aujourd'hui</span></div>
-      <div class="msg-sys">Vous êtes connecté·e à un bénévole. Espace confidentiel et bienveillant.</div>
+      <div class="msg-sys" id="chat-sys-msg" data-i18n="chat_sys_msg">Vous êtes connecté·e à un bénévole. Espace confidentiel et bienveillant.</div>
       <div class="msg-group vol">
         <span class="msg-sender" id="vol-sender">Marie · Bénévole</span>
         <div class="msg-bubble" id="welcome-bubble">Bonjour, je suis là pour vous écouter. Prenez tout le temps qu'il vous faut.</div>
@@ -315,12 +311,12 @@
 
     <div class="chat-input-area">
       <div class="input-row">
-        <textarea id="msg-input" placeholder="Écrivez votre message…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <textarea id="msg-input" data-i18n-placeholder="chat_input_pl" placeholder="Écrivez votre message…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
         <button class="send-btn" onclick="sendMsg()" title="Envoyer">
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M10 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
-      <p class="input-hint">Entrée pour envoyer · Maj+Entrée pour un saut de ligne</p>
+      <p class="input-hint" data-i18n="chat_input_hint">Entrée pour envoyer · Maj+Entrée pour un saut de ligne</p>
     </div>
   </div>
 
@@ -330,8 +326,8 @@
       <div class="m-icon" style="background:var(--sage-pale);">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
       </div>
-      <h3>Laisser un avis anonyme</h3>
-      <p>Jamais relié à votre identité. Aide uniquement à améliorer le service.</p>
+      <h3 data-i18n="modal_review_title">Laisser un avis anonyme</h3>
+      <p data-i18n="modal_review_p">Jamais relié à votre identité. Aide uniquement à améliorer le service.</p>
       <div class="stars" id="stars">
         <button class="s-btn" onclick="setRating(1)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--mist)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
         <button class="s-btn" onclick="setRating(2)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--mist)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
@@ -339,10 +335,10 @@
         <button class="s-btn" onclick="setRating(4)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--mist)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
         <button class="s-btn" onclick="setRating(5)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--mist)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
       </div>
-      <textarea class="rev-ta" placeholder="Un commentaire ? (optionnel)"></textarea>
+      <textarea class="rev-ta" data-i18n-placeholder="modal_review_pl" placeholder="Un commentaire ? (optionnel)"></textarea>
       <div class="m-actions">
-        <button class="m-btn m-cancel" onclick="closeModal('review-modal')">Passer</button>
-        <button class="m-btn m-sage" onclick="submitReview()">Envoyer</button>
+        <button class="m-btn m-cancel" onclick="closeModal('review-modal')" data-i18n="modal_review_skip">Passer</button>
+        <button class="m-btn m-sage" onclick="submitReview()" data-i18n="modal_review_send">Envoyer</button>
       </div>
     </div>
   </div>
@@ -353,38 +349,38 @@
       <div class="m-icon" style="background:var(--danger-pale);">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.5" fill="var(--danger)"/></svg>
       </div>
-      <h3>Signaler ce bénévole</h3>
-      <p>Notre équipe sera immédiatement alertée et examinera le signalement.</p>
+      <h3 data-i18n="modal_report_title">Signaler ce bénévole</h3>
+      <p data-i18n="modal_report_p">Notre équipe sera immédiatement alertée et examinera le signalement.</p>
       <div class="rep-opts">
-        <label class="rep-opt"><input type="radio" name="rep" value="argent" onchange="pickRep(this)"> A demandé de l'argent</label>
-        <label class="rep-opt"><input type="radio" name="rep" value="info" onchange="pickRep(this)"> A demandé des informations personnelles</label>
-        <label class="rep-opt"><input type="radio" name="rep" value="hors" onchange="pickRep(this)"> A proposé un contact hors plateforme</label>
-        <label class="rep-opt"><input type="radio" name="rep" value="comportement" onchange="pickRep(this)"> Comportement inapproprié</label>
-        <label class="rep-opt"><input type="radio" name="rep" value="autre" onchange="pickRep(this)"> Autre motif</label>
+        <label class="rep-opt"><input type="radio" name="rep" value="argent" onchange="pickRep(this)"> <span data-i18n="rep_opt1">A demandé de l'argent</span></label>
+        <label class="rep-opt"><input type="radio" name="rep" value="info" onchange="pickRep(this)"> <span data-i18n="rep_opt2">A demandé des informations personnelles</span></label>
+        <label class="rep-opt"><input type="radio" name="rep" value="hors" onchange="pickRep(this)"> <span data-i18n="rep_opt3">A proposé un contact hors plateforme</span></label>
+        <label class="rep-opt"><input type="radio" name="rep" value="comportement" onchange="pickRep(this)"> <span data-i18n="rep_opt4">Comportement inapproprié</span></label>
+        <label class="rep-opt"><input type="radio" name="rep" value="autre" onchange="pickRep(this)"> <span data-i18n="rep_opt5">Autre motif</span></label>
       </div>
       <div class="m-actions">
-        <button class="m-btn m-cancel" onclick="closeModal('report-modal')">Annuler</button>
-        <button class="m-btn m-red" id="rep-btn" onclick="submitReport()" disabled>Signaler</button>
+        <button class="m-btn m-cancel" onclick="closeModal('report-modal')" data-i18n="modal_report_cancel">Annuler</button>
+        <button class="m-btn m-red" id="rep-btn" onclick="submitReport()" disabled data-i18n="modal_report_submit">Signaler</button>
       </div>
     </div>
   </div>
 
-  <!-- MODALE TERMINER — choix conserver / supprimer + don -->
+  <!-- MODALE TERMINER -->
   <div class="modal-overlay" id="end-modal">
     <div class="modal-card">
       <div class="m-icon" style="background:var(--sage-pale);">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
-      <h3>Terminer l'échange</h3>
-      <div class="end-info">Souhaitez-vous conserver cette conversation ou la supprimer définitivement ?</div>
+      <h3 data-i18n="modal_end_title">Terminer l'échange</h3>
+      <div class="end-info" data-i18n="modal_end_info">Souhaitez-vous conserver cette conversation ou la supprimer définitivement ?</div>
       <div class="end-choices">
         <div class="end-choice-card" id="choice-keep" onclick="selectEndChoice('keep')">
           <div class="end-choice-icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.5" stroke-linecap="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
           </div>
           <div class="end-choice-text">
-            <h5>Conserver la conversation</h5>
-            <p>Vos messages restent accessibles lors de vos prochaines visites.</p>
+            <h5 data-i18n="modal_end_keep_title">Conserver la conversation</h5>
+            <p data-i18n="modal_end_keep_p">Vos messages restent accessibles lors de vos prochaines visites.</p>
           </div>
         </div>
         <div class="end-choice-card" id="choice-delete" onclick="selectEndChoice('delete')">
@@ -392,29 +388,29 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.5" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
           </div>
           <div class="end-choice-text">
-            <h5>Supprimer définitivement</h5>
-            <p>Tous vos messages seront effacés de façon irréversible.</p>
+            <h5 data-i18n="modal_end_del_title">Supprimer définitivement</h5>
+            <p data-i18n="modal_end_del_p">Tous vos messages seront effacés de façon irréversible.</p>
           </div>
         </div>
       </div>
       <div class="m-actions" style="margin-top:14px;">
-        <button class="m-btn m-cancel" onclick="closeModal('end-modal')">Annuler</button>
-        <button class="m-btn m-sage" id="end-confirm-btn" onclick="confirmEnd()" disabled>Continuer</button>
+        <button class="m-btn m-cancel" onclick="closeModal('end-modal')" data-i18n="modal_end_cancel">Annuler</button>
+        <button class="m-btn m-sage" id="end-confirm-btn" onclick="confirmEnd()" disabled data-i18n="modal_end_confirm">Continuer</button>
       </div>
     </div>
   </div>
 
-  <!-- MODALE DON (optionnel) -->
+  <!-- MODALE DON -->
   <div class="modal-overlay" id="don-modal">
     <div class="modal-card">
       <div class="m-icon" style="background:var(--warm-pale);">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warm)" stroke-width="1.5" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
       </div>
-      <h3>Soutenir l'association</h3>
-      <p>Ce service est entièrement gratuit et bénévole. Si vous souhaitez contribuer à sa pérennité, c'est possible — mais absolument pas obligatoire.</p>
+      <h3 data-i18n="modal_don_title">Soutenir l'association</h3>
+      <p data-i18n="modal_don_p">Ce service est entièrement gratuit et bénévole. Si vous souhaitez contribuer à sa pérennité, c'est possible — mais absolument pas obligatoire.</p>
       <div class="m-actions" style="flex-direction:column;gap:9px;">
-        <a href="soutenir.html" class="m-btn m-sage" style="text-decoration:none;display:block;text-align:center;">Faire un don</a>
-        <button class="m-btn m-cancel" onclick="skipDon()">Non merci, terminer</button>
+        <a href="soutenir.html" class="m-btn m-sage" style="text-decoration:none;display:block;text-align:center;" data-i18n="modal_don_btn">Faire un don</a>
+        <button class="m-btn m-cancel" onclick="skipDon()" data-i18n="modal_don_skip">Non merci, terminer</button>
       </div>
     </div>
   </div>
@@ -425,34 +421,85 @@
       <div class="m-icon" style="background:var(--sage-pale);margin:0 auto 16px;">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
-      <h3>Signalement envoyé</h3>
-      <p>Notre équipe examinera votre signalement dans les meilleurs délais. Merci.</p>
-      <button class="m-btn m-sage" onclick="closeModal('report-ok-modal')" style="display:block;width:100%;">Fermer</button>
+      <h3 data-i18n="modal_repok_title">Signalement envoyé</h3>
+      <p data-i18n="modal_repok_p">Notre équipe examinera votre signalement dans les meilleurs délais. Merci.</p>
+      <button class="m-btn m-sage" onclick="closeModal('report-ok-modal')" style="display:block;width:100%;" data-i18n="modal_repok_btn">Fermer</button>
     </div>
   </div>
 
   <script src="shared-ui.js"></script>
   <script>
     const volunteers = [
-      { id:1, name:'Marie',  status:'online',  tags:['Anxiété','Solitude'],  desc:'Disponible pour une écoute douce et sans jugement. Je crois en la puissance des mots pour traverser les moments difficiles.', dispo:'Soir et week-end',   reply:'Bonjour, je suis Marie. Je suis là pour vous écouter, à votre rythme.' },
-      { id:2, name:'Thomas', status:'away',    tags:['Relations','Travail'],  desc:'Passionné par l\'écoute active. Je suis là pour vous accompagner, sans jamais vous juger.', dispo:'Matin et après-midi', reply:'Bonjour, c\'est Thomas. Dites-moi ce qui vous amène, je suis tout ouïe.' },
-      { id:3, name:'Léa',    status:'online',  tags:['Deuil','Général'],      desc:'Formée à l\'écoute active, je vous offre un espace bienveillant. Chaque personne mérite d\'être entendue.', dispo:'Après-midi et soir', reply:'Bonjour, je suis Léa. Cet espace vous appartient, partagez à votre rythme.' },
-      { id:4, name:'Samuel', status:'offline', tags:['Général'],              desc:'Je suis là pour vous écouter, sans filtres. Votre vécu mérite toute mon attention.', dispo:'Week-end',           reply:'Bonjour, c\'est Samuel. Comment puis-je vous accompagner aujourd\'hui ?' },
+      {
+        id:1, name:'Marie', status:'online', tags:['Anxiété','Solitude'],
+        desc: {
+          fr: 'Disponible pour une écoute douce et sans jugement. Je crois en la puissance des mots pour traverser les moments difficiles.',
+          en: 'Available for gentle, judgment-free listening. I believe in the power of words to get through difficult times.'
+        },
+        dispo: { fr: 'Soir et week-end', en: 'Evenings and weekends' },
+        reply: { fr: 'Bonjour, je suis Marie. Je suis là pour vous écouter, à votre rythme.', en: 'Hello, I\'m Marie. I\'m here to listen to you, at your own pace.' }
+      },
+      {
+        id:2, name:'Thomas', status:'away', tags:['Relations','Travail'],
+        desc: {
+          fr: "Passionné par l'écoute active. Je suis là pour vous accompagner, sans jamais vous juger.",
+          en: "Passionate about active listening. I'm here to accompany you, without ever judging you."
+        },
+        dispo: { fr: 'Matin et après-midi', en: 'Mornings and afternoons' },
+        reply: { fr: "Bonjour, c'est Thomas. Dites-moi ce qui vous amène, je suis tout ouïe.", en: "Hello, it's Thomas. Tell me what brings you here, I'm all ears." }
+      },
+      {
+        id:3, name:'Léa', status:'online', tags:['Deuil','Général'],
+        desc: {
+          fr: "Formée à l'écoute active, je vous offre un espace bienveillant. Chaque personne mérite d'être entendue.",
+          en: "Trained in active listening, I offer you a caring space. Every person deserves to be heard."
+        },
+        dispo: { fr: 'Après-midi et soir', en: 'Afternoons and evenings' },
+        reply: { fr: "Bonjour, je suis Léa. Cet espace vous appartient, partagez à votre rythme.", en: "Hello, I'm Léa. This space is yours, share at your own pace." }
+      },
+      {
+        id:4, name:'Samuel', status:'offline', tags:['Général'],
+        desc: {
+          fr: "Je suis là pour vous écouter, sans filtres. Votre vécu mérite toute mon attention.",
+          en: "I'm here to listen to you, without filters. Your experience deserves my full attention."
+        },
+        dispo: { fr: 'Week-end', en: 'Weekends' },
+        reply: { fr: "Bonjour, c'est Samuel. Comment puis-je vous accompagner aujourd'hui ?", en: "Hello, it's Samuel. How can I support you today?" }
+      },
     ];
-    const statusTxt = { online:'En ligne', away:'Disponible bientôt', offline:'Hors ligne' };
+
+    function getStatusTxt(status) {
+      const lang = window.currentLang || 'fr';
+      const map = {
+        fr: { online:'En ligne', away:'Disponible bientôt', offline:'Hors ligne' },
+        en: { online:'Online', away:'Available soon', offline:'Offline' }
+      };
+      return map[lang][status] || status;
+    }
+
     const statusCls = { online:'v-s-online', away:'v-s-away', offline:'v-s-off' };
     const dotCls    = { online:'v-online', away:'v-away', offline:'v-offline' };
 
     let pseudo='Anonyme', selVol=null, rating=0, msgN=0, endChoice=null;
 
-    const replies = [
-      'Je vous entends. Pouvez-vous m\'en dire un peu plus ?',
-      'C\'est courageux de partager ça. Prenez tout le temps qu\'il vous faut.',
-      'Je comprends. Comment vous sentez-vous en ce moment ?',
-      'Merci de me faire confiance. Vous n\'êtes pas seul·e.',
-      'C\'est important ce que vous dites. Comment puis-je vous aider au mieux ?',
-      'Je suis là, je vous lis. Continuez si vous le souhaitez.',
-    ];
+    const replies = {
+      fr: [
+        'Je vous entends. Pouvez-vous m\'en dire un peu plus ?',
+        'C\'est courageux de partager ça. Prenez tout le temps qu\'il vous faut.',
+        'Je comprends. Comment vous sentez-vous en ce moment ?',
+        'Merci de me faire confiance. Vous n\'êtes pas seul·e.',
+        'C\'est important ce que vous dites. Comment puis-je vous aider au mieux ?',
+        'Je suis là, je vous lis. Continuez si vous le souhaitez.',
+      ],
+      en: [
+        'I hear you. Can you tell me a bit more?',
+        'It\'s brave to share that. Take all the time you need.',
+        'I understand. How are you feeling right now?',
+        'Thank you for trusting me. You\'re not alone.',
+        'What you\'re saying matters. How can I best help you?',
+        'I\'m here, I\'m reading. Continue if you wish.',
+      ]
+    };
 
     /* NAVIGATION */
     function showScreen(id) {
@@ -468,13 +515,14 @@
       const v=volunteers.find(x=>x.id===id);
       if(!v||v.status==='offline')return;
       selVol=v;
+      const lang = window.currentLang || 'fr';
       document.getElementById('pseudo-display').textContent=pseudo;
       document.getElementById('vol-name-top').textContent=v.name;
-      document.getElementById('vol-status-txt').textContent=statusTxt[v.status];
+      document.getElementById('vol-status-txt').textContent=getStatusTxt(v.status);
       document.getElementById('vol-status-txt').className='vol-top-status '+statusCls[v.status];
       document.getElementById('vol-status-dot').className='vol-top-dot '+dotCls[v.status];
-      document.getElementById('vol-sender').textContent=v.name+' · Bénévole';
-      document.getElementById('welcome-bubble').textContent=v.reply;
+      document.getElementById('vol-sender').textContent=v.name+' · '+(lang==='en'?'Volunteer':'Bénévole');
+      document.getElementById('welcome-bubble').textContent=v.reply[lang];
       document.getElementById('welcome-time').textContent=fmtTime(new Date());
       document.getElementById('today-label').textContent=fmtDate(new Date());
       document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -485,6 +533,7 @@
 
     /* BÉNÉVOLES */
     function renderVols(){
+      const lang = window.currentLang || 'fr';
       document.getElementById('vol-grid').innerHTML=volunteers.map(v=>`
         <div class="vol-card ${v.status==='offline'?'vol-offline':''}" onclick="pickVolunteer(${v.id})">
           <div class="vol-c-header">
@@ -494,21 +543,23 @@
             </div>
             <div class="vol-c-meta">
               <h3>${v.name}</h3>
-              <span class="v-status ${statusCls[v.status]}">${statusTxt[v.status]}</span>
+              <span class="v-status ${statusCls[v.status]}">${getStatusTxt(v.status)}</span>
             </div>
           </div>
           <div class="vol-tags">${v.tags.map(t=>`<span class="vol-tag">${t}</span>`).join('')}</div>
-          <p class="vol-desc">${v.desc}</p>
+          <p class="vol-desc">${v.desc[lang]}</p>
           <p class="vol-dispo">
             <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M6 3v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-            ${v.dispo}
+            ${v.dispo[lang]}
           </p>
           ${v.status!=='offline'
-            ?`<button class="vol-btn" onclick="event.stopPropagation();pickVolunteer(${v.id})">Choisir ${v.name}</button>`
-            :`<p class="vol-offline-note">Non disponible actuellement</p>`
+            ?`<button class="vol-btn" onclick="event.stopPropagation();pickVolunteer(${v.id})">${lang==='en'?'Choose':'Choisir'} ${v.name}</button>`
+            :`<p class="vol-offline-note">${lang==='en'?'Not available at the moment':'Non disponible actuellement'}</p>`
           }
         </div>`).join('');
     }
+
+    window.onLangChange = renderVols;
 
     /* CHAT */
     function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}
@@ -519,13 +570,16 @@
       const txt=inp.value.trim();if(!txt)return;
       addMsg(txt,'user');inp.value='';inp.style.height='auto';inp.focus();msgN++;
       const t=document.getElementById('typing');t.classList.add('on');scrollBot();
-      setTimeout(()=>{t.classList.remove('on');addMsg(replies[msgN%replies.length],'vol');},1800+Math.random()*1200);
+      const lang = window.currentLang || 'fr';
+      const rList = replies[lang];
+      setTimeout(()=>{t.classList.remove('on');addMsg(rList[msgN%rList.length],'vol');},1800+Math.random()*1200);
     }
 
     function addMsg(txt,type){
+      const lang = window.currentLang || 'fr';
       const c=document.getElementById('chat-messages'),t=document.getElementById('typing');
       const g=document.createElement('div');g.className=`msg-group ${type}`;
-      if(type==='vol'){const s=document.createElement('span');s.className='msg-sender';s.textContent=(selVol?selVol.name:'Bénévole')+' · Bénévole';g.appendChild(s);}
+      if(type==='vol'){const s=document.createElement('span');s.className='msg-sender';s.textContent=(selVol?selVol.name:(lang==='en'?'Volunteer':'Bénévole'))+' · '+(lang==='en'?'Volunteer':'Bénévole');g.appendChild(s);}
       const b=document.createElement('div');b.className='msg-bubble';b.textContent=txt;g.appendChild(b);
       const tm=document.createElement('span');tm.className='msg-time';tm.textContent=fmtTime(new Date());g.appendChild(tm);
       c.insertBefore(g,t);scrollBot();
@@ -533,7 +587,12 @@
 
     function scrollBot(){const c=document.getElementById('chat-messages');c.scrollTop=c.scrollHeight;}
     function fmtTime(d){return d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
-    function fmtDate(d){const t=new Date();return d.toDateString()===t.toDateString()?'Aujourd\'hui':d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});}
+    function fmtDate(d){
+      const lang = window.currentLang || 'fr';
+      const t=new Date();
+      if(d.toDateString()===t.toDateString()) return lang==='en'?'Today':'Aujourd\'hui';
+      return d.toLocaleDateString(lang==='en'?'en-GB':'fr-FR',{weekday:'long',day:'numeric',month:'long'});
+    }
 
     /* MODALES */
     function openModal(id){document.getElementById(id).classList.add('open');}
@@ -554,8 +613,10 @@
     }
     function submitReview(){
       closeModal('review-modal');
+      const lang = window.currentLang || 'fr';
       const c=document.getElementById('chat-messages'),t=document.getElementById('typing');
-      const s=document.createElement('div');s.className='msg-sys';s.textContent='Merci pour votre avis anonyme. Il nous aide à améliorer le service.';
+      const s=document.createElement('div');s.className='msg-sys';
+      s.textContent=lang==='en'?'Thank you for your anonymous review. It helps us improve the service.':'Merci pour votre avis anonyme. Il nous aide à améliorer le service.';
       c.insertBefore(s,t);scrollBot();
     }
 
@@ -576,7 +637,6 @@
       if(endChoice==='delete'){
         document.getElementById('chat-messages').innerHTML='';
       }
-      // Dans tous les cas, proposer le don
       setTimeout(()=>openModal('don-modal'),200);
     }
 

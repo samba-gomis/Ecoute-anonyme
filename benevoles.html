@@ -400,33 +400,33 @@
   </nav>
   <div class="nav-mobile-overlay" id="mobileOverlay" onclick="toggleMenu()"></div>
   <div class="nav-mobile-panel" id="mobilePanel">
-    <a href="index.html">Accueil</a>
-    <a href="presentation.html">Le projet</a>
-    <a href="benevoles.html" class="active">Bénévoles</a>
-    <a href="confidentialite.html">Confidentialité</a>
+    <a href="index.html" data-i18n="footer_home">Accueil</a>
+    <a href="presentation.html" data-i18n="nav_projet">Le projet</a>
+    <a href="benevoles.html" class="active" data-i18n="nav_benevoles">Bénévoles</a>
+    <a href="confidentialite.html" data-i18n="nav_confidentialite">Confidentialité</a>
     <div class="nav-mobile-divider"></div>
-    <a href="chat.html" class="btn-mobile-cta">Commencer à écrire</a>
+    <a href="chat.html" class="btn-mobile-cta" data-i18n="nav_cta">Commencer à écrire</a>
   </div>
 
   <!-- EN-TÊTE -->
   <section class="page-hero">
     <div class="container-narrow">
       <div class="breadcrumb">
-        <a href="index.html">Accueil</a>
+        <a href="index.html" data-i18n="bc_home">Accueil</a>
         <span class="sep"></span>
-        <span>Bénévoles</span>
+        <span data-i18n="bc_volunteers">Bénévoles</span>
       </div>
-      <span class="section-label">Espace bénévoles</span>
-      <h1 class="anim-fade-up">Rejoindre<br><em>l'équipe d'écoute</em></h1>
-      <p class="lead anim-fade-up delay-2">
+      <span class="section-label" data-i18n="page_benv_label">Espace bénévoles</span>
+      <h1 class="anim-fade-up" data-i18n-html="page_benv_h1">Rejoindre<br><em>l'équipe d'écoute</em></h1>
+      <p class="lead anim-fade-up delay-2" data-i18n="page_benv_lead">
         Nos bénévoles sont le cœur d'Écoute Anonyme. Découvrez l'équipe ou proposez votre candidature.
       </p>
     </div>
 
     <!-- Tabs -->
     <div class="tabs-bar">
-      <button class="tab-btn active" onclick="switchTab('liste', this)"> L'équipe actuelle</button>
-      <button class="tab-btn" onclick="switchTab('inscription', this)"> Devenir bénévole</button>
+      <button class="tab-btn active" id="tab-btn-liste" onclick="switchTab('liste', this)" data-i18n="tab_liste">L'équipe actuelle</button>
+      <button class="tab-btn" id="tab-btn-inscr" onclick="switchTab('inscription', this)" data-i18n="tab_inscr">Devenir bénévole</button>
     </div>
   </section>
 
@@ -436,9 +436,9 @@
     <div class="tab-content active" id="tab-liste">
       <div class="container">
         <div class="volunteers-intro">
-          <span class="section-label">Bénévoles actifs</span>
-          <h2 class="section-title">Des personnes <em>engagées</em> pour vous écouter</h2>
-          <p class="body-text" style="margin-top:12px;">
+          <span class="section-label" data-i18n="benv_intro_label">Bénévoles actifs</span>
+          <h2 class="section-title" data-i18n-html="benv_intro_title">Des personnes <em>engagées</em> pour vous écouter</h2>
+          <p class="body-text" style="margin-top:12px;" data-i18n="benv_intro_text">
             Chaque bénévole a été validé par notre équipe et a accepté la charte d'éthique. Ils offrent leur temps librement, sans contrepartie.
           </p>
         </div>
@@ -457,31 +457,31 @@
         <div class="process-steps">
           <div class="process-step">
             <div class="p-step-num">1</div>
-            <h4>Candidature</h4>
-            <p>Remplissez le formulaire avec vos motivations et disponibilités.</p>
+            <h4 data-i18n="proc_step1_title">Candidature</h4>
+            <p data-i18n="proc_step1_text">Remplissez le formulaire avec vos motivations et disponibilités.</p>
           </div>
           <div class="process-step">
             <div class="p-step-num">2</div>
-            <h4>Examen</h4>
-            <p>Notre équipe examine votre demande sous 5 à 10 jours ouvrés.</p>
+            <h4 data-i18n="proc_step2_title">Examen</h4>
+            <p data-i18n="proc_step2_text">Notre équipe examine votre demande sous 5 à 10 jours ouvrés.</p>
           </div>
           <div class="process-step">
             <div class="p-step-num">3</div>
-            <h4>Validation</h4>
-            <p>Si accepté·e, vous recevez un email d'accès à l'espace bénévole.</p>
+            <h4 data-i18n="proc_step3_title">Validation</h4>
+            <p data-i18n="proc_step3_text">Si accepté·e, vous recevez un email d'accès à l'espace bénévole.</p>
           </div>
           <div class="process-step">
             <div class="p-step-num">4</div>
-            <h4>Écoute</h4>
-            <p>Vous apparaissez dans la liste et pouvez commencer à écouter.</p>
+            <h4 data-i18n="proc_step4_title">Écoute</h4>
+            <p data-i18n="proc_step4_text">Vous apparaissez dans la liste et pouvez commencer à écouter.</p>
           </div>
         </div>
 
         <!-- Formulaire -->
         <div class="form-card">
-          <h2>Votre <em>candidature</em></h2>
-          <p class="form-intro">
-            Tous les champs marqués <span style="color:var(--sage)">*</span> sont obligatoires. Votre adresse email sera utilisée uniquement pour vous informer de la décision concernant votre candidature.
+          <h2 data-i18n-html="form_title">Votre <em>candidature</em></h2>
+          <p class="form-intro" data-i18n-html="form_intro">
+            Tous les champs marqués <span style="color:var(--sage)">*</span> sont obligatoires. Votre adresse email sera utilisée uniquement pour vous informer de la décision.
           </p>
 
           <div id="form-status" class="form-status"></div>
@@ -491,73 +491,73 @@
             <!-- Identité -->
             <div class="form-row">
               <div class="form-group">
-                <label>Prénom <span class="required">*</span></label>
-                <input type="text" name="prenom" placeholder="Votre prénom" required />
+                <label><span data-i18n="form_lbl_prenom">Prénom</span> <span class="required">*</span></label>
+                <input type="text" name="prenom" data-i18n-placeholder="form_pl_prenom" placeholder="Votre prénom" required />
               </div>
               <div class="form-group">
-                <label>Nom <span class="required">*</span></label>
-                <input type="text" name="nom" placeholder="Votre nom" required />
+                <label><span data-i18n="form_lbl_nom">Nom</span> <span class="required">*</span></label>
+                <input type="text" name="nom" data-i18n-placeholder="form_pl_nom" placeholder="Votre nom" required />
               </div>
             </div>
 
             <div class="form-group">
-              <label>Adresse email <span class="required">*</span></label>
-              <input type="email" name="email" placeholder="votre@email.com" required />
+              <label><span data-i18n="form_lbl_email">Adresse email</span> <span class="required">*</span></label>
+              <input type="email" name="email" data-i18n-placeholder="form_pl_email" placeholder="votre@email.com" required />
             </div>
 
             <div class="form-group">
-              <label>Pseudo bénévole <span class="required">*</span></label>
-              <input type="text" name="pseudo" placeholder="Nom qui apparaîtra dans la liste (ex : Marie, Lucie…)" required maxlength="30" />
+              <label><span data-i18n="form_lbl_pseudo">Pseudo bénévole</span> <span class="required">*</span></label>
+              <input type="text" name="pseudo" data-i18n-placeholder="form_pl_pseudo" placeholder="Nom qui apparaîtra dans la liste (ex : Marie, Lucie…)" required maxlength="30" />
             </div>
 
             <!-- Motivation -->
             <div class="form-group">
-              <label>Vos motivations <span class="required">*</span></label>
-              <textarea name="motivation" placeholder="Pourquoi souhaitez-vous devenir bénévole ? Quelle expérience ou sensibilité vous amène vers ce type d'écoute ?" required></textarea>
+              <label><span data-i18n="form_lbl_motivation">Vos motivations</span> <span class="required">*</span></label>
+              <textarea name="motivation" data-i18n-placeholder="form_pl_motivation" placeholder="Pourquoi souhaitez-vous devenir bénévole ?" required></textarea>
             </div>
 
             <!-- Description courte -->
             <div class="form-group">
-              <label>Courte description (visible par les utilisateurs) <span class="required">*</span></label>
-              <input type="text" name="description" placeholder="Ex : Bénévole passionné·e par l'écoute active, disponible le soir" maxlength="120" required />
+              <label><span data-i18n="form_lbl_desc">Courte description (visible par les utilisateurs)</span> <span class="required">*</span></label>
+              <input type="text" name="description" data-i18n-placeholder="form_pl_desc" placeholder="Ex : Bénévole passionné·e par l'écoute active, disponible le soir" maxlength="120" required />
             </div>
 
             <!-- Domaines -->
             <div class="form-group">
-              <label>Domaines d'écoute privilégiés</label>
+              <label data-i18n="form_lbl_domaine">Domaines d'écoute privilégiés</label>
               <select name="domaine">
                 <option value="">Choisir (optionnel)</option>
-                <option>Anxiété & stress</option>
-                <option>Solitude & isolement</option>
-                <option>Relations & famille</option>
-                <option>Travail & burn-out</option>
-                <option>Deuil & perte</option>
+                <option>Anxiété &amp; stress</option>
+                <option>Solitude &amp; isolement</option>
+                <option>Relations &amp; famille</option>
+                <option>Travail &amp; burn-out</option>
+                <option>Deuil &amp; perte</option>
                 <option>Général (tous sujets)</option>
               </select>
             </div>
 
             <!-- Disponibilités -->
             <div class="form-group">
-              <label>Disponibilités <span class="required">*</span></label>
+              <label><span data-i18n="form_lbl_dispo">Disponibilités</span> <span class="required">*</span></label>
               <div class="dispo-grid" id="dispo-grid">
                 <label class="dispo-option" onclick="toggleDispo(this)">
-                  <input type="checkbox" name="dispo" value="matin"> Matin (8h–12h)
+                  <input type="checkbox" name="dispo" value="matin"> <span data-i18n="dispo_matin">Matin (8h–12h)</span>
                 </label>
                 <label class="dispo-option" onclick="toggleDispo(this)">
-                  <input type="checkbox" name="dispo" value="apres-midi"> Après-midi (12h–18h)
+                  <input type="checkbox" name="dispo" value="apres-midi"> <span data-i18n="dispo_aprem">Après-midi (12h–18h)</span>
                 </label>
                 <label class="dispo-option" onclick="toggleDispo(this)">
-                  <input type="checkbox" name="dispo" value="soir"> Soir (18h–22h)
+                  <input type="checkbox" name="dispo" value="soir"> <span data-i18n="dispo_soir">Soir (18h–22h)</span>
                 </label>
                 <label class="dispo-option" onclick="toggleDispo(this)">
-                  <input type="checkbox" name="dispo" value="weekend"> Week-end
+                  <input type="checkbox" name="dispo" value="weekend"> <span data-i18n="dispo_wknd">Week-end</span>
                 </label>
               </div>
             </div>
 
             <!-- Charte -->
             <div class="form-group">
-              <label>Charte du bénévole <span class="required">*</span></label>
+              <label><span data-i18n="form_lbl_charte">Charte du bénévole</span> <span class="required">*</span></label>
               <div class="charte-box">
                 <h4>Charte éthique — Bénévole Écoute Anonyme</h4>
                 <ul>
@@ -573,12 +573,12 @@
               </div>
               <label class="charte-accept" style="margin-top:12px;">
                 <input type="checkbox" id="charte-check" required />
-                <span>J'ai lu et j'accepte la charte du bénévole. Je m'engage à la respecter scrupuleusement. <span class="required">*</span></span>
+                <span data-i18n="charte_accept">J'ai lu et j'accepte la charte du bénévole. Je m'engage à la respecter scrupuleusement. <span class="required">*</span></span>
               </label>
             </div>
 
             <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;font-size:15px;padding:16px;">
-              Envoyer ma candidature
+              <span data-i18n="form_submit">Envoyer ma candidature</span>
             </button>
 
           </form>
@@ -597,47 +597,38 @@
           <img src="logo_du_site.png" alt="Logo" style="height:36px;width:auto;filter:brightness(0) invert(1);opacity:0.85;" />
           <span class="footer-logo" style="margin-bottom:0;">Écoute Anonyme</span>
         </a>
-        <p class="footer-desc">Un espace d'écoute bénévole, gratuit et confidentiel.</p>
+        <p class="footer-desc" data-i18n="footer_desc">Un espace d'écoute bénévole, gratuit et confidentiel.</p>
       </div>
       <div class="footer-col">
         <h4 data-i18n="footer_nav">Navigation</h4>
         <ul>
-          <li><a href="index.html">Accueil</a></li>
-          <li><a href="presentation.html">Le projet</a></li>
-          <li><a href="benevoles.html">Bénévoles</a></li>
-          <li><a href="confidentialite.html">Confidentialité</a></li>
+          <li><a href="index.html" data-i18n="footer_home">Accueil</a></li>
+          <li><a href="presentation.html" data-i18n="nav_projet">Le projet</a></li>
+          <li><a href="benevoles.html" data-i18n="nav_benevoles">Bénévoles</a></li>
+          <li><a href="confidentialite.html" data-i18n="nav_confidentialite">Confidentialité</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4 data-i18n="footer_info">Informations</h4>
         <ul>
-          <li><a href="chat.html">Commencer</a></li>
-          <li><a href="#">Soutenir le projet</a></li>
-          <li><a href="#">Contact</a></li>
-          <li><a href="#">Urgences : 3114</a></li>
+          <li><a href="benevoles.html" data-i18n="footer_volunteer">Devenir bénévole</a></li>
+          <li><a href="soutenir.html" data-i18n="footer_support">Soutenir le projet</a></li>
+          <li><a href="mailto:ecoute.anonyme26@gmail.com" data-i18n="footer_contact">Contact</a></li>
+          <li><a href="tel:3114" data-i18n="footer_emergency">Urgences : 3114</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2025 Écoute Anonyme · Tous droits réservés</span>
+      <span data-i18n="footer_copy">© 2025 Écoute Anonyme · Tous droits réservés</span>
       <span class="footer-badge">
-        <span style="width:6px;height:6px;border-radius:50%;background:var(--sage);display:inline-block;"></span>
-        Service disponible
+        <span class="status-dot-sm"></span>
+        <span data-i18n="footer_available">Service disponible</span>
       </span>
     </div>
   </footer>
 
+  <script src="shared-ui.js"></script>
   <script>
-    // ===== NAV =====
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 30));
-    function toggleMenu() {
-      const open = document.getElementById('mobilePanel').classList.toggle('open');
-      document.getElementById('mobileOverlay').classList.toggle('open', open);
-      document.getElementById('hamburger').classList.toggle('open', open);
-      document.body.style.overflow = open ? 'hidden' : '';
-    }
-
     // ===== TABS =====
     function switchTab(tab, btn) {
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -653,38 +644,54 @@
       }, 0);
     }
 
-    // ===== BÉNÉVOLES (données simulées — à remplacer par un vrai backend) =====
+    // ===== BÉNÉVOLES =====
     const volunteers = [
       {
-        emoji: '🌿', name: 'Marie', since: 'Bénévole depuis 2024',
+        emoji: '🌿', name: 'Marie',
+        since: { fr: 'Bénévole depuis 2024', en: 'Volunteer since 2024' },
         status: 'online', tags: ['Anxiété', 'Solitude'],
-        desc: 'Disponible pour une écoute douce et sans jugement. Je crois en la puissance des mots pour aider à traverser les moments difficiles.',
-        dispo: 'Soir & week-end'
+        desc: {
+          fr: 'Disponible pour une écoute douce et sans jugement. Je crois en la puissance des mots pour aider à traverser les moments difficiles.',
+          en: 'Available for gentle, judgment-free listening. I believe in the power of words to help get through difficult times.'
+        },
+        dispo: { fr: 'Soir & week-end', en: 'Evenings & weekends' }
       },
       {
-        emoji: '🌊', name: 'Thomas', since: 'Bénévole depuis 2024',
+        emoji: '🌊', name: 'Thomas',
+        since: { fr: 'Bénévole depuis 2024', en: 'Volunteer since 2024' },
         status: 'away', tags: ['Relations', 'Travail'],
-        desc: "Passionné par l'écoute active. Je suis là pour vous accompagner, sans jamais vous juger, à votre rythme.",
-        dispo: 'Matin & après-midi'
+        desc: {
+          fr: "Passionné par l'écoute active. Je suis là pour vous accompagner, sans jamais vous juger, à votre rythme.",
+          en: "Passionate about active listening. I'm here to accompany you, never judging, at your own pace."
+        },
+        dispo: { fr: 'Matin & après-midi', en: 'Mornings & afternoons' }
       },
       {
-        emoji: '🌸', name: 'Léa', since: 'Bénévole depuis 2025',
+        emoji: '🌸', name: 'Léa',
+        since: { fr: 'Bénévole depuis 2025', en: 'Volunteer since 2025' },
         status: 'online', tags: ['Deuil', 'Général'],
-        desc: "Formatée à l\'écoute active, je vous offre un espace de parole bienveillant. Chaque personne mérite d\'être entendue.",
-        dispo: 'Après-midi & soir'
+        desc: {
+          fr: "Formée à l'écoute active, je vous offre un espace de parole bienveillant. Chaque personne mérite d'être entendue.",
+          en: "Trained in active listening, I offer you a caring space to speak. Every person deserves to be heard."
+        },
+        dispo: { fr: 'Après-midi & soir', en: 'Afternoons & evenings' }
       },
       {
-        emoji: '🍃', name: 'Samuel', since: 'Bénévole depuis 2025',
+        emoji: '🍃', name: 'Samuel',
+        since: { fr: 'Bénévole depuis 2025', en: 'Volunteer since 2025' },
         status: 'offline', tags: ['Général'],
-        desc: 'Je suis là pour vous écouter, sans filtres ni attentes. Votre vécu est important et mérite toute mon attention.',
-        dispo: 'Week-end'
+        desc: {
+          fr: 'Je suis là pour vous écouter, sans filtres ni attentes. Votre vécu est important et mérite toute mon attention.',
+          en: 'I am here to listen to you, without filters or expectations. Your experience matters and deserves my full attention.'
+        },
+        dispo: { fr: 'Week-end', en: 'Weekends' }
       },
     ];
 
-    const statusLabel = { online: 'En ligne', away: 'Disponible bientôt', offline: 'Hors ligne' };
-
     function renderVolunteers() {
+      const lang = window.currentLang || 'fr';
       const grid = document.getElementById('volunteers-grid');
+      if (!grid) return;
       grid.innerHTML = volunteers.map(v => `
         <div class="volunteer-card">
           <div class="vol-header">
@@ -694,22 +701,23 @@
             </div>
             <div class="vol-info">
               <h3>${v.name}</h3>
-              <span class="vol-since">${v.since}</span>
+              <span class="vol-since">${v.since[lang]}</span>
             </div>
           </div>
           <div class="vol-tags">
             ${v.tags.map(t => `<span class="vol-tag">${t}</span>`).join('')}
           </div>
-          <p class="vol-desc">${v.desc}</p>
+          <p class="vol-desc">${v.desc[lang]}</p>
           <p class="vol-dispo">
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M6 3v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-            ${v.dispo}
+            ${v.dispo[lang]}
           </p>
         </div>
       `).join('');
     }
 
     renderVolunteers();
+    window.onLangChange = renderVolunteers;
 
     // ===== FORMULAIRE =====
     function submitForm(e) {
@@ -717,7 +725,6 @@
       const form = e.target;
       const status = document.getElementById('form-status');
 
-      // Validation basique
       if (!form.prenom.value.trim() || !form.nom.value.trim() || !form.email.value.trim()
         || !form.pseudo.value.trim() || !form.motivation.value.trim()
         || !form.description.value.trim() || !document.getElementById('charte-check').checked) {
@@ -728,7 +735,6 @@
         return;
       }
 
-      // Vérifier au moins une disponibilité
       const dispos = form.querySelectorAll('input[name="dispo"]:checked');
       if (dispos.length === 0) {
         status.className = 'form-status error';
@@ -737,10 +743,9 @@
         return;
       }
 
-      // Simuler envoi (à remplacer par un fetch vers votre backend)
       const submitBtn = form.querySelector('button[type="submit"]');
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Envoi en cours…';
+      submitBtn.querySelector('span').textContent = 'Envoi en cours…';
 
       setTimeout(() => {
         status.className = 'form-status success';
@@ -752,11 +757,10 @@
         form.reset();
         document.querySelectorAll('.dispo-option').forEach(o => o.classList.remove('checked'));
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Envoyer ma candidature';
+        submitBtn.querySelector('span').textContent = window.LANG[window.currentLang].form_submit || 'Envoyer ma candidature';
         status.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 1200);
     }
   </script>
-  <script src="shared-ui.js"></script>
 </body>
 </html>
