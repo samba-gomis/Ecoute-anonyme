@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Écoute Anonyme — Un espace pour s'exprimer</title>
   <link rel="icon" type="image" href="logo.png">
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="css/styles.css" />
   <style>
     /* HERO */
     .hero {
@@ -183,10 +183,10 @@
       Écoute Anonyme
     </a>
     <ul class="nav-links">
-      <li><a href="presentation.html" data-i18n="nav_projet">Le projet</a></li>
-      <li><a href="benevoles.html" data-i18n="nav_benevoles">Bénévoles</a></li>
-      <li><a href="confidentialite.html" data-i18n="nav_confidentialite">Confidentialité</a></li>
-      <li><a href="chat.html" class="btn-nav" data-i18n="nav_cta">Commencer</a></li>
+      <li><a href="html/presentation.html" data-i18n="nav_projet">Le projet</a></li>
+      <li><a href="html/benevoles.html" data-i18n="nav_benevoles">Bénévoles</a></li>
+      <li><a href="html/confidentialite.html" data-i18n="nav_confidentialite">Confidentialité</a></li>
+      <li><a href="html/chat.html" class="btn-nav" data-i18n="nav_cta">Commencer</a></li>
     </ul>
     <button class="nav-hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
       <span></span><span></span><span></span>
@@ -196,11 +196,11 @@
   <div class="nav-mobile-overlay" id="mobileOverlay" onclick="toggleMenu()"></div>
   <div class="nav-mobile-panel" id="mobilePanel">
     <a href="index.html" class="active" data-i18n="footer_home">Accueil</a>
-    <a href="presentation.html" data-i18n="nav_projet">Le projet</a>
-    <a href="benevoles.html" data-i18n="nav_benevoles">Bénévoles</a>
-    <a href="confidentialite.html" data-i18n="nav_confidentialite">Confidentialité</a>
+    <a href="html/presentation.html" data-i18n="nav_projet">Le projet</a>
+    <a href="html/benevoles.html" data-i18n="nav_benevoles">Bénévoles</a>
+    <a href="html/confidentialite.html" data-i18n="nav_confidentialite">Confidentialité</a>
     <div class="nav-mobile-divider"></div>
-    <a href="chat.html" class="btn-mobile-cta" data-i18n="nav_cta">Commencer</a>
+    <a href="html/chat.html" class="btn-mobile-cta" data-i18n="nav_cta">Commencer</a>
   </div>
 
   <!-- HERO -->
@@ -219,11 +219,11 @@
         Écoute Anonyme est un lieu sûr où vous pouvez parler sans jugement, sans dévoiler votre identité. Des bénévoles attentifs sont là pour vous écouter.
       </p>
       <div class="hero-actions anim-fade-up delay-3">
-        <a href="chat.html" class="btn btn-primary">
+        <a href="html/chat.html" class="btn btn-primary">
           <span data-i18n="hero_cta">Commencer à écrire</span>
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
-        <a href="presentation.html" class="btn btn-secondary" data-i18n="hero_learn">En savoir plus</a>
+        <a href="html/presentation.html" class="btn btn-secondary" data-i18n="hero_learn">En savoir plus</a>
       </div>
       <p class="hero-note anim-fade-up delay-4" data-i18n="hero_note">Aucune inscription · Aucune donnée personnelle</p>
     </div>
@@ -310,7 +310,7 @@
           <h2 class="section-title" data-i18n-html="eng_title">Votre vie privée,<br><em>protégée avant tout</em></h2>
           <p data-i18n="eng_p1">Écoute Anonyme est conçu dès sa fondation pour minimiser la collecte de données. Vous n'avez besoin de rien dévoiler pour bénéficier du service.</p>
           <p data-i18n="eng_p2">Nous respectons le RGPD et allons au-delà de ses exigences : accès, rectification et effacement total garantis.</p>
-          <a href="confidentialite.html" class="btn btn-outline" style="margin-top:20px;">
+          <a href="html/confidentialite.html" class="btn btn-outline" style="margin-top:20px;">
             <span data-i18n="eng_btn">Lire la charte complète</span>
             <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7.5 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -381,7 +381,7 @@
         <p class="body-text" style="margin-bottom:28px;" data-i18n-html="benv_warning">
           <strong>Écoute Anonyme n'est pas un service d'urgence</strong> ni un dispositif médical. En cas de danger, contactez le 15, 17, 18 ou le 3114.
         </p>
-        <a href="benevoles.html" class="btn btn-outline" data-i18n="benv_sec_btn">Découvrir l'équipe</a>
+        <a href="html/benevoles.html" class="btn btn-outline" data-i18n="benv_sec_btn">Découvrir l'équipe</a>
       </div>
     </div>
   </section>
@@ -403,7 +403,7 @@
     <div class="container-narrow">
       <h2 data-i18n-html="cta_h2">Prêt·e à <em>vous exprimer</em> ?</h2>
       <p data-i18n="cta_p">Aucune inscription. Aucun engagement. Juste un espace pour vous.</p>
-      <a href="chat.html" class="btn btn-primary" style="font-size:15px;padding:15px 40px;" data-i18n="cta_btn">Commencer maintenant</a>
+      <a href="html/chat.html" class="btn btn-primary" style="font-size:15px;padding:15px 40px;" data-i18n="cta_btn">Commencer maintenant</a>
       <p class="cta-note" data-i18n="cta_note">Service gratuit · Anonyme · Disponible maintenant</p>
     </div>
   </section>
@@ -422,16 +422,16 @@
         <h4 data-i18n="footer_nav">Navigation</h4>
         <ul>
           <li><a href="index.html" data-i18n="footer_home">Accueil</a></li>
-          <li><a href="presentation.html" data-i18n="nav_projet">Le projet</a></li>
-          <li><a href="benevoles.html" data-i18n="nav_benevoles">Bénévoles</a></li>
-          <li><a href="confidentialite.html" data-i18n="nav_confidentialite">Confidentialité</a></li>
+          <li><a href="html/presentation.html" data-i18n="nav_projet">Le projet</a></li>
+          <li><a href="html/benevoles.html" data-i18n="nav_benevoles">Bénévoles</a></li>
+          <li><a href="html/confidentialite.html" data-i18n="nav_confidentialite">Confidentialité</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4 data-i18n="footer_info">Informations</h4>
         <ul>
-          <li><a href="benevoles.html" data-i18n="footer_volunteer">Devenir bénévole</a></li>
-          <li><a href="soutenir.html" data-i18n="footer_support">Soutenir le projet</a></li>
+          <li><a href="html/benevoles.html" data-i18n="footer_volunteer">Devenir bénévole</a></li>
+          <li><a href="html/soutenir.html" data-i18n="footer_support">Soutenir le projet</a></li>
           <li><a href="mailto:ecoute.anonyme26@gmail.com" data-i18n="footer_contact">Contact</a></li>
           <li><a href="tel:3114" data-i18n="footer_emergency">Urgences : 3114</a></li>
         </ul>

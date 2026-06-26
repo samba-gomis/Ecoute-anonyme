@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "Écoute Anonyme — Espace d'écoute bénévole, gratuit et confidentiel",
   "scripts": {
-    "sass": "sass scss/main.scss styles.css",
-    "sass:watch": "sass scss/main.scss styles.css --watch",
-    "sass:prod": "sass scss/main.scss styles.css --style=compressed --no-source-map"
+    "sass": "sass scss/main.scss css/styles.css",
+    "sass:watch": "sass scss/main.scss css/styles.css --watch",
+    "sass:prod": "sass scss/main.scss css/styles.css --style=compressed --no-source-map"
   },
   "devDependencies": {
     "sass": "^1.77.0"

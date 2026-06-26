@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chat — Écoute Anonyme</title>
-  <link rel="icon" type="image" href="logo.png">
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image" href="../logo.png">
+  <link rel="stylesheet" href="../css/styles.css" />
   <style>
     body { overflow: hidden; height: 100vh; }
 
@@ -212,8 +212,8 @@
   <!-- ÉCRAN 1 — PSEUDO -->
   <div class="screen active" id="screen-pseudo">
     <div class="entry-card">
-      <a href="index.html" class="entry-logo">
-        <img src="logo.png" alt="Logo" />
+      <a href="../index.html" class="entry-logo">
+        <img src="../logo.png" alt="Logo" />
         <span>Écoute Anonyme</span>
       </a>
       <h1 data-i18n-html="chat_entry_h1">Bienvenue.<br><em>Vous n'êtes pas seul·e.</em></h1>
@@ -251,12 +251,12 @@
   <div id="chat-screen">
     <div class="chat-topbar">
       <div class="chat-topbar-left">
-        <a href="index.html" class="chat-back">
+        <a href="../index.html" class="chat-back">
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <span data-i18n="chat_back">Retour</span>
         </a>
-        <a href="index.html" class="chat-logo-link">
-          <img src="logo.png" alt="Logo" />
+        <a href="../index.html" class="chat-logo-link">
+          <img src="../logo.png" alt="Logo" />
           <span>Écoute Anonyme</span>
         </a>
       </div>
@@ -427,7 +427,7 @@
     </div>
   </div>
 
-  <script src="shared-ui.js"></script>
+  <script src="../shared-ui.js"></script>
   <script>
     const volunteers = [
       {
@@ -642,7 +642,7 @@
 
     function skipDon(){
       closeModal('don-modal');
-      window.location.href='index.html';
+      window.location.href='../index.html';
     }
   </script>
 </body>
