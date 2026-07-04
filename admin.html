@@ -104,7 +104,13 @@
       display: flex; align-items: center; gap: 12px;
       font-family: var(--font-display); font-size: 17px; color: #fff;
     }
-    .admin-nav-logo img { height: 28px; filter: brightness(0) invert(1); opacity: 0.85; }
+    .admin-nav-logo-icon {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: rgba(255,255,255,0.12);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .admin-nav-logo-icon img { height: 22px; width: auto; }
     .admin-nav-badge {
       font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
       text-transform: uppercase; background: var(--sage);
@@ -403,7 +409,9 @@
     <!-- Nav admin -->
     <div class="admin-nav">
       <div class="admin-nav-logo">
-        <img src="logo.png" alt="Logo" />
+        <div class="admin-nav-logo-icon">
+          <img src="logo.png" alt="Logo" />
+        </div>
         Écoute Anonyme
         <span class="admin-nav-badge">Admin</span>
       </div>

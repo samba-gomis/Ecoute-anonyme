@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Espace Bénévole — Écoute Anonyme</title>
+  <link rel="icon" href="../logo.png" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    body { overflow: hidden; height: 100vh; }
+
+    /* ── SCREENS ─────────────────────────────────── */
+    .screen {
+      position: fixed; inset: 0; z-index: 300;
+      display: none; flex-direction: column;
+      background: var(--cream); transition: background 0.3s;
+      overflow-y: auto; padding-top: var(--util-h);
+    }
+    .screen.active { display: flex; }
+
+    #screen-login {
+      align-items: center; justify-content: center;
+      padding: calc(var(--util-h) + 32px) 24px 32px;
+      overflow: hidden;
+    }
+    #screen-login::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 60% at 15% 85%, rgba(139,175,138,0.10) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 50% at 82% 18%, rgba(196,168,130,0.07) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    /* ── LOGIN CARD ───────────────────────────────── */
+    .lcard {
+      background: var(--bg-card); border-radius: 24px; border: 1px solid var(--border);
+      padding: 44px 40px; width: 100%; max-width: 560px;
+      box-shadow: var(--shadow); animation: fadeUp 0.4s ease forwards;
+      position: relative; z-index: 1;
+    }
+    body.dark .lcard { box-shadow: 0 8px 40px rgba(0,0,0,0.45); }
+    .lcard::before {
+      content: ''; position: absolute; top: 0; left: 40px; right: 40px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--sage), transparent);
+    }
+    .lcard-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; text-decoration: none; }
+    .lcard-logo img { height: 34px; }
+    .lcard-logo span { font-family: var(--font-display); font-size: 18px; font-weight: 600; color: var(--stone-dark); }
+    .lcard h2 { font-family: var(--font-display); font-size: 26px; font-weight: 300; color: var(--stone-dark); margin-bottom: 6px; }
+    .lcard h2 em { font-style: italic; color: var(--sage-dark); }
+    .lcard-sub { font-size: 14px; color: var(--stone); margin-bottom: 28px; line-height: 1.6; }
+    .lcard-section-lbl {
+      font-size: 11px; font-weight: 500; color: var(--stone); letter-spacing: 0.06em;
+      text-transform: uppercase; margin-bottom: 10px; display: block;
+    }
+
+    .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 4px; }
+    .profile-card {
+      background: var(--bg-primary); border: 1.5px solid var(--border); border-radius: 14px;
+      padding: 13px 14px; cursor: pointer; display: flex; align-items: center; gap: 12px;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    }
+    .profile-card:hover:not(.pc-offline) { border-color: var(--sage-light); background: var(--sage-pale); transform: translateY(-1px); }
+    .pc-offline { opacity: 0.48; cursor: not-allowed; }
+    .pc-avatar {
+      width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+      background: var(--sage-pale); border: 2px solid rgba(139,175,138,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 16px; font-weight: 600;
+      color: var(--sage-dark); position: relative;
+    }
+    .pc-dot { position: absolute; bottom: 1px; right: 1px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--bg-primary); }
+    .dot-online { background: #48A868; } .dot-away { background: #D4A017; } .dot-offline { background: var(--mist); }
+    .pc-meta h4 { font-size: 14px; font-weight: 500; color: var(--stone-dark); margin-bottom: 2px; }
+    .pc-meta span { font-size: 11px; }
+    .s-online { color: #48A868; } .s-away { color: #D4A017; } .s-offline { color: var(--mist); }
+
+    .divider { display: flex; align-items: center; gap: 12px; margin: 18px 0; font-size: 12px; color: var(--mist); }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .pseudo-row { display: flex; gap: 9px; margin-bottom: 10px; }
+    .pseudo-row input {
+      flex: 1; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-md);
+      font-family: var(--font-body); font-size: 14px; color: var(--stone-dark);
+      background: var(--bg-primary); outline: none; transition: border-color 0.2s, background 0.2s;
+    }
+    .pseudo-row input:focus { border-color: var(--sage); background: var(--bg-card); }
+    .pseudo-row input::placeholder { color: var(--mist); }
+    .pseudo-btn {
+      padding: 11px 18px; background: var(--sage); color: #fff; border: none;
+      border-radius: var(--radius-pill); font-family: var(--font-body); font-size: 13px;
+      font-weight: 500; cursor: pointer; transition: background 0.2s; white-space: nowrap;
+    }
+    .pseudo-btn:hover { background: var(--sage-dark); }
+    .anon-btn {
+      width: 100%; padding: 12px; background: transparent; color: var(--stone);
+      border: 1.5px solid rgba(184,180,174,0.4); border-radius: var(--radius-pill);
+      font-family: var(--font-body); font-size: 14px; cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .anon-btn:hover { border-color: var(--sage-light); color: var(--stone-dark); }
+    .anon-note {
+      margin-top: 14px; font-size: 12px; color: var(--mist); line-height: 1.65;
+      background: var(--bg-primary); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 10px 13px;
+    }
+
+    /* ── VOL NAV ──────────────────────────────────── */
+    .vol-nav {
+      height: 60px; flex-shrink: 0; background: #2A2826;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .vn-left { display: flex; align-items: center; gap: 14px; }
+    .vn-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+    .vn-logo-box {
+      width: 30px; height: 30px; border-radius: 8px;
+      background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center;
+    }
+    .vn-logo-box img { height: 19px; }
+    .vn-logo-name { font-family: var(--font-display); font-size: 15px; color: rgba(255,255,255,0.8); }
+    .vn-sep { width: 1px; height: 20px; background: rgba(255,255,255,0.1); }
+    .vn-identity { display: flex; align-items: center; gap: 9px; }
+    .vn-avatar {
+      width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+      background: var(--sage-pale); border: 2px solid rgba(139,175,138,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 13px; font-weight: 600;
+      color: var(--sage-dark); position: relative;
+    }
+    .vn-status-dot { position: absolute; bottom: 0; right: 0; width: 8px; height: 8px; border-radius: 50%; border: 2px solid #2A2826; }
+    .vn-name { font-size: 13px; color: rgba(255,255,255,0.85); }
+    .vn-badge {
+      font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase;
+      background: var(--sage); color: #fff; padding: 2px 9px; border-radius: var(--radius-pill);
+    }
+    .vn-right { display: flex; align-items: center; gap: 10px; }
+    .vn-status-select {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius-pill); padding: 5px 12px; cursor: pointer;
+    }
+    .vn-status-select select {
+      background: transparent; border: none; outline: none;
+      color: rgba(255,255,255,0.75); font-family: var(--font-body); font-size: 12px; cursor: pointer;
+    }
+    .vn-status-select select option { background: #2A2826; }
+    .s-ind { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .si-online { background: #48A868; } .si-away { background: #D4A017; } .si-offline { background: var(--mist); }
+    .vn-logout {
+      font-size: 12px; color: rgba(255,255,255,0.4); background: none; border: none;
+      cursor: pointer; font-family: var(--font-body); display: flex; align-items: center;
+      gap: 5px; transition: color 0.2s;
+    }
+    .vn-logout:hover { color: rgba(255,255,255,0.85); }
+
+    /* ── LOBBY ────────────────────────────────────── */
+    #screen-lobby { overflow-y: auto; }
+    .lobby-body { flex: 1; max-width: 880px; margin: 0 auto; padding: 32px 24px 80px; width: 100%; }
+
+    .lobby-greeting { margin-bottom: 24px; }
+    .lobby-greeting .section-label { margin-bottom: 6px; }
+    .lobby-greeting h1 { font-family: var(--font-display); font-size: 30px; font-weight: 300; color: var(--stone-dark); }
+    .lobby-greeting h1 em { font-style: italic; color: var(--sage-dark); }
+    .lobby-greeting p { font-size: 14px; color: var(--stone); margin-top: 6px; }
+
+    .status-pills { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; }
+    .spill {
+      display: flex; align-items: center; gap: 7px; padding: 8px 16px;
+      border-radius: var(--radius-pill); border: 1.5px solid var(--border); cursor: pointer;
+      font-family: var(--font-body); font-size: 13px; font-weight: 500;
+      color: var(--stone); background: var(--bg-card); transition: border-color 0.2s, background 0.2s, color 0.2s;
+    }
+    .spill:hover { border-color: var(--sage-light); }
+    .spill.sp-active   { border-color: var(--sage);  background: var(--sage-pale); color: var(--sage-dark); }
+    .spill.sp-away     { border-color: #D4A017; background: rgba(212,160,23,0.09); color: #8A6A00; }
+    body.dark .spill.sp-away { color: #D4A017; }
+    .spill.sp-offline  { border-color: var(--mist); background: rgba(184,180,174,0.09); color: var(--stone); }
+
+    /* Pending section */
+    .pending-section {
+      background: var(--bg-card); border-radius: var(--radius-lg);
+      border: 1px solid var(--border); margin-bottom: 24px; overflow: hidden;
+      transition: background 0.3s;
+    }
+    .ps-header {
+      padding: 15px 20px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .ps-header-left { display: flex; align-items: center; gap: 10px; }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #48A868; animation: pulse 2s ease-in-out infinite; flex-shrink: 0; }
+    .ps-header h2 { font-family: var(--font-display); font-size: 18px; font-weight: 400; color: var(--stone-dark); }
+    .ps-count {
+      font-size: 12px; font-weight: 500; background: rgba(139,175,138,0.14);
+      color: var(--sage-dark); padding: 3px 10px; border-radius: var(--radius-pill);
+    }
+
+    .pending-item {
+      display: flex; align-items: center; gap: 14px; padding: 14px 20px;
+      border-bottom: 1px solid rgba(139,175,138,0.06);
+      transition: background 0.15s; animation: fadeUp 0.3s ease forwards;
+    }
+    .pending-item:last-child { border-bottom: none; }
+    .pending-item:hover { background: var(--bg-primary); }
+    .pending-item.new-user { border-left: 3px solid var(--sage); }
+    .pi-av {
+      width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+      background: var(--bg-primary); border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 16px; color: var(--stone);
+    }
+    .pi-info { flex: 1; min-width: 0; }
+    .pi-name { font-size: 14px; font-weight: 500; color: var(--stone-dark); margin-bottom: 3px; }
+    .pi-meta { display: flex; gap: 10px; font-size: 12px; color: var(--mist); align-items: center; flex-wrap: wrap; }
+    .pi-tag { background: var(--sage-pale); color: var(--sage-dark); padding: 2px 8px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 500; }
+    .accept-btn {
+      padding: 8px 18px; background: var(--sage); color: #fff; border: none;
+      border-radius: var(--radius-pill); font-family: var(--font-body); font-size: 13px;
+      font-weight: 500; cursor: pointer; transition: background 0.2s, transform 0.15s; flex-shrink: 0;
+    }
+    .accept-btn:hover { background: var(--sage-dark); transform: translateY(-1px); }
+    .lobby-empty { padding: 40px 24px; text-align: center; color: var(--mist); font-size: 14px; }
+    .lobby-empty-icon {
+      width: 46px; height: 46px; border-radius: 13px; background: var(--bg-primary);
+      border: 1px solid var(--border); display: flex; align-items: center;
+      justify-content: center; margin: 0 auto 12px;
+    }
+
+    /* Stats row */
+    .lobby-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
+    .ls-card {
+      background: var(--bg-card); border-radius: var(--radius-md);
+      border: 1px solid var(--border); padding: 18px 20px; transition: background 0.3s;
+    }
+    .ls-val { font-family: var(--font-display); font-size: 30px; font-weight: 300; color: var(--sage-dark); line-height: 1; margin-bottom: 4px; }
+    .ls-lbl { font-size: 12px; color: var(--mist); text-transform: uppercase; letter-spacing: 0.04em; }
+
+    /* Charter */
+    .charter-card {
+      background: var(--sage-pale); border-radius: var(--radius-md);
+      border: 1px solid var(--border); padding: 16px 20px;
+      display: flex; gap: 14px; align-items: flex-start;
+    }
+    .charter-icon {
+      width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+      background: rgba(139,175,138,0.2); display: flex; align-items: center; justify-content: center;
+    }
+    .charter-text h4 { font-size: 13px; font-weight: 500; color: var(--stone-dark); margin-bottom: 4px; }
+    .charter-text p { font-size: 12px; color: var(--stone); line-height: 1.65; }
+
+    /* ── CHAT SCREEN ──────────────────────────────── */
+    #screen-chat { overflow: hidden; }
+
+    .chat-topbar {
+      height: 60px; min-height: 60px; flex-shrink: 0;
+      background: var(--bg-card); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 14px; gap: 10px; transition: background 0.3s;
+    }
+    .ct-left { display: flex; align-items: center; gap: 8px; }
+    .back-btn {
+      display: flex; align-items: center; gap: 5px; font-size: 13px; color: var(--stone);
+      padding: 6px 9px; border-radius: var(--radius-sm); cursor: pointer; border: none;
+      background: none; font-family: var(--font-body); transition: background 0.15s, color 0.15s;
+      position: relative;
+    }
+    .back-btn:hover { background: var(--sage-pale); color: var(--sage-dark); }
+    .back-badge {
+      position: absolute; top: 4px; right: 4px; width: 7px; height: 7px;
+      border-radius: 50%; background: #48A868; border: 1.5px solid var(--bg-card); display: none;
+    }
+    .back-badge.show { display: block; }
+    .ct-user { display: flex; align-items: center; gap: 9px; }
+    .ct-user-av {
+      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+      background: var(--bg-subtle); border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 13px; color: var(--stone);
+    }
+    .ct-user-name { font-size: 13px; font-weight: 500; color: var(--stone-dark); line-height: 1.2; }
+    .ct-user-status { font-size: 11px; color: #48A868; }
+    .ct-right { display: flex; align-items: center; gap: 7px; }
+    .my-badge {
+      display: flex; align-items: center; gap: 5px;
+      background: var(--sage-pale); border: 1px solid rgba(139,175,138,0.3);
+      border-radius: var(--radius-pill); padding: 4px 11px; font-size: 11px; color: var(--sage-dark); font-weight: 500;
+    }
+    .ct-btn {
+      width: 32px; height: 32px; border-radius: var(--radius-sm); background: none; border: none;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: var(--stone); transition: background 0.15s, color 0.15s;
+    }
+    .ct-btn:hover { background: var(--sage-pale); color: var(--sage-dark); }
+    .ct-btn.danger:hover { background: var(--danger-pale); color: var(--danger); }
+    .dropdown { position: relative; }
+    .dd-menu {
+      position: absolute; top: calc(100% + 6px); right: 0;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); box-shadow: var(--shadow);
+      min-width: 185px; padding: 6px; z-index: 100; display: none;
+    }
+    .dd-menu.open { display: block; }
+    .dd-item {
+      display: flex; align-items: center; gap: 9px; padding: 10px 12px;
+      border-radius: var(--radius-sm); font-size: 13px; color: var(--stone);
+      cursor: pointer; border: none; background: none; width: 100%;
+      text-align: left; font-family: var(--font-body); transition: background 0.15s;
+    }
+    .dd-item:hover { background: var(--sage-pale); color: var(--stone-dark); }
+    .dd-item.dd-danger:hover { background: var(--danger-pale); color: var(--danger); }
+    .dd-sep { height: 1px; background: var(--border); margin: 4px 0; }
+
+    /* Messages */
+    .chat-messages {
+      flex: 1; overflow-y: auto; padding: 18px 16px;
+      display: flex; flex-direction: column; gap: 12px;
+      background: var(--cream); scroll-behavior: smooth; transition: background 0.3s;
+    }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: rgba(139,175,138,0.3); border-radius: 2px; }
+    .date-sep { display: flex; align-items: center; gap: 12px; }
+    .date-sep::before, .date-sep::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .date-sep span { font-size: 11px; color: var(--mist); white-space: nowrap; }
+    .msg-group { display: flex; flex-direction: column; gap: 3px; max-width: 72%; }
+    .msg-group.from-user { align-self: flex-start; align-items: flex-start; }
+    .msg-group.from-me   { align-self: flex-end; align-items: flex-end; }
+    .msg-sender { font-size: 11px; color: var(--mist); padding: 0 4px; }
+    .msg-bubble { padding: 11px 15px; border-radius: 18px; font-size: 14px; line-height: 1.65; word-break: break-word; }
+    .from-user .msg-bubble {
+      background: var(--bg-card); color: var(--stone-dark);
+      border: 1px solid var(--border); border-bottom-left-radius: 4px; transition: background 0.3s;
+    }
+    .from-me .msg-bubble { background: var(--sage); color: #fff; border-bottom-right-radius: 4px; }
+    .msg-time { font-size: 10px; color: var(--mist); padding: 0 4px; }
+    .msg-sys {
+      text-align: center; font-size: 12px; color: var(--mist);
+      background: rgba(139,175,138,0.09); border-radius: var(--radius-pill);
+      padding: 6px 16px; align-self: center; max-width: 85%; line-height: 1.5;
+    }
+    .typing-ind { display: none; align-self: flex-start; }
+    .typing-ind.on { display: flex; }
+    .typing-bub {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px;
+      border-bottom-left-radius: 4px; padding: 12px 14px;
+      display: flex; align-items: center; gap: 4px; transition: background 0.3s;
+    }
+    .t-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--sage-light); animation: tb 1.2s ease-in-out infinite; }
+    .t-dot:nth-child(2){animation-delay:.15s}.t-dot:nth-child(3){animation-delay:.3s}
+    @keyframes tb{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-5px);opacity:1}}
+
+    /* Input */
+    .chat-input-area {
+      flex-shrink: 0; background: var(--bg-card); border-top: 1px solid var(--border);
+      padding: 11px 13px; transition: background 0.3s;
+    }
+    .input-row {
+      display: flex; align-items: flex-end; gap: 9px; background: var(--cream);
+      border: 1.5px solid rgba(139,175,138,0.25); border-radius: 22px;
+      padding: 7px 7px 7px 14px; transition: border-color 0.2s, background 0.3s;
+    }
+    .input-row:focus-within { border-color: var(--sage); }
+    .input-row textarea {
+      flex: 1; border: none; background: transparent; font-family: var(--font-body);
+      font-size: 14px; color: var(--stone-dark); line-height: 1.5; resize: none;
+      outline: none; min-height: 22px; max-height: 110px; padding: 2px 0;
+    }
+    .input-row textarea::placeholder { color: var(--mist); }
+    .send-btn {
+      width: 33px; height: 33px; min-width: 33px; border-radius: 50%;
+      background: var(--sage); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; color: #fff;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .send-btn:hover { background: var(--sage-dark); transform: scale(1.06); }
+    .send-btn:active { transform: scale(0.95); }
+    .input-hint { text-align: center; font-size: 11px; color: var(--mist); margin-top: 7px; }
+
+    /* ── TOAST ───────────────────────────────────── */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(16px);
+      background: var(--stone-dark); color: #fff; padding: 11px 20px;
+      border-radius: var(--radius-pill); font-size: 13px; font-weight: 500;
+      z-index: 999; box-shadow: 0 8px 24px rgba(0,0,0,0.22);
+      opacity: 0; transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none; display: flex; align-items: center; gap: 8px; white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast-dot { width: 7px; height: 7px; border-radius: 50%; background: #48A868; flex-shrink: 0; }
+
+    /* ── MODALES ─────────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(20,18,16,0.55);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      z-index: 600; display: none; align-items: center; justify-content: center; padding: 24px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-card {
+      background: var(--bg-card); border-radius: 24px; padding: 30px 26px;
+      max-width: 420px; width: 100%; box-shadow: 0 24px 64px rgba(61,58,56,0.18);
+      animation: fadeUp 0.25s ease forwards; border: 1px solid var(--border); transition: background 0.3s;
+    }
+    body.dark .modal-card { box-shadow: 0 24px 64px rgba(0,0,0,0.55); }
+    .m-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+    .modal-card h3 { font-family: var(--font-display); font-size: 20px; font-weight: 400; color: var(--stone-dark); margin-bottom: 8px; }
+    .modal-card p { font-size: 14px; color: var(--stone); line-height: 1.7; margin-bottom: 18px; }
+    .m-actions { display: flex; gap: 9px; }
+    .m-btn {
+      flex: 1; padding: 12px; border-radius: var(--radius-pill); font-family: var(--font-body);
+      font-size: 14px; font-weight: 500; cursor: pointer; border: none;
+      transition: background 0.2s, transform 0.15s; text-align: center;
+    }
+    .m-btn:hover { transform: translateY(-1px); }
+    .m-cancel { background: var(--bg-primary); color: var(--stone); border: 1.5px solid var(--border); }
+    .m-cancel:hover { background: var(--sage-pale); }
+    .m-sage { background: var(--sage); color: #fff; }
+    .m-sage:hover { background: var(--sage-dark); }
+    .m-red { background: var(--danger); color: #fff; }
+    .m-red:hover { background: #A83030; }
+    .rep-opts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .rep-opt {
+      display: flex; align-items: center; gap: 10px; padding: 10px 13px;
+      border: 1.5px solid rgba(184,180,174,0.3); border-radius: var(--radius-sm);
+      cursor: pointer; font-size: 13px; color: var(--stone); transition: border-color 0.2s, background 0.2s;
+    }
+    .rep-opt:hover, .rep-opt.sel { border-color: var(--danger); background: var(--danger-pale); color: var(--danger); }
+    .rep-opt input { accent-color: var(--danger); }
+
+    @media(max-width:600px){
+      .profile-grid { grid-template-columns: 1fr; }
+      .lcard { padding: 32px 20px; }
+      .lobby-stats { grid-template-columns: 1fr 1fr; }
+      .lobby-body { padding: 20px 14px 60px; }
+      .vn-logo-name, .vn-name { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     ÉCRAN 1 — CONNEXION / IDENTITÉ
+════════════════════════════════════════════ -->
+<div id="screen-login" class="screen active">
+  <div class="lcard">
+    <a href="../index.html" class="lcard-logo">
+      <img src="../logo.png" alt="Logo" />
+      <span>Écoute Anonyme</span>
+    </a>
+    <h2>Espace <em>bénévole</em></h2>
+    <p class="lcard-sub">Choisissez comment vous souhaitez apparaître lors de cette session d'écoute.</p>
+
+    <span class="lcard-section-lbl">Vos profils enregistrés</span>
+    <div class="profile-grid" id="profile-grid"></div>
+
+    <div class="divider">ou</div>
+
+    <span class="lcard-section-lbl">Entrer avec un pseudo personnalisé</span>
+    <div class="pseudo-row">
+      <input type="text" id="custom-pseudo" placeholder="Votre pseudo…" maxlength="30" autocomplete="off"
+             onkeydown="if(event.key==='Enter') enterWithPseudo()" />
+      <button class="pseudo-btn" onclick="enterWithPseudo()">Entrer</button>
+    </div>
+
+    <button class="anon-btn" onclick="enterAnonymous()">
+      Entrer anonymement · Apparaître comme « Bénévole »
+    </button>
+
+    <p class="anon-note">
+      Votre identité peut rester privée. Les utilisateurs verront uniquement le nom ou pseudo que vous choisissez ici — jamais votre identité réelle.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     ÉCRAN 2 — SALON D'ATTENTE (LOBBY)
+════════════════════════════════════════════ -->
+<div id="screen-lobby" class="screen">
+
+  <!-- Nav bénévole -->
+  <div class="vol-nav">
+    <div class="vn-left">
+      <a href="../index.html" class="vn-logo">
+        <div class="vn-logo-box"><img src="../logo.png" alt="Logo" /></div>
+        <span class="vn-logo-name">Écoute Anonyme</span>
+      </a>
+      <div class="vn-sep"></div>
+      <div class="vn-identity">
+        <div class="vn-avatar">
+          <span id="vn-initial">M</span>
+          <span class="vn-status-dot si-online" id="vn-dot"></span>
+        </div>
+        <span class="vn-name" id="vn-name">Marie</span>
+        <span class="vn-badge">Bénévole</span>
+      </div>
+    </div>
+    <div class="vn-right">
+      <div class="vn-status-select">
+        <span class="s-ind si-online" id="vn-status-ind"></span>
+        <select id="status-select" onchange="setStatus(this.value)">
+          <option value="online">En ligne</option>
+          <option value="away">Absent·e</option>
+          <option value="offline">Hors ligne</option>
+        </select>
+      </div>
+      <button class="vn-logout" onclick="doLogout()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Quitter
+      </button>
+    </div>
+  </div>
+
+  <div class="lobby-body">
+
+    <!-- Titre -->
+    <div class="lobby-greeting">
+      <span class="section-label">Espace bénévole</span>
+      <h1 id="lobby-h1">Bonsoir, <em>Marie</em></h1>
+      <p id="lobby-sub">Vous êtes en ligne et disponible pour écouter.</p>
+    </div>
+
+    <!-- Statut rapide -->
+    <div class="status-pills">
+      <button class="spill sp-active" data-s="online" onclick="setStatus('online')">
+        <span class="s-ind si-online"></span>En ligne
+      </button>
+      <button class="spill" data-s="away" onclick="setStatus('away')">
+        <span class="s-ind si-away"></span>Absent·e
+      </button>
+      <button class="spill" data-s="offline" onclick="setStatus('offline')">
+        <span class="s-ind si-offline"></span>Hors ligne
+      </button>
+    </div>
+
+    <!-- Personnes en attente -->
+    <div class="pending-section">
+      <div class="ps-header">
+        <div class="ps-header-left">
+          <span class="live-dot"></span>
+          <h2>Personnes en attente</h2>
+        </div>
+        <span class="ps-count" id="ps-count">2</span>
+      </div>
+      <div id="pending-list"></div>
+    </div>
+
+    <!-- Stats du jour -->
+    <div class="lobby-stats">
+      <div class="ls-card">
+        <div class="ls-val" id="stat-exchanges">3</div>
+        <div class="ls-lbl">Échanges aujourd'hui</div>
+      </div>
+      <div class="ls-card">
+        <div class="ls-val">4,8</div>
+        <div class="ls-lbl">Note moyenne</div>
+      </div>
+      <div class="ls-card">
+        <div class="ls-val">12 min</div>
+        <div class="ls-lbl">Durée moyenne</div>
+      </div>
+    </div>
+
+    <!-- Rappel charte -->
+    <div class="charter-card">
+      <div class="charter-icon">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="charter-text">
+        <h4>Rappel de la charte</h4>
+        <p>Vous êtes un·e accompagnant·e, pas un·e thérapeute. Votre rôle est d'écouter avec bienveillance, sans juger ni prodiguer de conseils médicaux. En cas d'urgence, orientez vers le 3114.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     ÉCRAN 3 — CHAT AVEC UN UTILISATEUR
+════════════════════════════════════════════ -->
+<div id="screen-chat" class="screen">
+
+  <div class="chat-topbar">
+    <div class="ct-left">
+      <button class="back-btn" onclick="tryBackToLobby()">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Salon
+        <span class="back-badge" id="back-badge"></span>
+      </button>
+      <div class="ct-user">
+        <div class="ct-user-av" id="ct-av">?</div>
+        <div>
+          <div class="ct-user-name" id="ct-user-name">Anonyme</div>
+          <span class="ct-user-status">Connecté·e</span>
+        </div>
+      </div>
+    </div>
+    <div class="ct-right">
+      <div class="my-badge">
+        <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="4" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 10.5c0-2.2 2-4 4.5-4s4.5 1.8 4.5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <span id="my-id-badge">Marie</span>
+      </div>
+      <button class="ct-btn danger" onclick="openModal('report-modal')" title="Signaler l'utilisateur">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.5" fill="currentColor"/></svg>
+      </button>
+      <div class="dropdown">
+        <button class="ct-btn" onclick="ddToggle()" title="Options">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+        </button>
+        <div class="dd-menu" id="dd-menu">
+          <button class="dd-item" onclick="openModal('end-modal');ddClose()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Terminer l'échange
+          </button>
+          <div class="dd-sep"></div>
+          <button class="dd-item dd-danger" onclick="openModal('report-modal');ddClose()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
+            Signaler l'utilisateur
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-messages" id="chat-messages">
+    <div class="typing-ind" id="typing-ind">
+      <div class="typing-bub">
+        <span class="t-dot"></span><span class="t-dot"></span><span class="t-dot"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input-area">
+    <div class="input-row">
+      <textarea id="msg-input" placeholder="Répondez à l'utilisateur…" rows="1"
+                onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <button class="send-btn" onclick="sendMsg()">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M10 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <p class="input-hint">Entrée pour envoyer · Maj+Entrée pour un saut de ligne</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TOAST
+════════════════════════════════════════════ -->
+<div class="toast" id="toast">
+  <span class="toast-dot"></span>
+  <span id="toast-msg"></span>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     MODAL — FIN D'ÉCHANGE
+════════════════════════════════════════════ -->
+<div class="modal-overlay" id="end-modal">
+  <div class="modal-card">
+    <div class="m-icon" style="background:var(--sage-pale);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h3>Terminer l'échange</h3>
+    <p>Souhaitez-vous mettre fin à cette conversation et retourner au salon d'attente ?</p>
+    <div class="m-actions">
+      <button class="m-btn m-cancel" onclick="closeModal('end-modal')">Annuler</button>
+      <button class="m-btn m-sage" onclick="endConversation()">Terminer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     MODAL — SIGNALER UN UTILISATEUR
+════════════════════════════════════════════ -->
+<div class="modal-overlay" id="report-modal">
+  <div class="modal-card">
+    <div class="m-icon" style="background:var(--danger-pale);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.5" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <h3>Signaler cet utilisateur</h3>
+    <p>Notre équipe sera alertée et examinera le signalement.</p>
+    <div class="rep-opts">
+      <label class="rep-opt"><input type="radio" name="rep" value="menace" onchange="pickRep(this)"> Menaces ou violence verbale</label>
+      <label class="rep-opt"><input type="radio" name="rep" value="harcel" onchange="pickRep(this)"> Harcèlement</label>
+      <label class="rep-opt"><input type="radio" name="rep" value="info" onchange="pickRep(this)"> Demande d'informations personnelles</label>
+      <label class="rep-opt"><input type="radio" name="rep" value="inapp" onchange="pickRep(this)"> Contenu inapproprié</label>
+      <label class="rep-opt"><input type="radio" name="rep" value="autre" onchange="pickRep(this)"> Autre motif</label>
+    </div>
+    <div class="m-actions">
+      <button class="m-btn m-cancel" onclick="closeModal('report-modal')">Annuler</button>
+      <button class="m-btn m-red" id="rep-btn" onclick="submitReport()" disabled>Signaler</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     MODAL — CONFIRMATION SIGNALEMENT
+════════════════════════════════════════════ -->
+<div class="modal-overlay" id="report-ok-modal">
+  <div class="modal-card" style="text-align:center;">
+    <div class="m-icon" style="background:var(--sage-pale);margin:0 auto 16px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h3>Signalement envoyé</h3>
+    <p>Notre équipe examinera votre signalement dans les meilleurs délais. Merci.</p>
+    <button class="m-btn m-sage" onclick="closeModal('report-ok-modal')" style="display:block;width:100%;">Fermer</button>
+  </div>
+</div>
+
+<script src="../shared-ui.js"></script>
+<script>
+// ══════════════════════════════════════════
+// DONNÉES
+// ══════════════════════════════════════════
+const VOLS = [
+  { id:'marie',  name:'Marie',  init:'M', tags:['Anxiété','Solitude'],  status:'online' },
+  { id:'thomas', name:'Thomas', init:'T', tags:['Relations','Travail'], status:'away'   },
+  { id:'lea',    name:'Léa',    init:'L', tags:['Deuil','Général'],     status:'online' },
+  { id:'samuel', name:'Samuel', init:'S', tags:['Général'],             status:'offline'},
+];
+
+const STATUS_LABEL = { online:'En ligne', away:'Absent·e', offline:'Hors ligne' };
+
+const SCENARIOS = [
+  {
+    first: "Bonjour… j'avais besoin de parler à quelqu'un ce soir.",
+    seq: [
+      { d:7000,  t:"Je me sens assez seul·e depuis quelques semaines." },
+      { d:18000, t:"Je n'ose pas en parler à mon entourage, ils ne comprendraient pas." },
+      { d:38000, t:"Ça fait vraiment du bien d'avoir quelqu'un qui écoute." },
+    ]
+  },
+  {
+    first: "Bonsoir. Je traverse une période compliquée au travail.",
+    seq: [
+      { d:9000,  t:"Mon manager est de plus en plus exigeant, je n'en peux plus." },
+      { d:22000, t:"Je rentre épuisé·e tous les soirs. Je ne sais plus quoi faire." },
+      { d:45000, t:"Vous comprenez vraiment bien, merci." },
+    ]
+  },
+  {
+    first: "Bonjour, j'ai perdu quelqu'un de proche il y a peu.",
+    seq: [
+      { d:11000, t:"C'est encore très récent, je n'arrive pas à en parler autour de moi." },
+      { d:28000, t:"Je pleure souvent sans trop savoir pourquoi." },
+    ]
+  },
+  {
+    first: "Salut. J'ai des conflits avec ma famille depuis un moment.",
+    seq: [
+      { d:8000,  t:"Avec mes parents surtout. On ne se parle presque plus." },
+      { d:20000, t:"C'est pesant, ça prend beaucoup de place dans ma tête." },
+      { d:40000, t:"Ça aide vraiment d'en parler avec quelqu'un de neutre." },
+    ]
+  },
+];
+
+const PENDING_NAMES   = ['Anonyme','Alex27','Riverflow','Nuit42','Anonyme','Soleil'];
+const PENDING_DOMAINS = ['Anxiété','Solitude','Général','Relations','Deuil','Travail'];
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let me = null;            // { id, name, init, isAnon }
+let volStatus = 'online';
+let pendingUsers = [
+  { id:'pu1', pseudo:'Anonyme', domain:'Anxiété', since: new Date(Date.now()-210000), init:'?' },
+  { id:'pu2', pseudo:'Lucie42', domain:'Solitude', since: new Date(Date.now()-75000),  init:'L' },
+];
+let currentUser = null;
+let currentScenario = null;
+let scenarioTimers = [];
+let waitTimer = null;
+let exchangeCount = 3;
+let newArrivalScheduled = false;
+
+// ══════════════════════════════════════════
+// NAVIGATION ÉCRANS
+// ══════════════════════════════════════════
+function showScreen(id) {
+  ['screen-login','screen-lobby','screen-chat'].forEach(s => {
+    document.getElementById(s).classList.remove('active');
+  });
+  document.getElementById(id).classList.add('active');
+  document.getElementById(id).scrollTop = 0;
+}
+
+// ══════════════════════════════════════════
+// CONNEXION / IDENTITÉ
+// ══════════════════════════════════════════
+function renderProfiles() {
+  document.getElementById('profile-grid').innerHTML = VOLS.map(v => `
+    <div class="profile-card ${v.status==='offline'?'pc-offline':''}"
+         onclick="${v.status!=='offline'?`enterAs('${v.id}')`:''}">
+      <div class="pc-avatar">
+        ${v.init}
+        <span class="pc-dot dot-${v.status}"></span>
+      </div>
+      <div class="pc-meta">
+        <h4>${v.name}</h4>
+        <span class="s-${v.status}">${STATUS_LABEL[v.status]}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function enterAs(volId) {
+  const v = VOLS.find(x => x.id === volId);
+  if (!v || v.status === 'offline') return;
+  me = { id: v.id, name: v.name, init: v.init, isAnon: false };
+  loadLobby();
+}
+
+function enterWithPseudo() {
+  const val = document.getElementById('custom-pseudo').value.trim();
+  if (!val) { document.getElementById('custom-pseudo').focus(); return; }
+  me = { id: 'custom', name: val, init: val[0].toUpperCase(), isAnon: false };
+  loadLobby();
+}
+
+function enterAnonymous() {
+  me = { id: 'anon', name: 'Bénévole', init: 'B', isAnon: true };
+  loadLobby();
+}
+
+// ══════════════════════════════════════════
+// LOBBY
+// ══════════════════════════════════════════
+function loadLobby() {
+  showScreen('screen-lobby');
+  updateNavIdentity();
+  updateGreeting();
+  renderPending();
+  // Timer : mise à jour des temps d'attente
+  if (waitTimer) clearInterval(waitTimer);
+  waitTimer = setInterval(updateWaitTimes, 30000);
+  // Simulation : un nouvel utilisateur arrive après 40 secondes
+  if (!newArrivalScheduled) {
+    newArrivalScheduled = true;
+    setTimeout(simulateNewUser, 40000);
+  }
+}
+
+function updateNavIdentity() {
+  document.getElementById('vn-initial').textContent = me.init;
+  document.getElementById('vn-name').textContent     = me.name;
+  document.getElementById('vn-dot').className        = `vn-status-dot si-${volStatus}`;
+}
+
+function updateGreeting() {
+  const h = new Date().getHours();
+  const moment = h < 12 ? 'Bonjour' : h < 18 ? 'Bon après-midi' : 'Bonsoir';
+  const nameStr = me.isAnon ? '' : `, <em>${me.name}</em>`;
+  document.getElementById('lobby-h1').innerHTML = `${moment}${nameStr}`;
+  const subs = {
+    online:  'Vous êtes en ligne · les personnes en attente peuvent vous être attribuées.',
+    away:    'Vous êtes marqué·e absent·e · vous ne recevrez pas de nouvelles demandes.',
+    offline: 'Vous êtes hors ligne · passez en ligne pour commencer à écouter.',
+  };
+  document.getElementById('lobby-sub').textContent = subs[volStatus];
+}
+
+function setStatus(s) {
+  volStatus = s;
+  document.getElementById('status-select').value = s;
+  // Pills
+  document.querySelectorAll('.spill').forEach(b => {
+    b.className = 'spill';
+    if (b.dataset.s === s) b.classList.add(s === 'online' ? 'sp-active' : s === 'away' ? 'sp-away' : 'sp-offline');
+  });
+  // Nav dot + indicator
+  document.getElementById('vn-dot').className        = `vn-status-dot si-${s}`;
+  document.getElementById('vn-status-ind').className = `s-ind si-${s}`;
+  updateGreeting();
+}
+
+function renderPending() {
+  const list  = document.getElementById('pending-list');
+  const count = document.getElementById('ps-count');
+  count.textContent = pendingUsers.length;
+  if (!pendingUsers.length) {
+    list.innerHTML = `
+      <div class="lobby-empty">
+        <div class="lobby-empty-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--mist)" stroke-width="1.5" stroke-linecap="round">
+            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+          </svg>
+        </div>
+        Aucune personne en attente pour le moment.
+      </div>`;
+    return;
+  }
+  list.innerHTML = pendingUsers.map(u => `
+    <div class="pending-item ${u.isNew?'new-user':''}" id="pi-${u.id}">
+      <div class="pi-av">${u.init}</div>
+      <div class="pi-info">
+        <div class="pi-name">${u.pseudo}</div>
+        <div class="pi-meta">
+          <span class="pi-tag">${u.domain}</span>
+          <span>
+            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" style="vertical-align:middle;margin-right:3px;">
+              <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/>
+              <path d="M6 3v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+            <span id="wait-${u.id}">${fmtWait(u.since)}</span>
+          </span>
+        </div>
+      </div>
+      <button class="accept-btn" onclick="acceptUser('${u.id}')">Accepter</button>
+    </div>
+  `).join('');
+}
+
+function fmtWait(since) {
+  const secs = Math.floor((Date.now() - since.getTime()) / 1000);
+  if (secs < 60) return secs + ' s';
+  return Math.floor(secs / 60) + ' min';
+}
+
+function updateWaitTimes() {
+  pendingUsers.forEach(u => {
+    const el = document.getElementById(`wait-${u.id}`);
+    if (el) el.textContent = fmtWait(u.since);
+  });
+}
+
+function simulateNewUser() {
+  const pseudo = PENDING_NAMES[Math.floor(Math.random() * PENDING_NAMES.length)];
+  const domain = PENDING_DOMAINS[Math.floor(Math.random() * PENDING_DOMAINS.length)];
+  const u = { id:'pu'+Date.now(), pseudo, domain, since:new Date(), init: pseudo==='Anonyme'?'?':pseudo[0].toUpperCase(), isNew:true };
+  pendingUsers.push(u);
+  renderPending();
+  // Badge sur bouton retour si en chat
+  document.getElementById('back-badge').classList.add('show');
+  showToast(`${pseudo} attend · ${domain}`);
+  // Retire le style "new-user" après 4s
+  setTimeout(() => {
+    const el = document.getElementById(`pi-${u.id}`);
+    if (el) el.classList.remove('new-user');
+  }, 4000);
+  // Planifier un autre dans 90s
+  setTimeout(simulateNewUser, 90000);
+}
+
+function acceptUser(uid) {
+  const u = pendingUsers.find(x => x.id === uid);
+  if (!u) return;
+  pendingUsers = pendingUsers.filter(x => x.id !== uid);
+  currentUser = u;
+  exchangeCount++;
+  document.getElementById('stat-exchanges').textContent = exchangeCount;
+  loadChat(u);
+}
+
+// ══════════════════════════════════════════
+// CHAT
+// ══════════════════════════════════════════
+function loadChat(user) {
+  showScreen('screen-chat');
+  document.getElementById('ct-av').textContent       = user.init;
+  document.getElementById('ct-user-name').textContent = user.pseudo;
+  document.getElementById('my-id-badge').textContent  = me.name;
+  document.getElementById('back-badge').classList.remove('show');
+
+  // Vider les messages
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML = `<div class="typing-ind" id="typing-ind">
+    <div class="typing-bub">
+      <span class="t-dot"></span><span class="t-dot"></span><span class="t-dot"></span>
+    </div>
+  </div>`;
+
+  // Message système
+  addDateSep();
+  addSys(`Vous avez accepté l'échange avec ${user.pseudo}. Restez bienveillant·e.`);
+
+  // Choisir un scénario
+  currentScenario = SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)];
+  scenarioTimers.forEach(clearTimeout);
+  scenarioTimers = [];
+
+  // Premier message utilisateur (après typing)
+  setTimeout(() => {
+    setTyping(true);
+    setTimeout(() => {
+      setTyping(false);
+      addMsg(currentScenario.first, 'from-user', user.pseudo);
+      scheduleSeq();
+    }, 2000 + Math.random() * 1000);
+  }, 1500);
+
+  setTimeout(() => document.getElementById('msg-input').focus(), 100);
+}
+
+function scheduleSeq() {
+  currentScenario.seq.forEach(item => {
+    const t = setTimeout(() => {
+      setTyping(true);
+      setTimeout(() => {
+        setTyping(false);
+        addMsg(item.t, 'from-user', currentUser.pseudo);
+      }, 1600 + Math.random() * 800);
+    }, item.d);
+    scenarioTimers.push(t);
+  });
+}
+
+function addDateSep() {
+  const msgs = document.getElementById('chat-messages');
+  const ind  = document.getElementById('typing-ind');
+  const div  = document.createElement('div');
+  div.className = 'date-sep';
+  div.innerHTML = `<span>Aujourd'hui</span>`;
+  msgs.insertBefore(div, ind);
+}
+
+function addSys(txt) {
+  const msgs = document.getElementById('chat-messages');
+  const ind  = document.getElementById('typing-ind');
+  const el   = document.createElement('div');
+  el.className   = 'msg-sys';
+  el.textContent = txt;
+  msgs.insertBefore(el, ind);
+}
+
+function addMsg(txt, type, senderName) {
+  const msgs = document.getElementById('chat-messages');
+  const ind  = document.getElementById('typing-ind');
+  const g    = document.createElement('div');
+  g.className = `msg-group ${type}`;
+  if (type === 'from-user') {
+    const s = document.createElement('span');
+    s.className   = 'msg-sender';
+    s.textContent = senderName || 'Utilisateur·ice';
+    g.appendChild(s);
+  }
+  const b = document.createElement('div');
+  b.className   = 'msg-bubble';
+  b.textContent = txt;
+  g.appendChild(b);
+  const tm = document.createElement('span');
+  tm.className   = 'msg-time';
+  tm.textContent = fmtTime(new Date());
+  g.appendChild(tm);
+  msgs.insertBefore(g, ind);
+  scrollBot();
+}
+
+function setTyping(on) {
+  const ind = document.getElementById('typing-ind');
+  if (ind) { ind.classList.toggle('on', on); if (on) scrollBot(); }
+}
+
+function sendMsg() {
+  const inp = document.getElementById('msg-input');
+  const txt = inp.value.trim();
+  if (!txt) return;
+  addMsg(txt, 'from-me', me.name);
+  inp.value = ''; inp.style.height = 'auto'; inp.focus();
+}
+
+function handleKey(e) { if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); } }
+function autoResize(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,110)+'px'; }
+function scrollBot() { const m=document.getElementById('chat-messages'); m.scrollTop=m.scrollHeight; }
+function fmtTime(d) { return d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}); }
+
+// ══════════════════════════════════════════
+// NAVIGATION CHAT → LOBBY
+// ══════════════════════════════════════════
+function tryBackToLobby() {
+  // S'il y a des messages, demander confirmation
+  const msgs = document.getElementById('chat-messages');
+  const hasMsgs = msgs.querySelectorAll('.msg-group').length > 0;
+  if (hasMsgs) { openModal('end-modal'); return; }
+  goBackToLobby();
+}
+
+function endConversation() {
+  closeModal('end-modal');
+  addSys("L'échange a été terminé. Merci pour votre présence.");
+  setTimeout(goBackToLobby, 1200);
+}
+
+function goBackToLobby() {
+  scenarioTimers.forEach(clearTimeout);
+  scenarioTimers = [];
+  currentUser = null;
+  currentScenario = null;
+  document.getElementById('back-badge').classList.remove('show');
+  renderPending();
+  showScreen('screen-lobby');
+}
+
+function doLogout() {
+  if (waitTimer) clearInterval(waitTimer);
+  scenarioTimers.forEach(clearTimeout);
+  me = null; currentUser = null; volStatus = 'online';
+  pendingUsers = [
+    { id:'pu1', pseudo:'Anonyme', domain:'Anxiété', since:new Date(Date.now()-210000), init:'?' },
+    { id:'pu2', pseudo:'Lucie42', domain:'Solitude', since:new Date(Date.now()-75000),  init:'L' },
+  ];
+  showScreen('screen-login');
+}
+
+// ══════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ══════════════════════════════════════════
+// MODALES
+// ══════════════════════════════════════════
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function ddToggle() { document.getElementById('dd-menu').classList.toggle('open'); }
+function ddClose()  { document.getElementById('dd-menu').classList.remove('open'); }
+
+document.addEventListener('click', e => { if (!e.target.closest('.dropdown')) ddClose(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') ['end-modal','report-modal','report-ok-modal'].forEach(closeModal);
+});
+
+function pickRep(el) {
+  document.querySelectorAll('.rep-opt').forEach(o => o.classList.remove('sel'));
+  el.closest('.rep-opt').classList.add('sel');
+  document.getElementById('rep-btn').disabled = false;
+}
+function submitReport() {
+  closeModal('report-modal');
+  openModal('report-ok-modal');
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  renderProfiles();
+});
+</script>
+</body>
+</html>
