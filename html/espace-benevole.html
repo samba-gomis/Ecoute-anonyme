@@ -21,7 +21,7 @@
     #screen-login {
       align-items: center; justify-content: center;
       padding: calc(var(--util-h) + 32px) 24px 32px;
-      overflow: hidden;
+      overflow-y: auto;
     }
     #screen-login::before {
       content: ''; position: absolute; inset: 0;
@@ -1090,7 +1090,7 @@ function goBackToLobby() {
 function doLogout() {
   if (waitTimer) clearInterval(waitTimer);
   scenarioTimers.forEach(clearTimeout);
-  me = null; currentUser = null; volStatus = 'online';
+  me = null; currentUser = null; volStatus = 'online'; newArrivalScheduled = false;
   pendingUsers = [
     { id:'pu1', pseudo:'Anonyme', domain:'Anxiété', since:new Date(Date.now()-210000), init:'?' },
     { id:'pu2', pseudo:'Lucie42', domain:'Solitude', since:new Date(Date.now()-75000),  init:'L' },
