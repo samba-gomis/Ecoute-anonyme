@@ -2,10 +2,18 @@
   "name": "ecoute-anonyme",
   "version": "1.0.0",
   "description": "Écoute Anonyme — Espace d'écoute bénévole, gratuit et confidentiel",
+  "main": "backend/server.js",
   "scripts": {
+    "start": "node backend/server.js",
+    "seed": "node backend/seed.js",
     "sass": "sass scss/main.scss css/styles.css",
     "sass:watch": "sass scss/main.scss css/styles.css --watch",
     "sass:prod": "sass scss/main.scss css/styles.css --style=compressed --no-source-map"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.11.1",
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
   },
   "devDependencies": {
     "sass": "^1.77.0"
