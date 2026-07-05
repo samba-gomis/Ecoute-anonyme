@@ -45,16 +45,17 @@ router.patch('/admin', (req, res) => {
   if (!storedHash || !bcrypt.compareSync(current_password, storedHash.value))
     return res.status(401).json({ error: 'Mot de passe actuel incorrect.' });
 
-  if (new_login?.trim()) {
+  // Valider tout avant d'écrire quoi que ce soit
+  if (new_password && new_password.length < 6)
+    return res.status(400).json({ error: 'Le mot de passe doit faire au moins 6 caractères.' });
+
+  if (new_login?.trim())
     db.prepare("UPDATE settings SET value = ? WHERE key = 'admin_login'").run(new_login.trim());
-  }
-  if (new_password) {
-    if (new_password.length < 6)
-      return res.status(400).json({ error: 'Le mot de passe doit faire au moins 6 caractères.' });
+
+  if (new_password)
     db.prepare("UPDATE settings SET value = ? WHERE key = 'admin_password_hash'").run(
       bcrypt.hashSync(new_password, 10)
     );
-  }
 
   res.json({ ok: true });
 });

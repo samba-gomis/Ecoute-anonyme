@@ -1120,7 +1120,12 @@ function doLogout() {
     { id:'pu1', pseudo:'Anonyme', domain:'Anxiété', since:new Date(Date.now()-210000), init:'?' },
     { id:'pu2', pseudo:'Lucie42', domain:'Solitude', since:new Date(Date.now()-75000),  init:'L' },
   ];
+  // Réinitialiser le formulaire de connexion
+  document.getElementById('vol-login-input').value  = '';
+  document.getElementById('vol-pass-input').value   = '';
+  document.getElementById('vol-login-error').style.display = 'none';
   showScreen('screen-login');
+  setTimeout(() => document.getElementById('vol-login-input').focus(), 50);
 }
 
 // ══════════════════════════════════════════
