@@ -11,6 +11,7 @@
     "sass:prod": "sass scss/main.scss css/styles.css --style=compressed --no-source-map"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "better-sqlite3": "^12.11.1",
     "cors": "^2.8.5",
     "express": "^4.19.2"

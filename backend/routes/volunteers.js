@@ -1,12 +1,15 @@
 const express = require('express');
 const router  = express.Router();
+const bcrypt  = require('bcryptjs');
 const db      = require('../database');
 
 const VALID_STATUSES = ['online', 'away', 'offline'];
 
 function parseRow(row) {
   if (!row) return null;
-  return { ...row, tags: JSON.parse(row.tags) };
+  // Never expose password_hash to the client
+  const { password_hash, ...safe } = row;
+  return { ...safe, tags: JSON.parse(safe.tags) };
 }
 
 // GET /api/volunteers
@@ -24,24 +27,31 @@ router.get('/:id', (req, res) => {
 
 // POST /api/volunteers
 router.post('/', (req, res) => {
-  const { name, email, tags, status } = req.body;
-  if (!name?.trim()) return res.status(400).json({ error: 'Le champ "name" est requis.' });
+  const { name, email, tags, status, login, password } = req.body;
+  if (!name?.trim())  return res.status(400).json({ error: 'Le champ "name" est requis.' });
+  if (!login?.trim()) return res.status(400).json({ error: 'Un identifiant de connexion est requis.' });
+  if (!password)      return res.status(400).json({ error: 'Un mot de passe est requis.' });
+  if (password.length < 6) return res.status(400).json({ error: 'Le mot de passe doit faire au moins 6 caractères.' });
 
-  const tagsJson    = JSON.stringify(Array.isArray(tags) ? tags : []);
-  const safeStatus  = VALID_STATUSES.includes(status) ? status : 'online';
-  const safeEmail   = email?.trim() || null;
+  const tagsJson     = JSON.stringify(Array.isArray(tags) ? tags : []);
+  const safeStatus   = VALID_STATUSES.includes(status) ? status : 'online';
+  const safeEmail    = email?.trim() || null;
+  const safeLogin    = login.trim();
+  const passwordHash = bcrypt.hashSync(password, 10);
 
   try {
     const info = db.prepare(
-      'INSERT INTO volunteers (name, email, tags, status) VALUES (?, ?, ?, ?)'
-    ).run(name.trim(), safeEmail, tagsJson, safeStatus);
+      'INSERT INTO volunteers (name, email, tags, status, login, password_hash) VALUES (?, ?, ?, ?, ?, ?)'
+    ).run(name.trim(), safeEmail, tagsJson, safeStatus, safeLogin, passwordHash);
 
     res.status(201).json(parseRow(
       db.prepare('SELECT * FROM volunteers WHERE id = ?').get(info.lastInsertRowid)
     ));
   } catch (e) {
-    if (e.message.includes('UNIQUE'))
-      return res.status(409).json({ error: 'Cet email est déjà utilisé.' });
+    if (e.message.includes('UNIQUE')) {
+      if (e.message.includes('email')) return res.status(409).json({ error: 'Cet email est déjà utilisé.' });
+      if (e.message.includes('login')) return res.status(409).json({ error: 'Cet identifiant est déjà utilisé.' });
+    }
     throw e;
   }
 });

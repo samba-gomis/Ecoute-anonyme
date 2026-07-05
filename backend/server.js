@@ -1,13 +1,23 @@
 const express = require('express');
 const cors    = require('cors');
 const path    = require('path');
+const bcrypt  = require('bcryptjs');
 
+const db                  = require('./database');
 const volunteersRouter    = require('./routes/volunteers');
 const conversationsRouter = require('./routes/conversations');
 const reviewsRouter       = require('./routes/reviews');
+const authRouter          = require('./routes/auth');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
+
+// Seed des identifiants admin par défaut si absents
+const upsertSetting = db.prepare(
+  'INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)'
+);
+upsertSetting.run('admin_login', 'admin');
+upsertSetting.run('admin_password_hash', bcrypt.hashSync('admin123', 10));
 
 // Allow requests from file://, Live Server, and same origin
 app.use(cors({
@@ -21,6 +31,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '..')));
 
 // API
+app.use('/api/auth',          authRouter);
 app.use('/api/volunteers',    volunteersRouter);
 app.use('/api/conversations', conversationsRouter);
 app.use('/api/reviews',       reviewsRouter);

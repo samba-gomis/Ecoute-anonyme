@@ -232,10 +232,7 @@
       <label>Mot de passe</label>
       <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()" />
     </div>
-    <button class="login-btn" onclick="doLogin()">Se connecter</button>
-    <p style="margin-top:16px;font-size:12px;color:var(--mist);text-align:center;">
-      Demo : <strong>admin</strong> · <strong>admin123</strong>
-    </p>
+    <button class="login-btn" id="login-btn" onclick="doLogin()">Se connecter</button>
   </div>
 </div>
 
@@ -375,6 +372,39 @@
       </div>
     </div>
 
+    <!-- ── Mon compte ── -->
+    <div class="admin-section">
+      <div class="admin-section-header">
+        <div class="admin-section-header-left">
+          <div class="section-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          </div>
+          <h2>Mon compte</h2>
+        </div>
+      </div>
+      <div style="padding:24px;max-width:480px;">
+        <p style="font-size:13px;color:var(--mist);margin-bottom:20px;">Modifiez vos identifiants de connexion à l'espace admin.</p>
+        <div class="login-field">
+          <label>Mot de passe actuel *</label>
+          <input type="password" id="acc-current" placeholder="••••••••" autocomplete="current-password" />
+        </div>
+        <div class="login-field">
+          <label>Nouvel identifiant</label>
+          <input type="text" id="acc-login" placeholder="Laisser vide pour ne pas changer" autocomplete="username" />
+        </div>
+        <div class="login-field">
+          <label>Nouveau mot de passe</label>
+          <input type="password" id="acc-new-pass" placeholder="Min. 6 caractères (vide = inchangé)" autocomplete="new-password" />
+        </div>
+        <div class="login-field">
+          <label>Confirmer le nouveau mot de passe</label>
+          <input type="password" id="acc-new-pass2" placeholder="Répéter" autocomplete="new-password" />
+        </div>
+        <div id="acc-msg" style="display:none;font-size:13px;padding:10px 14px;border-radius:var(--radius-sm);margin-bottom:14px;"></div>
+        <button class="a-btn a-btn-primary" id="acc-save-btn" onclick="saveAccount()" style="padding:10px 24px;">Enregistrer</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -382,9 +412,9 @@
 <div class="modal-overlay" id="add-vol-modal">
   <div class="modal-card">
     <h3>Ajouter un bénévole</h3>
-    <p class="modal-sub">Le profil sera disponible immédiatement dans l'espace bénévole.</p>
+    <p class="modal-sub">Le profil et les identifiants de connexion seront créés immédiatement.</p>
     <div class="login-field">
-      <label>Nom *</label>
+      <label>Nom affiché *</label>
       <input type="text" id="add-name" placeholder="ex : Marie" maxlength="60" />
     </div>
     <div class="login-field">
@@ -402,6 +432,20 @@
         <option value="online">En ligne</option>
         <option value="away">Absent·e</option>
       </select>
+    </div>
+    <hr style="border:none;border-top:1px solid var(--border);margin:16px 0 14px;" />
+    <p style="font-size:12px;color:var(--mist);margin-bottom:12px;">Identifiants de connexion à l'espace bénévole :</p>
+    <div class="login-field">
+      <label>Identifiant *</label>
+      <input type="text" id="add-login" placeholder="ex : marie.b" maxlength="40" autocomplete="off" />
+    </div>
+    <div class="login-field">
+      <label>Mot de passe *</label>
+      <input type="password" id="add-password" placeholder="Min. 6 caractères" autocomplete="new-password" />
+    </div>
+    <div class="login-field">
+      <label>Confirmer le mot de passe *</label>
+      <input type="password" id="add-password2" placeholder="Répéter le mot de passe" autocomplete="new-password" />
     </div>
     <div class="modal-error" id="add-error"></div>
     <div class="modal-actions">
@@ -495,18 +539,27 @@ function updateClock() {
 setInterval(updateClock, 1000);
 
 // ── Login ─────────────────────────────────────────
-function doLogin() {
-  const u = document.getElementById('login-user').value;
-  const p = document.getElementById('login-pass').value;
+async function doLogin() {
+  const u   = document.getElementById('login-user').value.trim();
+  const p   = document.getElementById('login-pass').value;
   const err = document.getElementById('login-error');
-  if (u === 'admin' && p === 'admin123') {
+  const btn = document.getElementById('login-btn');
+
+  err.style.display = 'none';
+  if (!u || !p) { err.style.display = 'block'; err.textContent = 'Veuillez renseigner vos identifiants.'; return; }
+
+  btn.disabled = true; btn.textContent = 'Connexion…';
+  try {
+    await apiFetch('/auth/admin', { method: 'POST', body: JSON.stringify({ login: u, password: p }) });
     document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('admin-panel').style.display = 'block';
+    document.getElementById('admin-panel').style.display  = 'block';
     updateClock();
     loadAll();
-  } else {
+  } catch (e) {
+    err.textContent = e.message || 'Identifiants incorrects.';
     err.style.display = 'block';
-    setTimeout(() => err.style.display = 'none', 3000);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Se connecter';
   }
 }
 
@@ -660,9 +713,9 @@ function renderReviews() {
 
 // ── Add volunteer modal ───────────────────────────
 function openAddVolModal() {
-  document.getElementById('add-name').value   = '';
-  document.getElementById('add-email').value  = '';
-  document.getElementById('add-tags').value   = '';
+  ['add-name','add-email','add-tags','add-login','add-password','add-password2'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
   document.getElementById('add-status').value = 'offline';
   document.getElementById('add-error').style.display = 'none';
   document.getElementById('add-vol-modal').classList.add('open');
@@ -673,24 +726,31 @@ function closeAddVolModal() {
 }
 
 async function submitAddVol() {
-  const name   = document.getElementById('add-name').value.trim();
-  const email  = document.getElementById('add-email').value.trim();
-  const tagsRaw = document.getElementById('add-tags').value;
-  const status = document.getElementById('add-status').value;
-  const errEl  = document.getElementById('add-error');
-  const btn    = document.getElementById('add-submit-btn');
+  const name     = document.getElementById('add-name').value.trim();
+  const email    = document.getElementById('add-email').value.trim();
+  const tagsRaw  = document.getElementById('add-tags').value;
+  const status   = document.getElementById('add-status').value;
+  const login    = document.getElementById('add-login').value.trim();
+  const password = document.getElementById('add-password').value;
+  const password2= document.getElementById('add-password2').value;
+  const errEl    = document.getElementById('add-error');
+  const btn      = document.getElementById('add-submit-btn');
 
-  if (!name) { showModalError(errEl, 'Le nom est requis.'); return; }
+  errEl.style.display = 'none';
+  if (!name)     return showModalError(errEl, 'Le nom affiché est requis.');
+  if (!login)    return showModalError(errEl, 'L\'identifiant de connexion est requis.');
+  if (!password) return showModalError(errEl, 'Un mot de passe est requis.');
+  if (password.length < 6) return showModalError(errEl, 'Le mot de passe doit faire au moins 6 caractères.');
+  if (password !== password2) return showModalError(errEl, 'Les mots de passe ne correspondent pas.');
 
   const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
 
   btn.disabled = true; btn.textContent = 'Ajout en cours…';
-  errEl.style.display = 'none';
 
   try {
     const newVol = await apiFetch('/volunteers', {
       method: 'POST',
-      body: JSON.stringify({ name, email: email || undefined, tags, status }),
+      body: JSON.stringify({ name, email: email || undefined, tags, status, login, password }),
     });
     volunteers.push(newVol);
     closeAddVolModal();
@@ -763,6 +823,52 @@ function confirmDeleteReview(id, pseudo) {
 function showModalError(el, msg) {
   el.textContent = msg;
   el.style.display = 'block';
+}
+
+// ── Mon compte ────────────────────────────────────
+async function saveAccount() {
+  const current   = document.getElementById('acc-current').value;
+  const newLogin  = document.getElementById('acc-login').value.trim();
+  const newPass   = document.getElementById('acc-new-pass').value;
+  const newPass2  = document.getElementById('acc-new-pass2').value;
+  const msgEl     = document.getElementById('acc-msg');
+  const btn       = document.getElementById('acc-save-btn');
+
+  msgEl.style.display = 'none';
+  if (!current) return showAccMsg('Le mot de passe actuel est requis.', false);
+  if (newPass && newPass.length < 6) return showAccMsg('Le nouveau mot de passe doit faire au moins 6 caractères.', false);
+  if (newPass && newPass !== newPass2) return showAccMsg('Les nouveaux mots de passe ne correspondent pas.', false);
+  if (!newLogin && !newPass) return showAccMsg('Aucune modification à enregistrer.', false);
+
+  btn.disabled = true; btn.textContent = 'Enregistrement…';
+  try {
+    await apiFetch('/auth/admin', {
+      method: 'PATCH',
+      body: JSON.stringify({
+        current_password: current,
+        new_login:        newLogin  || undefined,
+        new_password:     newPass   || undefined,
+      }),
+    });
+    document.getElementById('acc-current').value   = '';
+    document.getElementById('acc-login').value     = '';
+    document.getElementById('acc-new-pass').value  = '';
+    document.getElementById('acc-new-pass2').value = '';
+    showAccMsg('Identifiants mis à jour avec succès.', true);
+  } catch (e) {
+    showAccMsg(e.message, false);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Enregistrer';
+  }
+}
+
+function showAccMsg(msg, success) {
+  const el = document.getElementById('acc-msg');
+  el.textContent = msg;
+  el.style.display = 'block';
+  el.style.background = success ? 'var(--sage-pale)' : 'rgba(220,53,69,0.08)';
+  el.style.color      = success ? 'var(--sage-dark)' : '#DC3545';
+  el.style.border     = success ? '1px solid rgba(139,175,138,0.3)' : '1px solid rgba(220,53,69,0.15)';
 }
 
 // ── Keyboard shortcuts ────────────────────────────

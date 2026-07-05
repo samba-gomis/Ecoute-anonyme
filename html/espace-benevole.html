@@ -54,6 +54,34 @@
       text-transform: uppercase; margin-bottom: 10px; display: block;
     }
 
+    /* ── Volunteer login form ── */
+    .vol-login-error {
+      font-size: 13px; color: #DC3545; background: rgba(220,53,69,0.08);
+      border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 14px;
+      display: none; border: 1px solid rgba(220,53,69,0.15);
+    }
+    body.dark .vol-login-error { color: #FF6B6B; background: rgba(220,53,69,0.12); }
+    .vol-field { margin-bottom: 12px; }
+    .vol-field label {
+      display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--stone); margin-bottom: 6px;
+    }
+    .vol-field input {
+      width: 100%; padding: 12px 14px; border: 1.5px solid var(--border);
+      border-radius: var(--radius-md); font-family: var(--font-body); font-size: 14px;
+      color: var(--stone-dark); background: var(--bg-primary); outline: none;
+      transition: border-color 0.2s; box-sizing: border-box;
+    }
+    .vol-field input:focus { border-color: var(--sage); background: var(--bg-card); }
+    .vol-submit-btn {
+      width: 100%; padding: 14px; margin-top: 6px;
+      background: var(--sage); color: #fff; border: none;
+      border-radius: var(--radius-pill); font-family: var(--font-body); font-size: 14px;
+      font-weight: 500; cursor: pointer; transition: background 0.2s, transform 0.15s;
+    }
+    .vol-submit-btn:hover:not(:disabled) { background: var(--sage-dark); transform: translateY(-1px); }
+    .vol-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
     .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 4px; }
     .profile-card {
       background: var(--bg-primary); border: 1.5px solid var(--border); border-radius: 14px;
@@ -446,26 +474,30 @@
       <span>Écoute Anonyme</span>
     </a>
     <h2>Espace <em>bénévole</em></h2>
-    <p class="lcard-sub">Choisissez comment vous souhaitez apparaître lors de cette session d'écoute.</p>
+    <p class="lcard-sub">Connectez-vous avec vos identifiants personnels.</p>
 
-    <span class="lcard-section-lbl">Vos profils enregistrés</span>
-    <div class="profile-grid" id="profile-grid"></div>
+    <div class="vol-login-error" id="vol-login-error"></div>
 
-    <div class="divider">ou</div>
-
-    <span class="lcard-section-lbl">Entrer avec un pseudo personnalisé</span>
-    <div class="pseudo-row">
-      <input type="text" id="custom-pseudo" placeholder="Votre pseudo…" maxlength="30" autocomplete="off"
-             onkeydown="if(event.key==='Enter') enterWithPseudo()" />
-      <button class="pseudo-btn" onclick="enterWithPseudo()">Entrer</button>
+    <div class="vol-field">
+      <label>Identifiant</label>
+      <input type="text" id="vol-login-input" placeholder="Votre identifiant"
+             autocomplete="username"
+             onkeydown="if(event.key==='Enter') document.getElementById('vol-pass-input').focus()" />
+    </div>
+    <div class="vol-field">
+      <label>Mot de passe</label>
+      <input type="password" id="vol-pass-input" placeholder="••••••••"
+             autocomplete="current-password"
+             onkeydown="if(event.key==='Enter') doVolLogin()" />
     </div>
 
-    <button class="anon-btn" onclick="enterAnonymous()">
-      Entrer anonymement · Apparaître comme « Bénévole »
+    <button class="vol-submit-btn" id="vol-login-btn" onclick="doVolLogin()">
+      Se connecter
     </button>
 
-    <p class="anon-note">
-      Votre identité peut rester privée. Les utilisateurs verront uniquement le nom ou pseudo que vous choisissez ici — jamais votre identité réelle.
+    <p class="anon-note" style="text-align:center;margin-top:18px;">
+      Accès réservé aux bénévoles validés. Pas encore de compte ?
+      <a href="benevoles.html" style="color:var(--sage-dark);font-weight:500;">Postuler →</a>
     </p>
   </div>
 </div>
@@ -707,8 +739,7 @@
 // ══════════════════════════════════════════
 // DONNÉES
 // ══════════════════════════════════════════
-// Populated from /api/volunteers on load
-let VOLS = [];
+// me est populé par doVolLogin() après authentification réussie
 
 const STATUS_LABEL = { online:'En ligne', away:'Absent·e', offline:'Hors ligne' };
 
@@ -779,44 +810,37 @@ function showScreen(id) {
 // ══════════════════════════════════════════
 // CONNEXION / IDENTITÉ
 // ══════════════════════════════════════════
-function renderProfiles() {
-  const grid = document.getElementById('profile-grid');
-  if (!VOLS.length) {
-    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px 0;font-size:13px;color:var(--mist);">Aucun bénévole disponible.</div>`;
+async function doVolLogin() {
+  const login    = document.getElementById('vol-login-input').value.trim();
+  const password = document.getElementById('vol-pass-input').value;
+  const errEl    = document.getElementById('vol-login-error');
+  const btn      = document.getElementById('vol-login-btn');
+
+  errEl.style.display = 'none';
+  if (!login || !password) {
+    errEl.textContent = 'Veuillez renseigner vos identifiants.';
+    errEl.style.display = 'block';
     return;
   }
-  grid.innerHTML = VOLS.map(v => `
-    <div class="profile-card ${v.status==='offline'?'pc-offline':''}"
-         onclick="${v.status!=='offline'?`enterAs('${v.id}')`:''}">
-      <div class="pc-avatar">
-        ${v.init}
-        <span class="pc-dot dot-${v.status}"></span>
-      </div>
-      <div class="pc-meta">
-        <h4>${v.name}</h4>
-        <span class="s-${v.status}">${STATUS_LABEL[v.status]}</span>
-      </div>
-    </div>
-  `).join('');
-}
 
-function enterAs(volId) {
-  const v = VOLS.find(x => String(x.id) === String(volId));
-  if (!v || v.status === 'offline') return;
-  me = { id: v.id, name: v.name, init: v.init, isAnon: false };
-  loadLobby();
-}
-
-function enterWithPseudo() {
-  const val = document.getElementById('custom-pseudo').value.trim();
-  if (!val) { document.getElementById('custom-pseudo').focus(); return; }
-  me = { id: 'custom', name: val, init: val[0].toUpperCase(), isAnon: false };
-  loadLobby();
-}
-
-function enterAnonymous() {
-  me = { id: 'anon', name: 'Bénévole', init: 'B', isAnon: true };
-  loadLobby();
+  btn.disabled = true; btn.textContent = 'Connexion…';
+  try {
+    const res  = await fetch('/api/auth/volunteer', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ login, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Erreur');
+    me = { id: data.id, name: data.name, init: data.name.charAt(0).toUpperCase(), isAnon: false };
+    document.getElementById('vol-pass-input').value = '';
+    loadLobby();
+  } catch (e) {
+    errEl.textContent = e.message;
+    errEl.style.display = 'block';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Se connecter';
+  }
 }
 
 // ══════════════════════════════════════════
@@ -1135,19 +1159,9 @@ function submitReport() {
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
-async function loadVolunteers() {
-  try {
-    const res = await fetch('/api/volunteers');
-    if (!res.ok) throw new Error();
-    const data = await res.json();
-    VOLS = data.map(v => ({ ...v, init: v.name.charAt(0).toUpperCase() }));
-  } catch {
-    VOLS = [];
-  }
-  renderProfiles();
-}
-
-document.addEventListener('DOMContentLoaded', loadVolunteers);
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('vol-login-input').focus();
+});
 </script>
 </body>
 </html>

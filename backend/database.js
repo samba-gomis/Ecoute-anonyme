@@ -8,13 +8,15 @@ db.pragma('foreign_keys = ON');
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS volunteers (
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    name       TEXT    NOT NULL,
-    email      TEXT    UNIQUE,
-    tags       TEXT    NOT NULL DEFAULT '[]',
-    status     TEXT    NOT NULL DEFAULT 'online'
-                       CHECK(status IN ('online','away','offline')),
-    created_at TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ','now'))
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    name          TEXT    NOT NULL,
+    email         TEXT    UNIQUE,
+    tags          TEXT    NOT NULL DEFAULT '[]',
+    status        TEXT    NOT NULL DEFAULT 'online'
+                           CHECK(status IN ('online','away','offline')),
+    login         TEXT    UNIQUE,
+    password_hash TEXT,
+    created_at    TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ','now'))
   );
 
   CREATE TABLE IF NOT EXISTS conversations (
@@ -37,6 +39,15 @@ db.exec(`
     domain     TEXT,
     created_at TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ','now'))
   );
+
+  CREATE TABLE IF NOT EXISTS settings (
+    key   TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+  );
 `);
+
+// Migration : colonnes ajoutées après la création initiale
+try { db.exec('ALTER TABLE volunteers ADD COLUMN login TEXT UNIQUE'); } catch {}
+try { db.exec('ALTER TABLE volunteers ADD COLUMN password_hash TEXT'); } catch {}
 
 module.exports = db;
