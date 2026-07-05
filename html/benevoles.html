@@ -645,75 +645,61 @@
     }
 
     // ===== BÉNÉVOLES =====
-    const volunteers = [
-      {
-        emoji: '🌿', name: 'Marie',
-        since: { fr: 'Bénévole depuis 2024', en: 'Volunteer since 2024' },
-        status: 'online', tags: ['Anxiété', 'Solitude'],
-        desc: {
-          fr: 'Disponible pour une écoute douce et sans jugement. Je crois en la puissance des mots pour aider à traverser les moments difficiles.',
-          en: 'Available for gentle, judgment-free listening. I believe in the power of words to help get through difficult times.'
-        },
-        dispo: { fr: 'Soir & week-end', en: 'Evenings & weekends' }
-      },
-      {
-        emoji: '🌊', name: 'Thomas',
-        since: { fr: 'Bénévole depuis 2024', en: 'Volunteer since 2024' },
-        status: 'away', tags: ['Relations', 'Travail'],
-        desc: {
-          fr: "Passionné par l'écoute active. Je suis là pour vous accompagner, sans jamais vous juger, à votre rythme.",
-          en: "Passionate about active listening. I'm here to accompany you, never judging, at your own pace."
-        },
-        dispo: { fr: 'Matin & après-midi', en: 'Mornings & afternoons' }
-      },
-      {
-        emoji: '🌸', name: 'Léa',
-        since: { fr: 'Bénévole depuis 2025', en: 'Volunteer since 2025' },
-        status: 'online', tags: ['Deuil', 'Général'],
-        desc: {
-          fr: "Formée à l'écoute active, je vous offre un espace de parole bienveillant. Chaque personne mérite d'être entendue.",
-          en: "Trained in active listening, I offer you a caring space to speak. Every person deserves to be heard."
-        },
-        dispo: { fr: 'Après-midi & soir', en: 'Afternoons & evenings' }
-      },
-      {
-        emoji: '🍃', name: 'Samuel',
-        since: { fr: 'Bénévole depuis 2025', en: 'Volunteer since 2025' },
-        status: 'offline', tags: ['Général'],
-        desc: {
-          fr: 'Je suis là pour vous écouter, sans filtres ni attentes. Votre vécu est important et mérite toute mon attention.',
-          en: 'I am here to listen to you, without filters or expectations. Your experience matters and deserves my full attention.'
-        },
-        dispo: { fr: 'Week-end', en: 'Weekends' }
-      },
-    ];
+    const STATUS_LABELS = { online: 'En ligne', away: 'Absent·e', offline: 'Hors ligne' };
+    const AVATAR_BG = ['#EDF3EC', '#E8F0F3', '#F5EDE5', '#EAE8F0', '#F0EDE8', '#EAF0ED'];
 
-    function renderVolunteers() {
-      const lang = window.currentLang || 'fr';
+    function escHtml(s) {
+      return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+    function fmtSince(iso) {
+      if (!iso) return '';
+      return 'Bénévole depuis ' + new Date(iso).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    }
+
+    async function renderVolunteers() {
       const grid = document.getElementById('volunteers-grid');
       if (!grid) return;
-      grid.innerHTML = volunteers.map(v => `
-        <div class="volunteer-card">
-          <div class="vol-header">
-            <div class="vol-avatar">
-              ${v.emoji}
-              <span class="vol-online-dot ${v.status}"></span>
-            </div>
-            <div class="vol-info">
-              <h3>${v.name}</h3>
-              <span class="vol-since">${v.since[lang]}</span>
-            </div>
-          </div>
-          <div class="vol-tags">
-            ${v.tags.map(t => `<span class="vol-tag">${t}</span>`).join('')}
-          </div>
-          <p class="vol-desc">${v.desc[lang]}</p>
-          <p class="vol-dispo">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M6 3v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-            ${v.dispo[lang]}
-          </p>
-        </div>
-      `).join('');
+      try {
+        const res  = await fetch('/api/volunteers');
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        if (!data.length) {
+          grid.innerHTML = `
+            <div style="text-align:center;padding:52px;color:var(--mist);font-size:14px;grid-column:1/-1;">
+              Aucun bénévole disponible pour le moment.<br>
+              <a href="#" onclick="switchTab('inscription',document.getElementById('tab-btn-inscr'));return false;"
+                style="color:var(--sage-dark);margin-top:10px;display:inline-block;">Rejoindre l'équipe →</a>
+            </div>`;
+          return;
+        }
+        grid.innerHTML = data.map((v, i) => {
+          const init = v.name.charAt(0).toUpperCase();
+          const bg   = AVATAR_BG[i % AVATAR_BG.length];
+          return `
+            <div class="volunteer-card">
+              <div class="vol-header">
+                <div class="vol-avatar" style="background:${bg};font-family:var(--font-display);font-size:22px;font-weight:500;color:var(--sage-dark);">
+                  ${init}
+                  <span class="vol-online-dot ${v.status}"></span>
+                </div>
+                <div class="vol-info">
+                  <h3>${escHtml(v.name)}</h3>
+                  <span class="vol-since">${fmtSince(v.created_at)}</span>
+                </div>
+              </div>
+              ${v.tags.length ? `<div class="vol-tags">${v.tags.map(t => `<span class="vol-tag">${escHtml(t)}</span>`).join('')}</div>` : ''}
+              <p class="vol-dispo">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M6 3v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                ${escHtml(STATUS_LABELS[v.status] || v.status)}
+              </p>
+            </div>`;
+        }).join('');
+      } catch {
+        grid.innerHTML = `
+          <div style="text-align:center;padding:52px;color:var(--mist);font-size:14px;grid-column:1/-1;">
+            Impossible de charger la liste des bénévoles.
+          </div>`;
+      }
     }
 
     renderVolunteers();

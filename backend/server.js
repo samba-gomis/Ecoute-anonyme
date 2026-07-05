@@ -4,6 +4,7 @@ const path    = require('path');
 
 const volunteersRouter    = require('./routes/volunteers');
 const conversationsRouter = require('./routes/conversations');
+const reviewsRouter       = require('./routes/reviews');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -22,6 +23,7 @@ app.use(express.static(path.join(__dirname, '..')));
 // API
 app.use('/api/volunteers',    volunteersRouter);
 app.use('/api/conversations', conversationsRouter);
+app.use('/api/reviews',       reviewsRouter);
 
 // 404 for unknown /api routes
 app.use('/api', (req, res) => {

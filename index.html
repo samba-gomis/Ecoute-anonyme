@@ -445,84 +445,45 @@
 
   <script src="shared-ui.js"></script>
   <script>
-    const reviews = [
-      {
-        stars: 5,
-        text: {
-          fr: 'Je n\'osais pas en parler à mon entourage. Ici j\'ai pu tout dire sans peur du jugement. Ça m\'a vraiment aidé.',
-          en: 'I couldn\'t dare talk about it around me. Here I could say everything without fear of being judged. It really helped me.'
-        },
-        pseudo: 'Anonyme',
-        date: { fr: 'Mai 2025', en: 'May 2025' }
-      },
-      {
-        stars: 5,
-        text: {
-          fr: 'La bénévole a été d\'une écoute exceptionnelle. Je me suis senti·e compris·e pour la première fois depuis longtemps.',
-          en: 'The volunteer listened exceptionally well. I felt understood for the first time in a long time.'
-        },
-        pseudo: 'Voyageur',
-        date: { fr: 'Avril 2025', en: 'April 2025' }
-      },
-      {
-        stars: 4,
-        text: {
-          fr: 'Un espace rare sur internet. Vrai, humain, sans artifice. Je reviendrai si j\'en ai besoin.',
-          en: 'A rare space on the internet. Real, human, without artifice. I\'ll come back if I need it.'
-        },
-        pseudo: 'Fleur42',
-        date: { fr: 'Mai 2025', en: 'May 2025' }
-      },
-      {
-        stars: 5,
-        text: {
-          fr: 'Savoir que quelqu\'un est là, même à distance, ça change tout dans les moments difficiles.',
-          en: 'Knowing someone is there, even from a distance, makes all the difference in difficult moments.'
-        },
-        pseudo: 'Anonyme',
-        date: { fr: 'Mars 2025', en: 'March 2025' }
-      },
-      {
-        stars: 4,
-        text: {
-          fr: 'Simple, discret, efficace. Exactement ce dont j\'avais besoin ce soir-là. Merci.',
-          en: 'Simple, discreet, effective. Exactly what I needed that evening. Thank you.'
-        },
-        pseudo: 'Anonyme',
-        date: { fr: 'Avril 2025', en: 'April 2025' }
-      },
-      {
-        stars: 5,
-        text: {
-          fr: 'Le bénévole a pris le temps, sans me brusquer. Une expérience vraiment positive.',
-          en: 'The volunteer took their time, without rushing me. A truly positive experience.'
-        },
-        pseudo: 'Lucie_M',
-        date: { fr: 'Mai 2025', en: 'May 2025' }
-      },
-    ];
-
     const starSVG = (filled) => filled
       ? `<svg class="star-filled" viewBox="0 0 16 16" fill="var(--sage)" xmlns="http://www.w3.org/2000/svg"><path d="M8 1l1.85 3.75L14 5.6l-3 2.92.71 4.13L8 10.6l-3.71 1.95L5 8.52 2 5.6l4.15-.85z"/></svg>`
       : `<svg class="star-empty" viewBox="0 0 16 16" fill="none" stroke="var(--mist)" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg"><path d="M8 1l1.85 3.75L14 5.6l-3 2.92.71 4.13L8 10.6l-3.71 1.95L5 8.52 2 5.6l4.15-.85z"/></svg>`;
 
-    function renderReviews() {
-      const lang = window.currentLang || 'fr';
+    function escHtml(s) {
+      return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function fmtMonthYear(iso) {
+      if (!iso) return '';
+      return new Date(iso).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    }
+
+    async function renderReviews() {
       const grid = document.getElementById('reviews-grid');
       if (!grid) return;
-      grid.innerHTML = reviews.map(r => `
-        <div class="review-card">
-          <div class="review-stars">${Array.from({length:5},(_,i)=>starSVG(i<r.stars)).join('')}</div>
-          <p class="review-text">"${r.text[lang]}"</p>
-          <div class="review-meta">
-            <span class="review-pseudo">${r.pseudo}</span>
-            <span class="review-date">${r.date[lang]}</span>
-          </div>
-        </div>`).join('');
+      try {
+        const res  = await fetch('/api/reviews');
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        if (!data.length) {
+          grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:52px 0;color:var(--mist);font-size:14px;">Les premiers avis apparaîtront ici après les échanges.</div>`;
+          return;
+        }
+        grid.innerHTML = data.map(r => `
+          <div class="review-card">
+            <div class="review-stars">${Array.from({length:5},(_,i)=>starSVG(i<r.stars)).join('')}</div>
+            <p class="review-text">"${escHtml(r.text)}"</p>
+            <div class="review-meta">
+              <span class="review-pseudo">${escHtml(r.pseudo)}</span>
+              <span class="review-date">${fmtMonthYear(r.created_at)}</span>
+            </div>
+          </div>`).join('');
+      } catch {
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:52px 0;color:var(--mist);font-size:14px;">Impossible de charger les avis pour le moment.</div>`;
+      }
     }
 
     renderReviews();
-
     window.onLangChange = renderReviews;
   </script>
 </body>

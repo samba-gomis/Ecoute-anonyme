@@ -707,12 +707,8 @@
 // ══════════════════════════════════════════
 // DONNÉES
 // ══════════════════════════════════════════
-const VOLS = [
-  { id:'marie',  name:'Marie',  init:'M', tags:['Anxiété','Solitude'],  status:'online' },
-  { id:'thomas', name:'Thomas', init:'T', tags:['Relations','Travail'], status:'away'   },
-  { id:'lea',    name:'Léa',    init:'L', tags:['Deuil','Général'],     status:'online' },
-  { id:'samuel', name:'Samuel', init:'S', tags:['Général'],             status:'offline'},
-];
+// Populated from /api/volunteers on load
+let VOLS = [];
 
 const STATUS_LABEL = { online:'En ligne', away:'Absent·e', offline:'Hors ligne' };
 
@@ -784,7 +780,12 @@ function showScreen(id) {
 // CONNEXION / IDENTITÉ
 // ══════════════════════════════════════════
 function renderProfiles() {
-  document.getElementById('profile-grid').innerHTML = VOLS.map(v => `
+  const grid = document.getElementById('profile-grid');
+  if (!VOLS.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px 0;font-size:13px;color:var(--mist);">Aucun bénévole disponible.</div>`;
+    return;
+  }
+  grid.innerHTML = VOLS.map(v => `
     <div class="profile-card ${v.status==='offline'?'pc-offline':''}"
          onclick="${v.status!=='offline'?`enterAs('${v.id}')`:''}">
       <div class="pc-avatar">
@@ -800,7 +801,7 @@ function renderProfiles() {
 }
 
 function enterAs(volId) {
-  const v = VOLS.find(x => x.id === volId);
+  const v = VOLS.find(x => String(x.id) === String(volId));
   if (!v || v.status === 'offline') return;
   me = { id: v.id, name: v.name, init: v.init, isAnon: false };
   loadLobby();
@@ -1134,9 +1135,19 @@ function submitReport() {
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', () => {
+async function loadVolunteers() {
+  try {
+    const res = await fetch('/api/volunteers');
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    VOLS = data.map(v => ({ ...v, init: v.name.charAt(0).toUpperCase() }));
+  } catch {
+    VOLS = [];
+  }
   renderProfiles();
-});
+}
+
+document.addEventListener('DOMContentLoaded', loadVolunteers);
 </script>
 </body>
 </html>

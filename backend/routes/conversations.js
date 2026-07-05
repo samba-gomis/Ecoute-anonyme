@@ -18,6 +18,17 @@ function generateShareId() {
   return id;
 }
 
+// GET /api/conversations  — list without full messages body
+router.get('/', (req, res) => {
+  const rows = db.prepare(`
+    SELECT share_id, user_pseudo, vol_display, domain,
+           started_at, ended_at, created_at,
+           json_array_length(messages) AS message_count
+    FROM conversations ORDER BY created_at DESC
+  `).all();
+  res.json(rows);
+});
+
 // GET /api/conversations/:id
 router.get('/:id', (req, res) => {
   const row = db.prepare('SELECT * FROM conversations WHERE share_id = ?')

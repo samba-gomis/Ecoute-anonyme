@@ -27,6 +27,16 @@ db.exec(`
     ended_at    TEXT,
     created_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ','now'))
   );
+
+  CREATE TABLE IF NOT EXISTS reviews (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    stars      INTEGER NOT NULL CHECK(stars BETWEEN 1 AND 5),
+    text       TEXT    NOT NULL,
+    pseudo     TEXT    NOT NULL DEFAULT 'Anonyme',
+    vol_name   TEXT,
+    domain     TEXT,
+    created_at TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ','now'))
+  );
 `);
 
 module.exports = db;
