@@ -13,6 +13,10 @@ const transporter = (process.env.EMAIL_USER && process.env.EMAIL_PASS)
   ? nodemailer.createTransport({
       service: 'gmail',
       auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+      // Certains hébergeurs (ex. Render) n'ont pas de route IPv6 sortante
+      // fiable ; smtp.gmail.com résout parfois en IPv6 d'abord, ce qui
+      // provoque un ENETUNREACH. On force IPv4 pour éviter ça.
+      family: 4,
     })
   : null;
 
