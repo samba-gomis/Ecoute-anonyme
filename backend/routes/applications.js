@@ -3,6 +3,7 @@ const nodemailer = require('nodemailer');
 const bcrypt     = require('bcryptjs');
 const router     = express.Router();
 const db         = require('../database');
+const { requireAdmin } = require('./auth');
 
 const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'ecoute.anonyme26@gmail.com';
 const SITE_URL       = process.env.SITE_URL || 'http://localhost:3000';
@@ -16,13 +17,13 @@ const transporter = (process.env.EMAIL_USER && process.env.EMAIL_PASS)
   : null;
 
 // GET /api/applications
-router.get('/', (req, res) => {
+router.get('/', requireAdmin, (req, res) => {
   const rows = db.prepare('SELECT * FROM applications ORDER BY created_at DESC').all();
   res.json(rows.map(r => ({ ...r, dispos: JSON.parse(r.dispos) })));
 });
 
 // POST /api/applications/:id/accept — { login, password, tags?, status?, name?, email? }
-router.post('/:id/accept', async (req, res) => {
+router.post('/:id/accept', requireAdmin, async (req, res) => {
   const app = db.prepare('SELECT * FROM applications WHERE id = ?').get(req.params.id);
   if (!app) return res.status(404).json({ error: 'Candidature introuvable.' });
 
@@ -89,7 +90,7 @@ router.post('/:id/accept', async (req, res) => {
 });
 
 // POST /api/applications/:id/reject
-router.post('/:id/reject', async (req, res) => {
+router.post('/:id/reject', requireAdmin, async (req, res) => {
   const app = db.prepare('SELECT * FROM applications WHERE id = ?').get(req.params.id);
   if (!app) return res.status(404).json({ error: 'Candidature introuvable.' });
 

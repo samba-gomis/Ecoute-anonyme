@@ -613,7 +613,8 @@ async function doLogin() {
   }
 }
 
-function doLogout() {
+async function doLogout() {
+  try { await apiFetch('/auth/admin/logout', { method: 'POST' }); } catch (e) {}
   document.getElementById('admin-panel').style.display = 'none';
   document.getElementById('login-screen').style.display = 'flex';
 }

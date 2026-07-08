@@ -2,6 +2,7 @@ const express = require('express');
 const router  = express.Router();
 const crypto  = require('crypto');
 const db      = require('../database');
+const { requireAdmin } = require('./auth');
 
 function parseRow(row) {
   if (!row) return null;
@@ -19,7 +20,7 @@ function generateShareId() {
 }
 
 // GET /api/conversations  — list without full messages body
-router.get('/', (req, res) => {
+router.get('/', requireAdmin, (req, res) => {
   const rows = db.prepare(`
     SELECT share_id, user_pseudo, vol_display, domain,
            started_at, ended_at, created_at,
@@ -69,7 +70,7 @@ router.post('/', (req, res) => {
 });
 
 // DELETE /api/conversations/:id
-router.delete('/:id', (req, res) => {
+router.delete('/:id', requireAdmin, (req, res) => {
   const info = db.prepare('DELETE FROM conversations WHERE share_id = ?')
     .run(req.params.id.toUpperCase());
   if (!info.changes) return res.status(404).json({ error: 'Conversation introuvable.' });

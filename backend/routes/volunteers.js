@@ -2,6 +2,7 @@ const express = require('express');
 const router  = express.Router();
 const bcrypt  = require('bcryptjs');
 const db      = require('../database');
+const { requireAdmin } = require('./auth');
 
 const VALID_STATUSES = ['online', 'away', 'offline'];
 
@@ -26,7 +27,7 @@ router.get('/:id', (req, res) => {
 });
 
 // POST /api/volunteers
-router.post('/', (req, res) => {
+router.post('/', requireAdmin, (req, res) => {
   const { name, email, tags, status, login, password, description } = req.body;
   if (!name?.trim())  return res.status(400).json({ error: 'Le champ "name" est requis.' });
   if (!login?.trim()) return res.status(400).json({ error: 'Un identifiant de connexion est requis.' });
@@ -58,7 +59,7 @@ router.post('/', (req, res) => {
 });
 
 // PATCH /api/volunteers/:id
-router.patch('/:id', (req, res) => {
+router.patch('/:id', requireAdmin, (req, res) => {
   const existing = db.prepare('SELECT * FROM volunteers WHERE id = ?').get(req.params.id);
   if (!existing) return res.status(404).json({ error: 'Bénévole introuvable.' });
 
@@ -85,7 +86,7 @@ router.patch('/:id', (req, res) => {
 });
 
 // DELETE /api/volunteers/:id
-router.delete('/:id', (req, res) => {
+router.delete('/:id', requireAdmin, (req, res) => {
   const info = db.prepare('DELETE FROM volunteers WHERE id = ?').run(req.params.id);
   if (!info.changes) return res.status(404).json({ error: 'Bénévole introuvable.' });
   res.status(204).end();

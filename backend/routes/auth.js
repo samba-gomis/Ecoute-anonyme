@@ -1,7 +1,19 @@
 const express = require('express');
 const router  = express.Router();
 const bcrypt  = require('bcryptjs');
+const crypto  = require('crypto');
 const db      = require('../database');
+
+const SESSION_COOKIE = 'ea_admin_session';
+const SESSION_MAX_AGE = 12 * 60 * 60 * 1000; // 12h
+const adminSessions = new Set();
+
+function requireAdmin(req, res, next) {
+  const token = req.cookies?.[SESSION_COOKIE];
+  if (!token || !adminSessions.has(token))
+    return res.status(401).json({ error: 'Authentification admin requise.' });
+  next();
+}
 
 // POST /api/auth/volunteer  — { login, password }
 router.post('/volunteer', (req, res) => {
@@ -61,11 +73,28 @@ router.post('/admin', (req, res) => {
   if (login.trim() !== storedLogin.value || !bcrypt.compareSync(password, storedHash.value))
     return res.status(401).json({ error: 'Identifiants incorrects.' });
 
+  const token = crypto.randomBytes(32).toString('hex');
+  adminSessions.add(token);
+  res.cookie(SESSION_COOKIE, token, {
+    httpOnly: true,
+    secure: req.secure,
+    sameSite: 'lax',
+    maxAge: SESSION_MAX_AGE,
+    path: '/',
+  });
+  res.json({ ok: true });
+});
+
+// POST /api/auth/admin/logout
+router.post('/admin/logout', (req, res) => {
+  const token = req.cookies?.[SESSION_COOKIE];
+  if (token) adminSessions.delete(token);
+  res.clearCookie(SESSION_COOKIE, { path: '/' });
   res.json({ ok: true });
 });
 
 // PATCH /api/auth/admin  — { current_password, new_login?, new_password? }
-router.patch('/admin', (req, res) => {
+router.patch('/admin', requireAdmin, (req, res) => {
   const { current_password, new_login, new_password } = req.body;
   if (!current_password)
     return res.status(400).json({ error: 'Mot de passe actuel requis.' });
@@ -89,4 +118,5 @@ router.patch('/admin', (req, res) => {
   res.json({ ok: true });
 });
 
+router.requireAdmin = requireAdmin;
 module.exports = router;

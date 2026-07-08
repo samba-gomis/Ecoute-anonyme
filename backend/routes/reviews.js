@@ -1,6 +1,7 @@
 const express = require('express');
 const router  = express.Router();
 const db      = require('../database');
+const { requireAdmin } = require('./auth');
 
 // GET /api/reviews
 router.get('/', (req, res) => {
@@ -31,7 +32,7 @@ router.post('/', (req, res) => {
 });
 
 // DELETE /api/reviews/:id
-router.delete('/:id', (req, res) => {
+router.delete('/:id', requireAdmin, (req, res) => {
   const info = db.prepare('DELETE FROM reviews WHERE id = ?').run(req.params.id);
   if (!info.changes) return res.status(404).json({ error: 'Avis introuvable.' });
   res.status(204).end();

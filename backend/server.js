@@ -1,9 +1,10 @@
 require('dotenv').config();
 
-const express = require('express');
-const cors    = require('cors');
-const path    = require('path');
-const bcrypt  = require('bcryptjs');
+const express      = require('express');
+const cors         = require('cors');
+const path         = require('path');
+const bcrypt       = require('bcryptjs');
+const cookieParser = require('cookie-parser');
 
 const db                  = require('./database');
 const volunteersRouter    = require('./routes/volunteers');
@@ -14,6 +15,9 @@ const applicationsRouter  = require('./routes/applications');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
+
+// Nécessaire pour que req.secure reflète le protocole d'origine derrière le proxy de Render
+app.set('trust proxy', 1);
 
 // Seed des identifiants admin par défaut si absents
 const upsertSetting = db.prepare(
@@ -29,6 +33,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use(cookieParser());
 
 // Serve the frontend
 app.use(express.static(path.join(__dirname, '..')));
