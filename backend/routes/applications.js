@@ -55,32 +55,30 @@ router.post('/:id/accept', requireAdmin, async (req, res) => {
 
   db.prepare('DELETE FROM applications WHERE id = ?').run(app.id);
 
+  // Envoi asynchrone : ne bloque jamais la réponse au client (évite un
+  // "Envoi en cours…" bloqué si le SMTP est lent ou le service vient de se réveiller).
   if (transporter) {
-    try {
-      await transporter.sendMail({
-        from: `"Écoute Anonyme" <${process.env.EMAIL_USER}>`,
-        to: app.email,
-        subject: 'Votre candidature bénévole a été acceptée — Écoute Anonyme',
-        text: [
-          `Bonjour ${app.prenom},`,
-          '',
-          'Bonne nouvelle : votre candidature pour devenir bénévole sur Écoute Anonyme a été acceptée !',
-          '',
-          'Voici vos identifiants pour accéder à l\'espace bénévole :',
-          `Identifiant : ${login.trim()}`,
-          `Mot de passe : ${password}`,
-          '',
-          `Connectez-vous ici : ${SITE_URL}/espace-benevole`,
-          '',
-          'Une fois connecté·e, vous pourrez modifier votre identifiant et votre mot de passe depuis "Mon compte".',
-          '',
-          'Merci pour votre engagement,',
-          'L\'équipe Écoute Anonyme',
-        ].join('\n'),
-      });
-    } catch (e) {
-      console.error('Échec de l\'envoi de l\'email d\'acceptation :', e.message);
-    }
+    transporter.sendMail({
+      from: `"Écoute Anonyme" <${process.env.EMAIL_USER}>`,
+      to: app.email,
+      subject: 'Votre candidature bénévole a été acceptée — Écoute Anonyme',
+      text: [
+        `Bonjour ${app.prenom},`,
+        '',
+        'Bonne nouvelle : votre candidature pour devenir bénévole sur Écoute Anonyme a été acceptée !',
+        '',
+        'Voici vos identifiants pour accéder à l\'espace bénévole :',
+        `Identifiant : ${login.trim()}`,
+        `Mot de passe : ${password}`,
+        '',
+        `Connectez-vous ici : ${SITE_URL}/espace-benevole`,
+        '',
+        'Une fois connecté·e, vous pourrez modifier votre identifiant et votre mot de passe depuis "Mon compte".',
+        '',
+        'Merci pour votre engagement,',
+        'L\'équipe Écoute Anonyme',
+      ].join('\n'),
+    }).catch(e => console.error('Échec de l\'envoi de l\'email d\'acceptation :', e.message));
   } else {
     console.warn('EMAIL_USER / EMAIL_PASS absents du .env — bénévole créé mais aucun email de confirmation envoyé.');
   }
@@ -97,27 +95,23 @@ router.post('/:id/reject', requireAdmin, async (req, res) => {
   db.prepare('DELETE FROM applications WHERE id = ?').run(app.id);
 
   if (transporter) {
-    try {
-      await transporter.sendMail({
-        from: `"Écoute Anonyme" <${process.env.EMAIL_USER}>`,
-        to: app.email,
-        subject: 'Votre candidature bénévole — Écoute Anonyme',
-        text: [
-          `Bonjour ${app.prenom},`,
-          '',
-          'Nous vous remercions sincèrement pour l\'intérêt que vous portez à Écoute Anonyme et pour le temps consacré à votre candidature.',
-          '',
-          'Après examen, nous ne sommes malheureusement pas en mesure d\'y donner suite pour le moment.',
-          '',
-          'N\'hésitez pas à retenter votre chance dans le futur.',
-          '',
-          'Bien cordialement,',
-          'L\'équipe Écoute Anonyme',
-        ].join('\n'),
-      });
-    } catch (e) {
-      console.error('Échec de l\'envoi de l\'email de refus :', e.message);
-    }
+    transporter.sendMail({
+      from: `"Écoute Anonyme" <${process.env.EMAIL_USER}>`,
+      to: app.email,
+      subject: 'Votre candidature bénévole — Écoute Anonyme',
+      text: [
+        `Bonjour ${app.prenom},`,
+        '',
+        'Nous vous remercions sincèrement pour l\'intérêt que vous portez à Écoute Anonyme et pour le temps consacré à votre candidature.',
+        '',
+        'Après examen, nous ne sommes malheureusement pas en mesure d\'y donner suite pour le moment.',
+        '',
+        'N\'hésitez pas à retenter votre chance dans le futur.',
+        '',
+        'Bien cordialement,',
+        'L\'équipe Écoute Anonyme',
+      ].join('\n'),
+    }).catch(e => console.error('Échec de l\'envoi de l\'email de refus :', e.message));
   } else {
     console.warn('EMAIL_USER / EMAIL_PASS absents du .env — candidature refusée mais aucun email envoyé.');
   }
@@ -147,30 +141,26 @@ router.post('/', async (req, res) => {
   );
 
   if (transporter) {
-    try {
-      await transporter.sendMail({
-        from: `"Écoute Anonyme" <${process.env.EMAIL_USER}>`,
-        to: CONTACT_EMAIL,
-        replyTo: email.trim(),
-        subject: `Nouvelle candidature bénévole — ${prenom} ${nom}`,
-        text: [
-          `Prénom : ${prenom}`,
-          `Nom : ${nom}`,
-          `Email : ${email}`,
-          `Pseudo souhaité : ${pseudo}`,
-          `Domaine : ${domaine || '—'}`,
-          `Disponibilités : ${dispos.join(', ')}`,
-          '',
-          'Motivations :',
-          motivation,
-          '',
-          'Description courte :',
-          description,
-        ].join('\n'),
-      });
-    } catch (e) {
-      console.error('Échec de l\'envoi de l\'email de candidature :', e.message);
-    }
+    transporter.sendMail({
+      from: `"Écoute Anonyme" <${process.env.EMAIL_USER}>`,
+      to: CONTACT_EMAIL,
+      replyTo: email.trim(),
+      subject: `Nouvelle candidature bénévole — ${prenom} ${nom}`,
+      text: [
+        `Prénom : ${prenom}`,
+        `Nom : ${nom}`,
+        `Email : ${email}`,
+        `Pseudo souhaité : ${pseudo}`,
+        `Domaine : ${domaine || '—'}`,
+        `Disponibilités : ${dispos.join(', ')}`,
+        '',
+        'Motivations :',
+        motivation,
+        '',
+        'Description courte :',
+        description,
+      ].join('\n'),
+    }).catch(e => console.error('Échec de l\'envoi de l\'email de candidature :', e.message));
   } else {
     console.warn('EMAIL_USER / EMAIL_PASS absents du .env — candidature enregistrée en base mais aucun email envoyé.');
   }

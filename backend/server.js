@@ -39,7 +39,7 @@ app.use(cookieParser());
 // URLs propres : /benevoles, /chat, /presentation... résolvent vers html/*.html
 // sans exposer le préfixe /html/ ni l'extension .html
 app.use(express.static(path.join(__dirname, '..', 'html'), { extensions: ['html'] }));
-app.use(express.static(path.join(__dirname, '..')));
+app.use(express.static(path.join(__dirname, '..'), { extensions: ['html'] }));
 
 // API
 app.use('/api/auth',          authRouter);
