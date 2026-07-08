@@ -769,7 +769,7 @@
         status.textContent = ' Une erreur est survenue lors de l\'envoi. Merci de réessayer, ou de nous contacter directement.';
       } finally {
         submitBtn.disabled = false;
-        submitBtn.querySelector('span').textContent = window.LANG[window.currentLang].form_submit || 'Envoyer ma candidature';
+        submitBtn.querySelector('span').textContent = LANG[window.currentLang || 'fr'].form_submit || 'Envoyer ma candidature';
         status.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
