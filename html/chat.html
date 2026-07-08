@@ -212,7 +212,7 @@
   <!-- ÉCRAN 1 — PSEUDO -->
   <div class="screen active" id="screen-pseudo">
     <div class="entry-card">
-      <a href="../index.html" class="entry-logo">
+      <a href="/" class="entry-logo">
         <img src="../logo.png" alt="Logo" />
         <span>Écoute Anonyme</span>
       </a>
@@ -226,7 +226,7 @@
       </div>
       <p class="entry-notice">
         <span data-i18n="chat_notice">Anonymat total · Aucune donnée collectée</span><br>
-        <a href="confidentialite.html" data-i18n="chat_notice_link">Charte de confidentialité</a>
+        <a href="confidentialite" data-i18n="chat_notice_link">Charte de confidentialité</a>
       </p>
     </div>
   </div>
@@ -251,11 +251,11 @@
   <div id="chat-screen">
     <div class="chat-topbar">
       <div class="chat-topbar-left">
-        <a href="../index.html" class="chat-back">
+        <a href="/" class="chat-back">
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <span data-i18n="chat_back">Retour</span>
         </a>
-        <a href="../index.html" class="chat-logo-link">
+        <a href="/" class="chat-logo-link">
           <img src="../logo.png" alt="Logo" />
           <span>Écoute Anonyme</span>
         </a>
@@ -409,7 +409,7 @@
       <h3 data-i18n="modal_don_title">Soutenir l'association</h3>
       <p data-i18n="modal_don_p">Ce service est entièrement gratuit et bénévole. Si vous souhaitez contribuer à sa pérennité, c'est possible — mais absolument pas obligatoire.</p>
       <div class="m-actions" style="flex-direction:column;gap:9px;">
-        <a href="soutenir.html" class="m-btn m-sage" style="text-decoration:none;display:block;text-align:center;" data-i18n="modal_don_btn">Faire un don</a>
+        <a href="soutenir" class="m-btn m-sage" style="text-decoration:none;display:block;text-align:center;" data-i18n="modal_don_btn">Faire un don</a>
         <button class="m-btn m-cancel" onclick="skipDon()" data-i18n="modal_don_skip">Non merci, terminer</button>
       </div>
     </div>
@@ -634,7 +634,7 @@
 
     function skipDon(){
       closeModal('don-modal');
-      window.location.href='../index.html';
+      window.location.href='/';
     }
   </script>
 </body>

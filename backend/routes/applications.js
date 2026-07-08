@@ -70,7 +70,7 @@ router.post('/:id/accept', requireAdmin, async (req, res) => {
           `Identifiant : ${login.trim()}`,
           `Mot de passe : ${password}`,
           '',
-          `Connectez-vous ici : ${SITE_URL}/html/espace-benevole.html`,
+          `Connectez-vous ici : ${SITE_URL}/espace-benevole`,
           '',
           'Une fois connecté·e, vous pourrez modifier votre identifiant et votre mot de passe depuis "Mon compte".',
           '',

@@ -36,6 +36,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Serve the frontend
+// URLs propres : /benevoles, /chat, /presentation... résolvent vers html/*.html
+// sans exposer le préfixe /html/ ni l'extension .html
+app.use(express.static(path.join(__dirname, '..', 'html'), { extensions: ['html'] }));
 app.use(express.static(path.join(__dirname, '..')));
 
 // API
