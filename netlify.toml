@@ -1,0 +1,10 @@
+[build]
+  publish = "."
+
+# Proxy toutes les requêtes /api/* vers le vrai backend Node (Render).
+# Remplacez l'URL ci-dessous par celle donnée par Render une fois le service déployé.
+[[redirects]]
+  from = "/api/*"
+  to = "https://REMPLACER-PAR-VOTRE-URL-RENDER.onrender.com/api/:splat"
+  status = 200
+  force = true

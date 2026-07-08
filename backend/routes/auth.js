@@ -17,6 +17,35 @@ router.post('/volunteer', (req, res) => {
   res.json({ ...safe, tags: JSON.parse(safe.tags) });
 });
 
+// PATCH /api/auth/volunteer — { id, current_password, new_login?, new_password? }
+router.patch('/volunteer', (req, res) => {
+  const { id, current_password, new_login, new_password } = req.body;
+  if (!id || !current_password)
+    return res.status(400).json({ error: 'Mot de passe actuel requis.' });
+
+  const vol = db.prepare('SELECT * FROM volunteers WHERE id = ?').get(id);
+  if (!vol?.password_hash || !bcrypt.compareSync(current_password, vol.password_hash))
+    return res.status(401).json({ error: 'Mot de passe actuel incorrect.' });
+
+  if (new_password && new_password.length < 6)
+    return res.status(400).json({ error: 'Le nouveau mot de passe doit faire au moins 6 caractères.' });
+  if (!new_login?.trim() && !new_password)
+    return res.status(400).json({ error: 'Aucune modification à enregistrer.' });
+
+  try {
+    if (new_login?.trim())
+      db.prepare('UPDATE volunteers SET login = ? WHERE id = ?').run(new_login.trim(), id);
+    if (new_password)
+      db.prepare('UPDATE volunteers SET password_hash = ? WHERE id = ?').run(bcrypt.hashSync(new_password, 10), id);
+  } catch (e) {
+    if (e.message.includes('UNIQUE'))
+      return res.status(409).json({ error: 'Cet identifiant est déjà utilisé.' });
+    throw e;
+  }
+
+  res.json({ ok: true });
+});
+
 // POST /api/auth/admin  — { login, password }
 router.post('/admin', (req, res) => {
   const { login, password } = req.body;

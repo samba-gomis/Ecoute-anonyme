@@ -293,6 +293,32 @@
       </div>
     </div>
 
+    <!-- ── Candidatures ── -->
+    <div class="admin-section">
+      <div class="admin-section-header">
+        <div class="admin-section-header-left">
+          <div class="section-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.6" stroke-linecap="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg>
+          </div>
+          <h2>Candidatures bénévoles</h2>
+        </div>
+        <span class="count-badge info" id="badge-apps">—</span>
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Domaine</th>
+            <th>Disponibilités</th>
+            <th>Reçue le</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="apps-tbody"></tbody>
+      </table>
+    </div>
+
     <!-- ── Bénévoles ── -->
     <div class="admin-section">
       <div class="admin-section-header">
@@ -426,6 +452,10 @@
       <input type="text" id="add-tags" placeholder="Anxiété, Solitude, Général" />
     </div>
     <div class="login-field">
+      <label>Description courte (visible par les utilisateurs)</label>
+      <input type="text" id="add-description" placeholder="ex : Disponible pour une écoute douce et sans jugement." maxlength="120" />
+    </div>
+    <div class="login-field">
       <label>Statut initial</label>
       <select id="add-status">
         <option value="offline" selected>Hors ligne</option>
@@ -455,6 +485,23 @@
   </div>
 </div>
 
+<!-- ── Modal : Détail candidature ── -->
+<div class="modal-overlay" id="app-detail-modal">
+  <div class="modal-card" style="max-width:560px;">
+    <h3 id="app-detail-name">—</h3>
+    <p class="modal-sub" id="app-detail-sub">—</p>
+    <div style="font-size:13px;color:var(--stone);line-height:1.7;">
+      <p style="margin-bottom:14px;"><strong style="color:var(--stone-dark);">Motivations :</strong><br><span id="app-detail-motivation"></span></p>
+      <p><strong style="color:var(--stone-dark);">Description courte :</strong><br><span id="app-detail-description"></span></p>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-cancel" onclick="closeAppDetail()">Fermer</button>
+      <button class="modal-btn" style="background:rgba(220,53,69,0.10);color:#DC3545;" onclick="rejectFromDetail()">Refuser</button>
+      <button class="modal-btn modal-btn-primary" onclick="acceptFromDetail()">Accepter</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── Modal : Confirmer suppression ── -->
 <div class="modal-overlay" id="confirm-modal">
   <div class="modal-card" style="max-width:400px;">
@@ -475,6 +522,9 @@ const API = '/api';
 let volunteers    = [];
 let conversations = [];
 let reviews       = [];
+let applications  = [];
+let _acceptingAppId = null;
+let _detailAppId    = null;
 
 // ── Helpers ──────────────────────────────────────
 function escHtml(s) {
@@ -572,10 +622,11 @@ function doLogout() {
 async function loadAll() {
   renderLoadingStates();
   try {
-    [volunteers, conversations, reviews] = await Promise.all([
+    [volunteers, conversations, reviews, applications] = await Promise.all([
       apiFetch('/volunteers'),
       apiFetch('/conversations'),
       apiFetch('/reviews'),
+      apiFetch('/applications'),
     ]);
   } catch (e) {
     console.error('Erreur chargement données :', e);
@@ -584,11 +635,13 @@ async function loadAll() {
   renderVolunteers();
   renderConversations();
   renderReviews();
+  renderApplications();
 }
 
 function renderLoadingStates() {
   document.getElementById('vols-tbody').innerHTML  = loadingRow(6);
   document.getElementById('convs-tbody').innerHTML = loadingRow(7);
+  document.getElementById('apps-tbody').innerHTML  = loadingRow(6);
   document.getElementById('admin-reviews-list').innerHTML = '<div style="text-align:center;padding:32px;color:var(--mist);"><span class="spinner"></span>Chargement…</div>';
 }
 
@@ -606,6 +659,12 @@ function updateStats() {
   document.getElementById('badge-vols').textContent  = volunteers.length + ' bénévole' + (volunteers.length > 1 ? 's' : '');
   document.getElementById('badge-convs').textContent = conversations.length + ' conversation' + (conversations.length > 1 ? 's' : '');
   document.getElementById('badge-avis').textContent  = reviews.length + ' avis' + (reviews.length > 0 ? ` · Moy. ${avg}/5` : '');
+  document.getElementById('badge-apps').textContent  = applications.length + ' candidature' + (applications.length > 1 ? 's' : '');
+}
+
+function dispoLabel(d) {
+  const labels = { matin: 'Matin', 'apres-midi': 'Après-midi', soir: 'Soir', weekend: 'Week-end' };
+  return labels[d] || d;
 }
 
 // ── Render volunteers ─────────────────────────────
@@ -627,6 +686,34 @@ function renderVolunteers() {
       <td>
         <div class="action-btns">
           <button class="a-btn a-btn-danger" onclick="confirmDeleteVol(${v.id}, '${escHtml(v.name)}')">Supprimer</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// ── Render applications ───────────────────────────
+function renderApplications() {
+  const tbody = document.getElementById('apps-tbody');
+  if (!applications.length) {
+    tbody.innerHTML = emptyRow(6, 'Aucune candidature en attente.');
+    return;
+  }
+  tbody.innerHTML = applications.map(a => `
+    <tr>
+      <td class="name-cell">
+        <strong>${escHtml(a.prenom + ' ' + a.nom)}</strong>
+        <span>${escHtml(a.pseudo)}</span>
+      </td>
+      <td>${escHtml(a.email)}</td>
+      <td>${a.domaine ? `<span class="tag-chip">${escHtml(a.domaine)}</span>` : '<span style="color:var(--mist)">—</span>'}</td>
+      <td>${a.dispos.map(d => `<span class="tag-chip">${escHtml(dispoLabel(d))}</span>`).join('')}</td>
+      <td style="font-size:12px;color:var(--mist);">${fmtDate(a.created_at)}</td>
+      <td>
+        <div class="action-btns">
+          <button class="a-btn a-btn-ghost" onclick="openAppDetail(${a.id})">Voir</button>
+          <button class="a-btn a-btn-primary" onclick="acceptApplication(${a.id})">Accepter</button>
+          <button class="a-btn a-btn-danger" onclick="confirmRejectApp(${a.id}, '${escHtml(a.prenom + ' ' + a.nom)}')">Refuser</button>
         </div>
       </td>
     </tr>
@@ -713,7 +800,11 @@ function renderReviews() {
 
 // ── Add volunteer modal ───────────────────────────
 function openAddVolModal() {
-  ['add-name','add-email','add-tags','add-login','add-password','add-password2'].forEach(id => {
+  _acceptingAppId = null;
+  document.querySelector('#add-vol-modal h3').textContent = 'Ajouter un bénévole';
+  document.querySelector('#add-vol-modal .modal-sub').textContent = 'Le profil et les identifiants de connexion seront créés immédiatement.';
+  document.getElementById('add-submit-btn').textContent = 'Ajouter';
+  ['add-name','add-email','add-tags','add-description','add-login','add-password','add-password2'].forEach(id => {
     document.getElementById(id).value = '';
   });
   document.getElementById('add-status').value = 'offline';
@@ -725,10 +816,72 @@ function closeAddVolModal() {
   document.getElementById('add-vol-modal').classList.remove('open');
 }
 
+// ── Candidatures : détail / accepter / refuser ────
+function openAppDetail(id) {
+  const a = applications.find(x => x.id === id);
+  if (!a) return;
+  _detailAppId = id;
+  document.getElementById('app-detail-name').textContent = `${a.prenom} ${a.nom}`;
+  document.getElementById('app-detail-sub').textContent =
+    `${a.email} · Pseudo souhaité : ${a.pseudo}${a.domaine ? ' · ' + a.domaine : ''}`;
+  document.getElementById('app-detail-motivation').textContent = a.motivation;
+  document.getElementById('app-detail-description').textContent = a.description;
+  document.getElementById('app-detail-modal').classList.add('open');
+}
+function closeAppDetail() {
+  document.getElementById('app-detail-modal').classList.remove('open');
+  _detailAppId = null;
+}
+function acceptFromDetail() {
+  const id = _detailAppId;
+  closeAppDetail();
+  if (id != null) acceptApplication(id);
+}
+function rejectFromDetail() {
+  const a = applications.find(x => x.id === _detailAppId);
+  closeAppDetail();
+  if (a) confirmRejectApp(a.id, `${a.prenom} ${a.nom}`);
+}
+
+function acceptApplication(id) {
+  const a = applications.find(x => x.id === id);
+  if (!a) return;
+  _acceptingAppId = id;
+  document.querySelector('#add-vol-modal h3').textContent = 'Accepter la candidature';
+  document.querySelector('#add-vol-modal .modal-sub').textContent =
+    `Définissez les identifiants de connexion de ${a.prenom}. La candidature sera retirée de la liste une fois validée.`;
+  document.getElementById('add-submit-btn').textContent = 'Accepter';
+  document.getElementById('add-name').value  = `${a.prenom} ${a.nom}`;
+  document.getElementById('add-email').value = a.email;
+  document.getElementById('add-tags').value  = a.domaine || '';
+  document.getElementById('add-description').value = a.description || '';
+  document.getElementById('add-status').value = 'offline';
+  document.getElementById('add-login').value = '';
+  document.getElementById('add-password').value = '';
+  document.getElementById('add-password2').value = '';
+  document.getElementById('add-error').style.display = 'none';
+  document.getElementById('add-vol-modal').classList.add('open');
+  setTimeout(() => document.getElementById('add-login').focus(), 50);
+}
+
+function confirmRejectApp(id, name) {
+  openConfirm(
+    'Refuser la candidature',
+    `Refuser définitivement la candidature de "${name}" ? Un email de notification lui sera envoyé.`,
+    async () => {
+      await apiFetch(`/applications/${id}/reject`, { method: 'POST' });
+      applications = applications.filter(a => a.id !== id);
+      updateStats();
+      renderApplications();
+    }
+  );
+}
+
 async function submitAddVol() {
-  const name     = document.getElementById('add-name').value.trim();
-  const email    = document.getElementById('add-email').value.trim();
-  const tagsRaw  = document.getElementById('add-tags').value;
+  const name        = document.getElementById('add-name').value.trim();
+  const email       = document.getElementById('add-email').value.trim();
+  const tagsRaw     = document.getElementById('add-tags').value;
+  const description = document.getElementById('add-description').value.trim();
   const status   = document.getElementById('add-status').value;
   const login    = document.getElementById('add-login').value.trim();
   const password = document.getElementById('add-password').value;
@@ -744,14 +897,28 @@ async function submitAddVol() {
   if (password !== password2) return showModalError(errEl, 'Les mots de passe ne correspondent pas.');
 
   const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
+  const wasAccepting = _acceptingAppId;
 
-  btn.disabled = true; btn.textContent = 'Ajout en cours…';
+  btn.disabled = true; btn.textContent = wasAccepting ? 'Validation…' : 'Ajout en cours…';
 
   try {
-    const newVol = await apiFetch('/volunteers', {
-      method: 'POST',
-      body: JSON.stringify({ name, email: email || undefined, tags, status, login, password }),
-    });
+    let newVol;
+    if (wasAccepting) {
+      const result = await apiFetch(`/applications/${wasAccepting}/accept`, {
+        method: 'POST',
+        body: JSON.stringify({ name, email: email || undefined, tags, description: description || undefined, status, login, password }),
+      });
+      newVol = result.volunteer;
+      applications = applications.filter(a => a.id !== wasAccepting);
+      renderApplications();
+      _acceptingAppId = null;
+    } else {
+      newVol = await apiFetch('/volunteers', {
+        method: 'POST',
+        body: JSON.stringify({ name, email: email || undefined, tags, description: description || undefined, status, login, password }),
+      });
+    }
+
     volunteers.push(newVol);
     closeAddVolModal();
     updateStats();
@@ -759,7 +926,7 @@ async function submitAddVol() {
   } catch (e) {
     showModalError(errEl, e.message);
   } finally {
-    btn.disabled = false; btn.textContent = 'Ajouter';
+    btn.disabled = false; btn.textContent = wasAccepting ? 'Accepter' : 'Ajouter';
   }
 }
 
@@ -876,6 +1043,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     closeAddVolModal();
     closeConfirm();
+    closeAppDetail();
   }
 });
 

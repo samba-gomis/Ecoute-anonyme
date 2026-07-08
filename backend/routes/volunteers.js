@@ -27,22 +27,23 @@ router.get('/:id', (req, res) => {
 
 // POST /api/volunteers
 router.post('/', (req, res) => {
-  const { name, email, tags, status, login, password } = req.body;
+  const { name, email, tags, status, login, password, description } = req.body;
   if (!name?.trim())  return res.status(400).json({ error: 'Le champ "name" est requis.' });
   if (!login?.trim()) return res.status(400).json({ error: 'Un identifiant de connexion est requis.' });
   if (!password)      return res.status(400).json({ error: 'Un mot de passe est requis.' });
   if (password.length < 6) return res.status(400).json({ error: 'Le mot de passe doit faire au moins 6 caractères.' });
 
-  const tagsJson     = JSON.stringify(Array.isArray(tags) ? tags : []);
-  const safeStatus   = VALID_STATUSES.includes(status) ? status : 'online';
-  const safeEmail    = email?.trim() || null;
-  const safeLogin    = login.trim();
-  const passwordHash = bcrypt.hashSync(password, 10);
+  const tagsJson       = JSON.stringify(Array.isArray(tags) ? tags : []);
+  const safeStatus     = VALID_STATUSES.includes(status) ? status : 'online';
+  const safeEmail      = email?.trim() || null;
+  const safeLogin      = login.trim();
+  const safeDescription = description?.trim() || null;
+  const passwordHash   = bcrypt.hashSync(password, 10);
 
   try {
     const info = db.prepare(
-      'INSERT INTO volunteers (name, email, tags, status, login, password_hash) VALUES (?, ?, ?, ?, ?, ?)'
-    ).run(name.trim(), safeEmail, tagsJson, safeStatus, safeLogin, passwordHash);
+      'INSERT INTO volunteers (name, email, tags, status, login, password_hash, description) VALUES (?, ?, ?, ?, ?, ?, ?)'
+    ).run(name.trim(), safeEmail, tagsJson, safeStatus, safeLogin, passwordHash, safeDescription);
 
     res.status(201).json(parseRow(
       db.prepare('SELECT * FROM volunteers WHERE id = ?').get(info.lastInsertRowid)
@@ -61,16 +62,17 @@ router.patch('/:id', (req, res) => {
   const existing = db.prepare('SELECT * FROM volunteers WHERE id = ?').get(req.params.id);
   if (!existing) return res.status(404).json({ error: 'Bénévole introuvable.' });
 
-  const name   = req.body.name?.trim()  || existing.name;
-  const email  = 'email'  in req.body   ? (req.body.email?.trim() || null) : existing.email;
-  const tags   = 'tags'   in req.body   ? JSON.stringify(Array.isArray(req.body.tags) ? req.body.tags : []) : existing.tags;
-  const status = VALID_STATUSES.includes(req.body.status) ? req.body.status : existing.status;
+  const name        = req.body.name?.trim()  || existing.name;
+  const email       = 'email'  in req.body   ? (req.body.email?.trim() || null) : existing.email;
+  const tags        = 'tags'   in req.body   ? JSON.stringify(Array.isArray(req.body.tags) ? req.body.tags : []) : existing.tags;
+  const status      = VALID_STATUSES.includes(req.body.status) ? req.body.status : existing.status;
+  const description = 'description' in req.body ? (req.body.description?.trim() || null) : existing.description;
 
   if (!name) return res.status(400).json({ error: 'Le champ "name" est requis.' });
 
   try {
-    db.prepare('UPDATE volunteers SET name=?, email=?, tags=?, status=? WHERE id=?')
-      .run(name, email, tags, status, req.params.id);
+    db.prepare('UPDATE volunteers SET name=?, email=?, tags=?, status=?, description=? WHERE id=?')
+      .run(name, email, tags, status, description, req.params.id);
 
     res.json(parseRow(
       db.prepare('SELECT * FROM volunteers WHERE id = ?').get(req.params.id)

@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors    = require('cors');
 const path    = require('path');
@@ -8,6 +10,7 @@ const volunteersRouter    = require('./routes/volunteers');
 const conversationsRouter = require('./routes/conversations');
 const reviewsRouter       = require('./routes/reviews');
 const authRouter          = require('./routes/auth');
+const applicationsRouter  = require('./routes/applications');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -35,6 +38,7 @@ app.use('/api/auth',          authRouter);
 app.use('/api/volunteers',    volunteersRouter);
 app.use('/api/conversations', conversationsRouter);
 app.use('/api/reviews',       reviewsRouter);
+app.use('/api/applications',  applicationsRouter);
 
 // 404 for unknown /api routes
 app.use('/api', (req, res) => {

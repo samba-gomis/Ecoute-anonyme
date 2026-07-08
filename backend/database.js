@@ -44,10 +44,26 @@ db.exec(`
     key   TEXT PRIMARY KEY,
     value TEXT NOT NULL
   );
+
+  CREATE TABLE IF NOT EXISTS applications (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    prenom      TEXT    NOT NULL,
+    nom         TEXT    NOT NULL,
+    email       TEXT    NOT NULL,
+    pseudo      TEXT    NOT NULL,
+    motivation  TEXT    NOT NULL,
+    description TEXT    NOT NULL,
+    domaine     TEXT,
+    dispos      TEXT    NOT NULL DEFAULT '[]',
+    status      TEXT    NOT NULL DEFAULT 'pending'
+                        CHECK(status IN ('pending','accepted','rejected')),
+    created_at  TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ','now'))
+  );
 `);
 
 // Migration : colonnes ajoutées après la création initiale
 try { db.exec('ALTER TABLE volunteers ADD COLUMN login TEXT UNIQUE'); } catch {}
 try { db.exec('ALTER TABLE volunteers ADD COLUMN password_hash TEXT'); } catch {}
+try { db.exec('ALTER TABLE volunteers ADD COLUMN description TEXT'); } catch {}
 
 module.exports = db;

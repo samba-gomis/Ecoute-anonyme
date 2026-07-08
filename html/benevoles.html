@@ -706,7 +706,7 @@
     window.onLangChange = renderVolunteers;
 
     // ===== FORMULAIRE =====
-    function submitForm(e) {
+    async function submitForm(e) {
       e.preventDefault();
       const form = e.target;
       const status = document.getElementById('form-status');
@@ -721,8 +721,8 @@
         return;
       }
 
-      const dispos = form.querySelectorAll('input[name="dispo"]:checked');
-      if (dispos.length === 0) {
+      const dispoEls = form.querySelectorAll('input[name="dispo"]:checked');
+      if (dispoEls.length === 0) {
         status.className = 'form-status error';
         status.style.display = 'block';
         status.textContent = ' Veuillez sélectionner au moins une disponibilité.';
@@ -733,7 +733,28 @@
       submitBtn.disabled = true;
       submitBtn.querySelector('span').textContent = 'Envoi en cours…';
 
-      setTimeout(() => {
+      const payload = {
+        prenom:      form.prenom.value.trim(),
+        nom:         form.nom.value.trim(),
+        email:       form.email.value.trim(),
+        pseudo:      form.pseudo.value.trim(),
+        motivation:  form.motivation.value.trim(),
+        description: form.description.value.trim(),
+        domaine:     form.domaine.value || null,
+        dispos:      Array.from(dispoEls).map(el => el.value),
+      };
+
+      try {
+        const res = await fetch('/api/applications', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error || 'Erreur serveur.');
+        }
+
         status.className = 'form-status success';
         status.style.display = 'block';
         status.innerHTML = `
@@ -742,10 +763,15 @@
         `;
         form.reset();
         document.querySelectorAll('.dispo-option').forEach(o => o.classList.remove('checked'));
+      } catch (err) {
+        status.className = 'form-status error';
+        status.style.display = 'block';
+        status.textContent = ' Une erreur est survenue lors de l\'envoi. Merci de réessayer, ou de nous contacter directement.';
+      } finally {
         submitBtn.disabled = false;
         submitBtn.querySelector('span').textContent = window.LANG[window.currentLang].form_submit || 'Envoyer ma candidature';
         status.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 1200);
+      }
     }
   </script>
 </body>
