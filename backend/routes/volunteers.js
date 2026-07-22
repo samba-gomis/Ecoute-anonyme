@@ -2,6 +2,7 @@ const express = require('express');
 const router  = express.Router();
 const bcrypt  = require('bcryptjs');
 const db      = require('../database');
+const ah      = require('../asyncHandler');
 const { requireAdmin } = require('./auth');
 
 const VALID_STATUSES = ['online', 'away', 'offline'];
@@ -14,20 +15,20 @@ function parseRow(row) {
 }
 
 // GET /api/volunteers
-router.get('/', (req, res) => {
-  const rows = db.prepare('SELECT * FROM volunteers ORDER BY created_at ASC').all();
+router.get('/', ah(async (req, res) => {
+  const rows = await db.all('SELECT * FROM volunteers ORDER BY created_at ASC');
   res.json(rows.map(parseRow));
-});
+}));
 
 // GET /api/volunteers/:id
-router.get('/:id', (req, res) => {
-  const row = db.prepare('SELECT * FROM volunteers WHERE id = ?').get(req.params.id);
+router.get('/:id', ah(async (req, res) => {
+  const row = await db.get('SELECT * FROM volunteers WHERE id = ?', [req.params.id]);
   if (!row) return res.status(404).json({ error: 'Bénévole introuvable.' });
   res.json(parseRow(row));
-});
+}));
 
 // POST /api/volunteers
-router.post('/', requireAdmin, (req, res) => {
+router.post('/', requireAdmin, ah(async (req, res) => {
   const { name, email, tags, status, login, password, description } = req.body;
   if (!name?.trim())  return res.status(400).json({ error: 'Le champ "name" est requis.' });
   if (!login?.trim()) return res.status(400).json({ error: 'Un identifiant de connexion est requis.' });
@@ -42,25 +43,27 @@ router.post('/', requireAdmin, (req, res) => {
   const passwordHash   = bcrypt.hashSync(password, 10);
 
   try {
-    const info = db.prepare(
-      'INSERT INTO volunteers (name, email, tags, status, login, password_hash, description) VALUES (?, ?, ?, ?, ?, ?, ?)'
-    ).run(name.trim(), safeEmail, tagsJson, safeStatus, safeLogin, passwordHash, safeDescription);
+    const info = await db.run(
+      'INSERT INTO volunteers (name, email, tags, status, login, password_hash, description) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [name.trim(), safeEmail, tagsJson, safeStatus, safeLogin, passwordHash, safeDescription],
+      'id'
+    );
 
     res.status(201).json(parseRow(
-      db.prepare('SELECT * FROM volunteers WHERE id = ?').get(info.lastInsertRowid)
+      await db.get('SELECT * FROM volunteers WHERE id = ?', [info.lastInsertRowid])
     ));
   } catch (e) {
-    if (e.message.includes('UNIQUE')) {
+    if (e.message.includes('duplicate key')) {
       if (e.message.includes('email')) return res.status(409).json({ error: 'Cet email est déjà utilisé.' });
       if (e.message.includes('login')) return res.status(409).json({ error: 'Cet identifiant est déjà utilisé.' });
     }
     throw e;
   }
-});
+}));
 
 // PATCH /api/volunteers/:id
-router.patch('/:id', requireAdmin, (req, res) => {
-  const existing = db.prepare('SELECT * FROM volunteers WHERE id = ?').get(req.params.id);
+router.patch('/:id', requireAdmin, ah(async (req, res) => {
+  const existing = await db.get('SELECT * FROM volunteers WHERE id = ?', [req.params.id]);
   if (!existing) return res.status(404).json({ error: 'Bénévole introuvable.' });
 
   const name        = req.body.name?.trim()  || existing.name;
@@ -72,24 +75,26 @@ router.patch('/:id', requireAdmin, (req, res) => {
   if (!name) return res.status(400).json({ error: 'Le champ "name" est requis.' });
 
   try {
-    db.prepare('UPDATE volunteers SET name=?, email=?, tags=?, status=?, description=? WHERE id=?')
-      .run(name, email, tags, status, description, req.params.id);
+    await db.run(
+      'UPDATE volunteers SET name=?, email=?, tags=?, status=?, description=? WHERE id=?',
+      [name, email, tags, status, description, req.params.id]
+    );
 
     res.json(parseRow(
-      db.prepare('SELECT * FROM volunteers WHERE id = ?').get(req.params.id)
+      await db.get('SELECT * FROM volunteers WHERE id = ?', [req.params.id])
     ));
   } catch (e) {
-    if (e.message.includes('UNIQUE'))
+    if (e.message.includes('duplicate key'))
       return res.status(409).json({ error: 'Cet email est déjà utilisé.' });
     throw e;
   }
-});
+}));
 
 // DELETE /api/volunteers/:id
-router.delete('/:id', requireAdmin, (req, res) => {
-  const info = db.prepare('DELETE FROM volunteers WHERE id = ?').run(req.params.id);
+router.delete('/:id', requireAdmin, ah(async (req, res) => {
+  const info = await db.run('DELETE FROM volunteers WHERE id = ?', [req.params.id]);
   if (!info.changes) return res.status(404).json({ error: 'Bénévole introuvable.' });
   res.status(204).end();
-});
+}));
 
 module.exports = router;

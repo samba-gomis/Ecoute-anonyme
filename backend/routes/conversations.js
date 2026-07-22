@@ -2,6 +2,7 @@ const express = require('express');
 const router  = express.Router();
 const crypto  = require('crypto');
 const db      = require('../database');
+const ah      = require('../asyncHandler');
 const { requireAdmin } = require('./auth');
 
 function parseRow(row) {
@@ -9,37 +10,38 @@ function parseRow(row) {
   return { ...row, messages: JSON.parse(row.messages) };
 }
 
-function generateShareId() {
+async function generateShareId() {
   // 8 uppercase hex chars, e.g. "A3F9B2D1" — ~4 billion combinations
   let id;
-  const check = db.prepare('SELECT 1 FROM conversations WHERE share_id = ?');
   do {
     id = crypto.randomBytes(4).toString('hex').toUpperCase();
-  } while (check.get(id));
+  } while (await db.get('SELECT 1 FROM conversations WHERE share_id = ?', [id]));
   return id;
 }
 
 // GET /api/conversations  — list without full messages body
-router.get('/', requireAdmin, (req, res) => {
-  const rows = db.prepare(`
+router.get('/', requireAdmin, ah(async (req, res) => {
+  const rows = await db.all(`
     SELECT share_id, user_pseudo, vol_display, domain,
            started_at, ended_at, created_at,
-           json_array_length(messages) AS message_count
+           jsonb_array_length(messages::jsonb) AS message_count
     FROM conversations ORDER BY created_at DESC
-  `).all();
+  `);
   res.json(rows);
-});
+}));
 
 // GET /api/conversations/:id
-router.get('/:id', (req, res) => {
-  const row = db.prepare('SELECT * FROM conversations WHERE share_id = ?')
-    .get(req.params.id.toUpperCase());
+router.get('/:id', ah(async (req, res) => {
+  const row = await db.get(
+    'SELECT * FROM conversations WHERE share_id = ?',
+    [req.params.id.toUpperCase()]
+  );
   if (!row) return res.status(404).json({ error: 'Conversation introuvable. Vérifiez votre identifiant.' });
   res.json(parseRow(row));
-});
+}));
 
 // POST /api/conversations  — save a conversation, returns share_id
-router.post('/', (req, res) => {
+router.post('/', ah(async (req, res) => {
   const { user_pseudo, vol_display, domain, messages, started_at, ended_at } = req.body;
 
   if (!user_pseudo?.trim())
@@ -49,12 +51,12 @@ router.post('/', (req, res) => {
   if (!messages.length)
     return res.status(400).json({ error: 'Impossible de sauvegarder une conversation vide.' });
 
-  const share_id = generateShareId();
+  const share_id = await generateShareId();
 
-  db.prepare(`
+  await db.run(`
     INSERT INTO conversations (share_id, user_pseudo, vol_display, domain, messages, started_at, ended_at)
     VALUES (?, ?, ?, ?, ?, ?, ?)
-  `).run(
+  `, [
     share_id,
     user_pseudo.trim(),
     vol_display?.trim() || 'Bénévole',
@@ -62,19 +64,21 @@ router.post('/', (req, res) => {
     JSON.stringify(messages),
     started_at || null,
     ended_at   || null,
-  );
+  ]);
 
   res.status(201).json(parseRow(
-    db.prepare('SELECT * FROM conversations WHERE share_id = ?').get(share_id)
+    await db.get('SELECT * FROM conversations WHERE share_id = ?', [share_id])
   ));
-});
+}));
 
 // DELETE /api/conversations/:id
-router.delete('/:id', requireAdmin, (req, res) => {
-  const info = db.prepare('DELETE FROM conversations WHERE share_id = ?')
-    .run(req.params.id.toUpperCase());
+router.delete('/:id', requireAdmin, ah(async (req, res) => {
+  const info = await db.run(
+    'DELETE FROM conversations WHERE share_id = ?',
+    [req.params.id.toUpperCase()]
+  );
   if (!info.changes) return res.status(404).json({ error: 'Conversation introuvable.' });
   res.status(204).end();
-});
+}));
 
 module.exports = router;

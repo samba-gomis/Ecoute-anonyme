@@ -19,13 +19,6 @@ const PORT = process.env.PORT || 3000;
 // Nécessaire pour que req.secure reflète le protocole d'origine derrière le proxy de Render
 app.set('trust proxy', 1);
 
-// Seed des identifiants admin par défaut si absents
-const upsertSetting = db.prepare(
-  'INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)'
-);
-upsertSetting.run('admin_login', 'admin');
-upsertSetting.run('admin_password_hash', bcrypt.hashSync('admin123', 10));
-
 // Allow requests from file://, Live Server, and same origin
 app.use(cors({
   origin: (origin, cb) => cb(null, true),
@@ -59,11 +52,30 @@ app.use((err, req, res, _next) => {
   res.status(500).json({ error: 'Erreur serveur interne.' });
 });
 
-app.listen(PORT, () => {
-  console.log(`
+async function start() {
+  await db.init();
+
+  // Seed des identifiants admin par défaut si absents
+  await db.run(
+    'INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT (key) DO NOTHING',
+    ['admin_login', 'admin']
+  );
+  await db.run(
+    'INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT (key) DO NOTHING',
+    ['admin_password_hash', bcrypt.hashSync('admin123', 10)]
+  );
+
+  app.listen(PORT, () => {
+    console.log(`
   ╔═══════════════════════════════════════╗
   ║   Écoute Anonyme  ·  Backend actif    ║
   ║   http://localhost:${PORT}               ║
   ╚═══════════════════════════════════════╝
   `);
+  });
+}
+
+start().catch(err => {
+  console.error('Échec du démarrage du serveur :', err);
+  process.exit(1);
 });

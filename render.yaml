@@ -1,0 +1,28 @@
+databases:
+  - name: ecoute-anonyme-db
+    plan: free
+    databaseName: ecoute_anonyme
+    user: ecoute_anonyme
+
+services:
+  - type: web
+    name: ecoute-anonyme
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ecoute-anonyme-db
+          property: connectionString
+      # Secrets à saisir manuellement lors de la création du Blueprint
+      # (voir .env.example pour leur signification).
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: CONTACT_EMAIL
+        sync: false
+      - key: SITE_URL
+        sync: false

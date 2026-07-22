@@ -3,6 +3,7 @@ const nodemailer = require('nodemailer');
 const bcrypt     = require('bcryptjs');
 const router     = express.Router();
 const db         = require('../database');
+const ah         = require('../asyncHandler');
 const { requireAdmin } = require('./auth');
 
 const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'ecoute.anonyme26@gmail.com';
@@ -13,22 +14,19 @@ const transporter = (process.env.EMAIL_USER && process.env.EMAIL_PASS)
   ? nodemailer.createTransport({
       service: 'gmail',
       auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
-      // Certains hébergeurs (ex. Render) n'ont pas de route IPv6 sortante
-      // fiable ; smtp.gmail.com résout parfois en IPv6 d'abord, ce qui
-      // provoque un ENETUNREACH. On force IPv4 pour éviter ça.
       family: 4,
     })
   : null;
 
 // GET /api/applications
-router.get('/', requireAdmin, (req, res) => {
-  const rows = db.prepare('SELECT * FROM applications ORDER BY created_at DESC').all();
+router.get('/', requireAdmin, ah(async (req, res) => {
+  const rows = await db.all('SELECT * FROM applications ORDER BY created_at DESC');
   res.json(rows.map(r => ({ ...r, dispos: JSON.parse(r.dispos) })));
-});
+}));
 
 // POST /api/applications/:id/accept — { login, password, tags?, status?, name?, email? }
-router.post('/:id/accept', requireAdmin, async (req, res) => {
-  const app = db.prepare('SELECT * FROM applications WHERE id = ?').get(req.params.id);
+router.post('/:id/accept', requireAdmin, ah(async (req, res) => {
+  const app = await db.get('SELECT * FROM applications WHERE id = ?', [req.params.id]);
   if (!app) return res.status(404).json({ error: 'Candidature introuvable.' });
 
   const { login, password, tags, status } = req.body;
@@ -44,20 +42,20 @@ router.post('/:id/accept', requireAdmin, async (req, res) => {
 
   let volunteer;
   try {
-    const info = db.prepare(`
+    const info = await db.run(`
       INSERT INTO volunteers (name, email, tags, status, login, password_hash, description)
       VALUES (?, ?, ?, ?, ?, ?, ?)
-    `).run(finalName, finalEmail, tagsJson, safeStatus, login.trim(), passwordHash, finalDescription);
-    volunteer = db.prepare('SELECT * FROM volunteers WHERE id = ?').get(info.lastInsertRowid);
+    `, [finalName, finalEmail, tagsJson, safeStatus, login.trim(), passwordHash, finalDescription], 'id');
+    volunteer = await db.get('SELECT * FROM volunteers WHERE id = ?', [info.lastInsertRowid]);
   } catch (e) {
-    if (e.message.includes('UNIQUE')) {
+    if (e.message.includes('duplicate key')) {
       if (e.message.includes('email')) return res.status(409).json({ error: 'Cet email est déjà utilisé par un autre bénévole.' });
       if (e.message.includes('login')) return res.status(409).json({ error: 'Cet identifiant est déjà utilisé.' });
     }
     throw e;
   }
 
-  db.prepare('DELETE FROM applications WHERE id = ?').run(app.id);
+  await db.run('DELETE FROM applications WHERE id = ?', [app.id]);
 
   // Envoi asynchrone : ne bloque jamais la réponse au client (évite un
   // "Envoi en cours…" bloqué si le SMTP est lent ou le service vient de se réveiller).
@@ -89,14 +87,14 @@ router.post('/:id/accept', requireAdmin, async (req, res) => {
 
   const { password_hash, ...safeVolunteer } = volunteer;
   res.status(201).json({ ok: true, volunteer: { ...safeVolunteer, tags: JSON.parse(safeVolunteer.tags) } });
-});
+}));
 
 // POST /api/applications/:id/reject
-router.post('/:id/reject', requireAdmin, async (req, res) => {
-  const app = db.prepare('SELECT * FROM applications WHERE id = ?').get(req.params.id);
+router.post('/:id/reject', requireAdmin, ah(async (req, res) => {
+  const app = await db.get('SELECT * FROM applications WHERE id = ?', [req.params.id]);
   if (!app) return res.status(404).json({ error: 'Candidature introuvable.' });
 
-  db.prepare('DELETE FROM applications WHERE id = ?').run(app.id);
+  await db.run('DELETE FROM applications WHERE id = ?', [app.id]);
 
   if (transporter) {
     transporter.sendMail({
@@ -121,10 +119,10 @@ router.post('/:id/reject', requireAdmin, async (req, res) => {
   }
 
   res.status(204).end();
-});
+}));
 
 // POST /api/applications
-router.post('/', async (req, res) => {
+router.post('/', ah(async (req, res) => {
   const { prenom, nom, email, pseudo, motivation, description, domaine, dispos } = req.body;
 
   if (!prenom?.trim() || !nom?.trim() || !email?.trim() || !pseudo?.trim()
@@ -135,14 +133,14 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ error: 'Veuillez sélectionner au moins une disponibilité.' });
   }
 
-  const info = db.prepare(`
+  const info = await db.run(`
     INSERT INTO applications (prenom, nom, email, pseudo, motivation, description, domaine, dispos)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(
+  `, [
     prenom.trim(), nom.trim(), email.trim(), pseudo.trim(),
     motivation.trim(), description.trim(), domaine?.trim() || null,
     JSON.stringify(dispos)
-  );
+  ], 'id');
 
   if (transporter) {
     transporter.sendMail({
@@ -171,8 +169,8 @@ router.post('/', async (req, res) => {
 
   res.status(201).json({
     ok: true,
-    row: db.prepare('SELECT * FROM applications WHERE id = ?').get(info.lastInsertRowid),
+    row: await db.get('SELECT * FROM applications WHERE id = ?', [info.lastInsertRowid]),
   });
-});
+}));
 
 module.exports = router;
