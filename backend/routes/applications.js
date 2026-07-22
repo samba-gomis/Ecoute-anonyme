@@ -1,5 +1,6 @@
 const express    = require('express');
 const nodemailer = require('nodemailer');
+const dns        = require('dns').promises;
 const bcrypt     = require('bcryptjs');
 const router     = express.Router();
 const db         = require('../database');
@@ -10,13 +11,24 @@ const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'ecoute.anonyme26@gmail.com';
 const SITE_URL       = process.env.SITE_URL || 'http://localhost:3000';
 const VALID_STATUSES = ['online', 'away', 'offline'];
 
-const transporter = (process.env.EMAIL_USER && process.env.EMAIL_PASS)
-  ? nodemailer.createTransport({
-      service: 'gmail',
-      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
-      family: 4,
-    })
-  : null;
+const EMAIL_CONFIGURED = Boolean(process.env.EMAIL_USER && process.env.EMAIL_PASS);
+
+// nodemailer's built-in DNS resolution picks a random address out of
+// smtp.gmail.com's combined IPv4+IPv6 pool, ignoring the `family` option —
+// on hosts without an IPv6 route (e.g. Render) that intermittently connects
+// to an unreachable AAAA record. Resolving to a literal IPv4 address up
+// front sidesteps that resolver entirely (a literal IP is used as-is).
+async function sendMail(mailOptions) {
+  const [ip] = await dns.resolve4('smtp.gmail.com');
+  const transporter = nodemailer.createTransport({
+    host: ip,
+    port: 465,
+    secure: true,
+    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+    tls: { servername: 'smtp.gmail.com' },
+  });
+  return transporter.sendMail({ from: `"Écoute Anonyme" <${process.env.EMAIL_USER}>`, ...mailOptions });
+}
 
 // GET /api/applications
 router.get('/', requireAdmin, ah(async (req, res) => {
@@ -59,9 +71,8 @@ router.post('/:id/accept', requireAdmin, ah(async (req, res) => {
 
   // Envoi asynchrone : ne bloque jamais la réponse au client (évite un
   // "Envoi en cours…" bloqué si le SMTP est lent ou le service vient de se réveiller).
-  if (transporter) {
-    transporter.sendMail({
-      from: `"Écoute Anonyme" <${process.env.EMAIL_USER}>`,
+  if (EMAIL_CONFIGURED) {
+    sendMail({
       to: app.email,
       subject: 'Votre candidature bénévole a été acceptée — Écoute Anonyme',
       text: [
@@ -96,9 +107,8 @@ router.post('/:id/reject', requireAdmin, ah(async (req, res) => {
 
   await db.run('DELETE FROM applications WHERE id = ?', [app.id]);
 
-  if (transporter) {
-    transporter.sendMail({
-      from: `"Écoute Anonyme" <${process.env.EMAIL_USER}>`,
+  if (EMAIL_CONFIGURED) {
+    sendMail({
       to: app.email,
       subject: 'Votre candidature bénévole — Écoute Anonyme',
       text: [
@@ -142,9 +152,8 @@ router.post('/', ah(async (req, res) => {
     JSON.stringify(dispos)
   ], 'id');
 
-  if (transporter) {
-    transporter.sendMail({
-      from: `"Écoute Anonyme" <${process.env.EMAIL_USER}>`,
+  if (EMAIL_CONFIGURED) {
+    sendMail({
       to: CONTACT_EMAIL,
       replyTo: email.trim(),
       subject: `Nouvelle candidature bénévole — ${prenom} ${nom}`,

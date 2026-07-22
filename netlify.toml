@@ -5,6 +5,6 @@
 # Remplacez l'URL ci-dessous par celle donnée par Render une fois le service déployé.
 [[redirects]]
   from = "/api/*"
-  to = "https://ecoute-anonyme.onrender.com/api/:splat"
+  to = "https://ecoute-anonyme-5mkt.onrender.com/api/:splat"
   status = 200
   force = true
