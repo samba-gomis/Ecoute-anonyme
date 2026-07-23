@@ -1,6 +1,4 @@
 const express    = require('express');
-const nodemailer = require('nodemailer');
-const dns        = require('dns').promises;
 const bcrypt     = require('bcryptjs');
 const router     = express.Router();
 const db         = require('../database');
@@ -11,26 +9,27 @@ const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'ecoute.anonyme26@gmail.com';
 const SITE_URL       = process.env.SITE_URL || 'http://localhost:3000';
 const VALID_STATUSES = ['online', 'away', 'offline'];
 
-const EMAIL_CONFIGURED = Boolean(process.env.EMAIL_USER && process.env.EMAIL_PASS);
+const EMAIL_CONFIGURED = Boolean(process.env.BREVO_API_KEY && process.env.BREVO_SENDER_EMAIL);
 
-// nodemailer's built-in DNS resolution picks a random address out of
-// smtp.gmail.com's combined IPv4+IPv6 pool, ignoring the `family` option —
-// on hosts without an IPv6 route (e.g. Render) that intermittently connects
-// to an unreachable AAAA record. Resolving to a literal IPv4 address up
-// front sidesteps that resolver entirely (a literal IP is used as-is).
-// Port 465 (direct TLS) timed out on Render's network — 587 (STARTTLS) is
-// the port most hosts leave open for outbound SMTP.
-async function sendMail(mailOptions) {
-  const [ip] = await dns.resolve4('smtp.gmail.com');
-  const transporter = nodemailer.createTransport({
-    host: ip,
-    port: 587,
-    secure: false,
-    requireTLS: true,
-    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
-    tls: { servername: 'smtp.gmail.com' },
+// Render blocks outbound SMTP (ports 465 and 587 both timed out), so emails
+// go through Brevo's HTTPS API instead — port 443 is never blocked.
+async function sendMail({ to, replyTo, subject, text }) {
+  const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'api-key': process.env.BREVO_API_KEY,
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify({
+      sender: { name: 'Écoute Anonyme', email: process.env.BREVO_SENDER_EMAIL },
+      to: [{ email: to }],
+      ...(replyTo ? { replyTo: { email: replyTo } } : {}),
+      subject,
+      textContent: text,
+    }),
   });
-  return transporter.sendMail({ from: `"Écoute Anonyme" <${process.env.EMAIL_USER}>`, ...mailOptions });
+  if (!res.ok) throw new Error(`Brevo API ${res.status}: ${await res.text()}`);
 }
 
 // GET /api/applications
@@ -96,7 +95,7 @@ router.post('/:id/accept', requireAdmin, ah(async (req, res) => {
       ].join('\n'),
     }).catch(e => console.error('Échec de l\'envoi de l\'email d\'acceptation :', e.message));
   } else {
-    console.warn('EMAIL_USER / EMAIL_PASS absents du .env — bénévole créé mais aucun email de confirmation envoyé.');
+    console.warn('BREVO_API_KEY / BREVO_SENDER_EMAIL absents du .env — bénévole créé mais aucun email de confirmation envoyé.');
   }
 
   const { password_hash, ...safeVolunteer } = volunteer;
@@ -128,7 +127,7 @@ router.post('/:id/reject', requireAdmin, ah(async (req, res) => {
       ].join('\n'),
     }).catch(e => console.error('Échec de l\'envoi de l\'email de refus :', e.message));
   } else {
-    console.warn('EMAIL_USER / EMAIL_PASS absents du .env — candidature refusée mais aucun email envoyé.');
+    console.warn('BREVO_API_KEY / BREVO_SENDER_EMAIL absents du .env — candidature refusée mais aucun email envoyé.');
   }
 
   res.status(204).end();
@@ -176,7 +175,7 @@ router.post('/', ah(async (req, res) => {
       ].join('\n'),
     }).catch(e => console.error('Échec de l\'envoi de l\'email de candidature :', e.message));
   } else {
-    console.warn('EMAIL_USER / EMAIL_PASS absents du .env — candidature enregistrée en base mais aucun email envoyé.');
+    console.warn('BREVO_API_KEY / BREVO_SENDER_EMAIL absents du .env — candidature enregistrée en base mais aucun email envoyé.');
   }
 
   res.status(201).json({

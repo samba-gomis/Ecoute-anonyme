@@ -18,9 +18,9 @@ services:
           property: connectionString
       # Secrets à saisir manuellement lors de la création du Blueprint
       # (voir .env.example pour leur signification).
-      - key: EMAIL_USER
+      - key: BREVO_API_KEY
         sync: false
-      - key: EMAIL_PASS
+      - key: BREVO_SENDER_EMAIL
         sync: false
       - key: CONTACT_EMAIL
         sync: false
