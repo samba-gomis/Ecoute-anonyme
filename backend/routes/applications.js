@@ -18,12 +18,15 @@ const EMAIL_CONFIGURED = Boolean(process.env.EMAIL_USER && process.env.EMAIL_PAS
 // on hosts without an IPv6 route (e.g. Render) that intermittently connects
 // to an unreachable AAAA record. Resolving to a literal IPv4 address up
 // front sidesteps that resolver entirely (a literal IP is used as-is).
+// Port 465 (direct TLS) timed out on Render's network — 587 (STARTTLS) is
+// the port most hosts leave open for outbound SMTP.
 async function sendMail(mailOptions) {
   const [ip] = await dns.resolve4('smtp.gmail.com');
   const transporter = nodemailer.createTransport({
     host: ip,
-    port: 465,
-    secure: true,
+    port: 587,
+    secure: false,
+    requireTLS: true,
     auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
     tls: { servername: 'smtp.gmail.com' },
   });
