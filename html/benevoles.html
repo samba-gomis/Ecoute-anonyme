@@ -526,13 +526,13 @@
             <div class="form-group">
               <label data-i18n="form_lbl_domaine">Domaines d'écoute privilégiés</label>
               <select name="domaine">
-                <option value="">Choisir (optionnel)</option>
-                <option>Anxiété &amp; stress</option>
-                <option>Solitude &amp; isolement</option>
-                <option>Relations &amp; famille</option>
-                <option>Travail &amp; burn-out</option>
-                <option>Deuil &amp; perte</option>
-                <option>Général (tous sujets)</option>
+                <option value="" data-i18n="dom_opt_choose">Choisir (optionnel)</option>
+                <option value="Anxiété &amp; stress" data-i18n="dom_opt1">Anxiété &amp; stress</option>
+                <option value="Solitude &amp; isolement" data-i18n="dom_opt2">Solitude &amp; isolement</option>
+                <option value="Relations &amp; famille" data-i18n="dom_opt3">Relations &amp; famille</option>
+                <option value="Travail &amp; burn-out" data-i18n="dom_opt4">Travail &amp; burn-out</option>
+                <option value="Deuil &amp; perte" data-i18n="dom_opt5">Deuil &amp; perte</option>
+                <option value="Général (tous sujets)" data-i18n="dom_opt6">Général (tous sujets)</option>
               </select>
             </div>
 
@@ -559,21 +559,21 @@
             <div class="form-group">
               <label><span data-i18n="form_lbl_charte">Charte du bénévole</span> <span class="required">*</span></label>
               <div class="charte-box">
-                <h4>Charte éthique — Bénévole Écoute Anonyme</h4>
+                <h4 data-i18n="charte_title">Charte éthique — Bénévole Écoute Anonyme</h4>
                 <ul>
-                  <li>Je m'engage à offrir une écoute bienveillante, sans jugement ni pression, à toute personne qui me contacte.</li>
-                  <li>Je ne demanderai jamais d'argent, de coordonnées bancaires, ni aucune contrepartie financière à un utilisateur, sous quelque forme que ce soit.</li>
-                  <li>Je ne demanderai pas d'informations personnelles (numéro de téléphone, adresse, identité réelle) à l'utilisateur — sauf si celui-ci les partage spontanément de son propre chef.</li>
-                  <li>Je respecterai l'anonymat de chaque personne et je n'essaierai pas de l'identifier.</li>
-                  <li>Je ne proposerai ni n'établirai de relation personnelle en dehors de la plateforme.</li>
-                  <li>Je ne fournirai pas de conseils médicaux, psychologiques ou juridiques, et je redirigerai vers les services compétents si nécessaire (15, 17, 18, 3114).</li>
-                  <li>Je maintiendrai un comportement respectueux et professionnel en toute circonstance.</li>
-                  <li>Je comprends que tout manquement à cette charte peut entraîner la suspension ou le bannissement de mon compte.</li>
+                  <li data-i18n="charte_li1">Je m'engage à offrir une écoute bienveillante, sans jugement ni pression, à toute personne qui me contacte.</li>
+                  <li data-i18n="charte_li2">Je ne demanderai jamais d'argent, de coordonnées bancaires, ni aucune contrepartie financière à un utilisateur, sous quelque forme que ce soit.</li>
+                  <li data-i18n="charte_li3">Je ne demanderai pas d'informations personnelles (numéro de téléphone, adresse, identité réelle) à l'utilisateur — sauf si celui-ci les partage spontanément de son propre chef.</li>
+                  <li data-i18n="charte_li4">Je respecterai l'anonymat de chaque personne et je n'essaierai pas de l'identifier.</li>
+                  <li data-i18n="charte_li5">Je ne proposerai ni n'établirai de relation personnelle en dehors de la plateforme.</li>
+                  <li data-i18n="charte_li6">Je ne fournirai pas de conseils médicaux, psychologiques ou juridiques, et je redirigerai vers les services compétents si nécessaire (15, 17, 18, 3114).</li>
+                  <li data-i18n="charte_li7">Je maintiendrai un comportement respectueux et professionnel en toute circonstance.</li>
+                  <li data-i18n="charte_li8">Je comprends que tout manquement à cette charte peut entraîner la suspension ou le bannissement de mon compte.</li>
                 </ul>
               </div>
               <label class="charte-accept" style="margin-top:12px;">
                 <input type="checkbox" id="charte-check" required />
-                <span data-i18n="charte_accept">J'ai lu et j'accepte la charte du bénévole. Je m'engage à la respecter scrupuleusement. <span class="required">*</span></span>
+                <span><span data-i18n="charte_accept">J'ai lu et j'accepte la charte du bénévole. Je m'engage à la respecter scrupuleusement.</span> <span class="required">*</span></span>
               </label>
             </div>
 
@@ -645,7 +645,6 @@
     }
 
     // ===== BÉNÉVOLES =====
-    const STATUS_LABELS = { online: 'En ligne', away: 'Absent·e', offline: 'Hors ligne' };
     const AVATAR_BG = ['#EDF3EC', '#E8F0F3', '#F5EDE5', '#EAE8F0', '#F0EDE8', '#EAF0ED'];
 
     function escHtml(s) {
@@ -653,12 +652,14 @@
     }
     function fmtSince(iso) {
       if (!iso) return '';
-      return 'Bénévole depuis ' + new Date(iso).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+      const t = LANG[currentLang];
+      return t.vol_since_prefix + new Date(iso).toLocaleDateString(t.vol_date_locale, { month: 'long', year: 'numeric' });
     }
 
     async function renderVolunteers() {
       const grid = document.getElementById('volunteers-grid');
       if (!grid) return;
+      const t = LANG[currentLang];
       try {
         const res  = await fetch('/api/volunteers');
         if (!res.ok) throw new Error();
@@ -666,15 +667,16 @@
         if (!data.length) {
           grid.innerHTML = `
             <div style="text-align:center;padding:52px;color:var(--mist);font-size:14px;grid-column:1/-1;">
-              Aucun bénévole disponible pour le moment.<br>
+              ${escHtml(t.benv_empty_text)}<br>
               <a href="#" onclick="switchTab('inscription',document.getElementById('tab-btn-inscr'));return false;"
-                style="color:var(--sage-dark);margin-top:10px;display:inline-block;">Rejoindre l'équipe →</a>
+                style="color:var(--sage-dark);margin-top:10px;display:inline-block;">${escHtml(t.benv_empty_link)}</a>
             </div>`;
           return;
         }
         grid.innerHTML = data.map((v, i) => {
           const init = v.name.charAt(0).toUpperCase();
           const bg   = AVATAR_BG[i % AVATAR_BG.length];
+          const statusLabel = t['vol_status_' + v.status] || v.status;
           return `
             <div class="volunteer-card">
               <div class="vol-header">
@@ -690,14 +692,14 @@
               ${v.tags.length ? `<div class="vol-tags">${v.tags.map(t => `<span class="vol-tag">${escHtml(t)}</span>`).join('')}</div>` : ''}
               <p class="vol-dispo">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M6 3v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-                ${escHtml(STATUS_LABELS[v.status] || v.status)}
+                ${escHtml(statusLabel)}
               </p>
             </div>`;
         }).join('');
       } catch {
         grid.innerHTML = `
           <div style="text-align:center;padding:52px;color:var(--mist);font-size:14px;grid-column:1/-1;">
-            Impossible de charger la liste des bénévoles.
+            ${escHtml(t.benv_load_error)}
           </div>`;
       }
     }
@@ -710,13 +712,14 @@
       e.preventDefault();
       const form = e.target;
       const status = document.getElementById('form-status');
+      const t = LANG[currentLang];
 
       if (!form.prenom.value.trim() || !form.nom.value.trim() || !form.email.value.trim()
         || !form.pseudo.value.trim() || !form.motivation.value.trim()
         || !form.description.value.trim() || !document.getElementById('charte-check').checked) {
         status.className = 'form-status error';
         status.style.display = 'block';
-        status.textContent = ' Veuillez remplir tous les champs obligatoires et accepter la charte.';
+        status.textContent = ' ' + t.form_err_required;
         status.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
       }
@@ -725,13 +728,13 @@
       if (dispoEls.length === 0) {
         status.className = 'form-status error';
         status.style.display = 'block';
-        status.textContent = ' Veuillez sélectionner au moins une disponibilité.';
+        status.textContent = ' ' + t.form_err_dispo;
         return;
       }
 
       const submitBtn = form.querySelector('button[type="submit"]');
       submitBtn.disabled = true;
-      submitBtn.querySelector('span').textContent = 'Envoi en cours…';
+      submitBtn.querySelector('span').textContent = t.form_sending;
 
       const payload = {
         prenom:      form.prenom.value.trim(),
@@ -758,18 +761,18 @@
         status.className = 'form-status success';
         status.style.display = 'block';
         status.innerHTML = `
-           <strong>Votre candidature a bien été envoyée !</strong><br>
-          Notre équipe l'examinera dans un délai de 5 à 10 jours ouvrés. Vous recevrez une réponse à l'adresse <strong>${form.email.value}</strong>.
+           <strong>${t.form_success_title}</strong><br>
+          ${t.form_success_text.replace('{{email}}', escHtml(form.email.value))}
         `;
         form.reset();
         document.querySelectorAll('.dispo-option').forEach(o => o.classList.remove('checked'));
       } catch (err) {
         status.className = 'form-status error';
         status.style.display = 'block';
-        status.textContent = ' Une erreur est survenue lors de l\'envoi. Merci de réessayer, ou de nous contacter directement.';
+        status.textContent = ' ' + t.form_err_generic;
       } finally {
         submitBtn.disabled = false;
-        submitBtn.querySelector('span').textContent = LANG[window.currentLang || 'fr'].form_submit || 'Envoyer ma candidature';
+        submitBtn.querySelector('span').textContent = t.form_submit;
         status.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
