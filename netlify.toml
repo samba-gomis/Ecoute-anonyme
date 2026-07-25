@@ -8,3 +8,32 @@
   to = "https://ecoute-anonyme-5mkt.onrender.com/api/:splat"
   status = 200
   force = true
+
+# Les pages ci-dessous vivent dans html/ mais sont liées avec des URLs
+# propres (ex. /espace-benevole) qui correspondent au routage fait par
+# server.js sur Render. Netlify sert les fichiers tels quels sans cette
+# couche Express, donc on rejoue le même mapping ici.
+[[redirects]]
+  from = "/presentation"
+  to = "/html/presentation.html"
+  status = 200
+[[redirects]]
+  from = "/benevoles"
+  to = "/html/benevoles.html"
+  status = 200
+[[redirects]]
+  from = "/confidentialite"
+  to = "/html/confidentialite.html"
+  status = 200
+[[redirects]]
+  from = "/chat"
+  to = "/html/chat.html"
+  status = 200
+[[redirects]]
+  from = "/soutenir"
+  to = "/html/soutenir.html"
+  status = 200
+[[redirects]]
+  from = "/espace-benevole"
+  to = "/html/espace-benevole.html"
+  status = 200
