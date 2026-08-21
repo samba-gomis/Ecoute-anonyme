@@ -32,6 +32,15 @@ app.use(cookieParser());
 // URLs propres : /benevoles, /chat, /presentation... résolvent vers html/*.html
 // sans exposer le préfixe /html/ ni l'extension .html
 app.use(express.static(path.join(__dirname, '..', 'html'), { extensions: ['html'] }));
+
+// Le second mount statique sert la racine du repo (pour index.html, admin.html,
+// logo.png, css/, shared-ui.js...) : on bloque explicitement tout ce qui ne
+// doit jamais être téléchargeable (code source backend, config, dépendances).
+const BLOCKED_ROOT_PATHS = /^\/(backend|node_modules|scss|\.git)(\/|$)|^\/(package(-lock)?\.json|render\.yaml|\.env(\..*)?|README\.md|LICENSE)$/i;
+app.use((req, res, next) => {
+  if (BLOCKED_ROOT_PATHS.test(req.path)) return res.status(404).end();
+  next();
+});
 app.use(express.static(path.join(__dirname, '..'), { extensions: ['html'] }));
 
 // API

@@ -686,7 +686,7 @@ function renderVolunteers() {
       <td style="font-size:12px;color:var(--mist);">${fmtDate(v.created_at)}</td>
       <td>
         <div class="action-btns">
-          <button class="a-btn a-btn-danger" onclick="confirmDeleteVol(${v.id}, '${escHtml(v.name)}')">Supprimer</button>
+          <button class="a-btn a-btn-danger" onclick="confirmDeleteVol(${v.id})">Supprimer</button>
         </div>
       </td>
     </tr>
@@ -714,7 +714,7 @@ function renderApplications() {
         <div class="action-btns">
           <button class="a-btn a-btn-ghost" onclick="openAppDetail(${a.id})">Voir</button>
           <button class="a-btn a-btn-primary" onclick="acceptApplication(${a.id})">Accepter</button>
-          <button class="a-btn a-btn-danger" onclick="confirmRejectApp(${a.id}, '${escHtml(a.prenom + ' ' + a.nom)}')">Refuser</button>
+          <button class="a-btn a-btn-danger" onclick="confirmRejectApp(${a.id})">Refuser</button>
         </div>
       </td>
     </tr>
@@ -793,7 +793,7 @@ function renderReviews() {
           ${r.vol_name ? `<span>Bénévole : <strong style="color:var(--stone)">${escHtml(r.vol_name)}</strong></span>` : ''}
           <span>${fmtDate(r.created_at)}</span>
         </div>
-        <button class="a-btn a-btn-danger" style="font-size:11px;padding:4px 10px;" onclick="confirmDeleteReview(${r.id}, '${escHtml(r.pseudo)}')">Supprimer</button>
+        <button class="a-btn a-btn-danger" style="font-size:11px;padding:4px 10px;" onclick="confirmDeleteReview(${r.id})">Supprimer</button>
       </div>
     </div>
   `).join('');
@@ -865,7 +865,9 @@ function acceptApplication(id) {
   setTimeout(() => document.getElementById('add-login').focus(), 50);
 }
 
-function confirmRejectApp(id, name) {
+function confirmRejectApp(id) {
+  const a = applications.find(a => a.id === id);
+  const name = a ? `${a.prenom} ${a.nom}` : '';
   openConfirm(
     'Refuser la candidature',
     `Refuser définitivement la candidature de "${name}" ? Un email de notification lui sera envoyé.`,
@@ -949,7 +951,8 @@ function closeConfirm() {
   _confirmAction = null;
 }
 
-function confirmDeleteVol(id, name) {
+function confirmDeleteVol(id) {
+  const name = volunteers.find(v => v.id === id)?.name || '';
   openConfirm(
     'Supprimer le bénévole',
     `Supprimer définitivement "${name}" ? Cette action est irréversible.`,
@@ -975,7 +978,8 @@ function confirmDeleteConv(shareId) {
   );
 }
 
-function confirmDeleteReview(id, pseudo) {
+function confirmDeleteReview(id) {
+  const pseudo = reviews.find(r => r.id === id)?.pseudo || '';
   openConfirm(
     'Supprimer l\'avis',
     `Supprimer l'avis de "${pseudo}" ?`,
