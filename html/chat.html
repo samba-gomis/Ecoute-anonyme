@@ -51,6 +51,11 @@
     .entry-notice { margin-top: 18px; font-size: 12px; color: var(--mist); text-align: center; line-height: 1.6; }
     .entry-notice a { color: var(--sage); text-decoration: underline; text-underline-offset: 2px; }
 
+    /* ===== ÉCRAN ATTENTE ===== */
+    .waiting-spinner { width: 30px; height: 30px; margin: 6px auto 20px; border: 3px solid var(--sage-pale); border-top-color: var(--sage); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .waiting-error { display: none; font-size: 13px; color: #DC3545; background: rgba(220,53,69,0.08); border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 16px; }
+
     /* ===== ÉCRAN BÉNÉVOLE ===== */
     .vol-wrap { width: 100%; max-width: 760px; margin: 0 auto; padding: 36px 24px 60px; }
     .vol-header { text-align: center; margin-bottom: 30px; }
@@ -247,6 +252,23 @@
     </div>
   </div>
 
+  <!-- ÉCRAN 2b — ATTENTE D'ACCEPTATION -->
+  <div class="screen" id="screen-waiting">
+    <div class="entry-card" style="text-align:center;">
+      <div class="entry-logo" style="justify-content:center;">
+        <img src="../logo.png" alt="Logo" />
+        <span>Écoute Anonyme</span>
+      </div>
+      <div class="waiting-spinner" id="waiting-spinner"></div>
+      <h1 style="font-size:20px;"><span id="waiting-title">En attente de <em id="waiting-vol-name">…</em></span></h1>
+      <p class="entry-desc" id="waiting-msg">Votre demande a été envoyée, merci de patienter quelques instants…</p>
+      <div class="waiting-error" id="waiting-error"></div>
+      <div class="entry-actions">
+        <button class="btn-anon" id="waiting-cancel-btn" onclick="cancelWaiting()">Annuler</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ÉCRAN 3 — CHAT -->
   <div id="chat-screen">
     <div class="chat-topbar">
@@ -299,11 +321,6 @@
     <div class="chat-messages" id="chat-messages">
       <div class="date-sep"><span id="today-label">Aujourd'hui</span></div>
       <div class="msg-sys" id="chat-sys-msg" data-i18n="chat_sys_msg">Vous êtes connecté·e à un bénévole. Espace confidentiel et bienveillant.</div>
-      <div class="msg-group vol">
-        <span class="msg-sender" id="vol-sender">Marie · Bénévole</span>
-        <div class="msg-bubble" id="welcome-bubble">Bonjour, je suis là pour vous écouter. Prenez tout le temps qu'il vous faut.</div>
-        <span class="msg-time" id="welcome-time"></span>
-      </div>
       <div class="typing-ind" id="typing">
         <div class="typing-bub"><span class="t-dot"></span><span class="t-dot"></span><span class="t-dot"></span></div>
       </div>
@@ -462,26 +479,13 @@
     const statusCls = { online:'v-s-online', away:'v-s-away', offline:'v-s-off' };
     const dotCls    = { online:'v-online', away:'v-away', offline:'v-offline' };
 
-    let pseudo='Anonyme', selVol=null, rating=0, msgN=0, endChoice=null;
+    let pseudo='Anonyme', selVol=null, rating=0, endChoice=null;
 
-    const replies = {
-      fr: [
-        'Je vous entends. Pouvez-vous m\'en dire un peu plus ?',
-        'C\'est courageux de partager ça. Prenez tout le temps qu\'il vous faut.',
-        'Je comprends. Comment vous sentez-vous en ce moment ?',
-        'Merci de me faire confiance. Vous n\'êtes pas seul·e.',
-        'C\'est important ce que vous dites. Comment puis-je vous aider au mieux ?',
-        'Je suis là, je vous lis. Continuez si vous le souhaitez.',
-      ],
-      en: [
-        'I hear you. Can you tell me a bit more?',
-        'It\'s brave to share that. Take all the time you need.',
-        'I understand. How are you feeling right now?',
-        'Thank you for trusting me. You\'re not alone.',
-        'What you\'re saying matters. How can I best help you?',
-        'I\'m here, I\'m reading. Continue if you wish.',
-      ]
-    };
+    // État de la demande de chat réelle (remplace l'ancien bot simulé) :
+    // id/session_token identifient la demande côté backend, requestPollTimer
+    // fait le poll régulier, renderedMsgCount évite de ré-afficher deux fois
+    // le même message reçu par poll.
+    let currentRequestId = null, currentSessionToken = null, requestPollTimer = null, renderedMsgCount = 0, chatEnded = false;
 
     /* NAVIGATION */
     function showScreen(id) {
@@ -493,23 +497,123 @@
     function setAnonAndGo(){pseudo='Anonyme';renderVols();showScreen('screen-volunteer');}
     function backToPseudo(){showScreen('screen-pseudo');}
 
-    function pickVolunteer(id){
+    async function pickVolunteer(id){
       const v=volunteers.find(x=>x.id===id);
       if(!v||v.status==='offline')return;
       selVol=v;
       const lang = window.currentLang || 'fr';
+
+      document.getElementById('waiting-spinner').style.display='';
+      document.getElementById('waiting-cancel-btn').style.display='';
+      document.getElementById('waiting-cancel-btn').textContent = lang==='en'?'Cancel':'Annuler';
+      document.getElementById('waiting-error').style.display='none';
+      document.getElementById('waiting-vol-name').textContent=v.name;
+      document.getElementById('waiting-msg').textContent = lang==='en'
+        ? 'Your request has been sent, please wait a moment…'
+        : 'Votre demande a été envoyée, merci de patienter quelques instants…';
+      showScreen('screen-waiting');
+
+      try {
+        const res = await fetch('/api/chat-requests', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ volunteer_id: v.id, user_pseudo: pseudo, domain: v.tags?.[0] || null }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Erreur');
+        currentRequestId = data.id;
+        currentSessionToken = data.session_token;
+        renderedMsgCount = 0;
+        chatEnded = false;
+        startRequestPoll();
+      } catch (e) {
+        showWaitingError(e.message);
+      }
+    }
+
+    function showWaitingError(msg){
+      document.getElementById('waiting-spinner').style.display='none';
+      const err = document.getElementById('waiting-error');
+      err.textContent = msg;
+      err.style.display = 'block';
+    }
+
+    function cancelWaiting(){
+      stopRequestPoll();
+      if (currentRequestId) {
+        fetch(requestUrl('/end'), { method:'POST' }).catch(()=>{});
+      }
+      currentRequestId = null; currentSessionToken = null;
+      showScreen('screen-volunteer');
+    }
+
+    function requestUrl(path){
+      return `/api/chat-requests/${currentRequestId}${path}?token=${encodeURIComponent(currentSessionToken)}`;
+    }
+
+    function startRequestPoll(){
+      stopRequestPoll();
+      pollRequestOnce();
+      requestPollTimer = setInterval(pollRequestOnce, 2500);
+    }
+    function stopRequestPoll(){
+      if (requestPollTimer) clearInterval(requestPollTimer);
+      requestPollTimer = null;
+    }
+
+    async function pollRequestOnce(){
+      if (!currentRequestId) return;
+      const lang = window.currentLang || 'fr';
+      try {
+        const res = await fetch(requestUrl(''));
+        if (!res.ok) return; // raté ponctuel (réseau, cold start…) : le poll suivant retentera
+        const data = await res.json();
+
+        if (data.status === 'pending') return;
+
+        if (data.status === 'accepted') {
+          if (!document.getElementById('chat-screen').classList.contains('active')) enterChat();
+          renderNewMessages(data.messages);
+          return;
+        }
+
+        if (data.status === 'declined' || data.status === 'expired') {
+          stopRequestPoll();
+          showWaitingError(data.status === 'declined'
+            ? (lang==='en' ? 'This volunteer is not available. Please choose someone else.' : 'Ce bénévole n\'est pas disponible. Choisissez quelqu\'un d\'autre.')
+            : (lang==='en' ? 'No response for now. Please choose someone else.' : 'Pas de réponse pour le moment. Choisissez quelqu\'un d\'autre.'));
+          document.getElementById('waiting-cancel-btn').textContent = lang==='en' ? 'Back' : 'Retour';
+          currentRequestId = null; currentSessionToken = null;
+          return;
+        }
+
+        if (data.status === 'ended' && !chatEnded) {
+          chatEnded = true;
+          stopRequestPoll();
+          renderNewMessages(data.messages);
+          const c=document.getElementById('chat-messages'), t=document.getElementById('typing');
+          const s=document.createElement('div'); s.className='msg-sys';
+          s.textContent = lang==='en' ? 'The volunteer ended this conversation.' : 'Le bénévole a mis fin à cet échange.';
+          c.insertBefore(s,t); scrollBot();
+          document.getElementById('msg-input').disabled = true;
+        }
+      } catch (e) { /* réseau : on retentera au prochain poll */ }
+    }
+
+    function renderNewMessages(messages){
+      for (let i = renderedMsgCount; i < messages.length; i++) {
+        if (messages[i].from === 'vol') addMsg(messages[i].text, 'vol');
+      }
+      renderedMsgCount = messages.length;
+    }
+
+    function enterChat(){
       document.getElementById('pseudo-display').textContent=pseudo;
-      document.getElementById('vol-name-top').textContent=v.name;
-      document.getElementById('vol-status-txt').textContent=getStatusTxt(v.status);
-      document.getElementById('vol-status-txt').className='vol-top-status '+statusCls[v.status];
-      document.getElementById('vol-status-dot').className='vol-top-dot '+dotCls[v.status];
-      document.getElementById('vol-sender').textContent=v.name+' · '+(lang==='en'?'Volunteer':'Bénévole');
-      const welcome = lang==='en'
-        ? `Hello, I'm ${v.name}. I'm here to listen to you, at your own pace.`
-        : `Bonjour, je suis ${v.name}. Je suis là pour vous écouter, à votre rythme.`;
-      document.getElementById('welcome-bubble').textContent=welcome;
-      document.getElementById('welcome-time').textContent=fmtTime(new Date());
+      document.getElementById('vol-name-top').textContent=selVol.name;
+      document.getElementById('vol-status-txt').textContent=getStatusTxt(selVol.status);
+      document.getElementById('vol-status-txt').className='vol-top-status '+statusCls[selVol.status];
+      document.getElementById('vol-status-dot').className='vol-top-dot '+dotCls[selVol.status];
       document.getElementById('today-label').textContent=fmtDate(new Date());
+      document.getElementById('msg-input').disabled = false;
       document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
       const cs=document.getElementById('chat-screen');
       cs.classList.add('active');cs.style.display='flex';
@@ -557,14 +661,18 @@
     function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}
     function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,110)+'px';}
 
-    function sendMsg(){
+    async function sendMsg(){
       const inp=document.getElementById('msg-input');
-      const txt=inp.value.trim();if(!txt)return;
-      addMsg(txt,'user');inp.value='';inp.style.height='auto';inp.focus();msgN++;
-      const t=document.getElementById('typing');t.classList.add('on');scrollBot();
-      const lang = window.currentLang || 'fr';
-      const rList = replies[lang];
-      setTimeout(()=>{t.classList.remove('on');addMsg(rList[msgN%rList.length],'vol');},1800+Math.random()*1200);
+      const txt=inp.value.trim();
+      if(!txt||!currentRequestId||chatEnded)return;
+      addMsg(txt,'user');inp.value='';inp.style.height='auto';inp.focus();
+      try {
+        const res = await fetch(requestUrl('/messages'), {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ text: txt }),
+        });
+        if (res.ok) pollRequestOnce(); // récupère aussitôt une éventuelle réponse déjà arrivée
+      } catch (e) { /* le poll régulier retentera de toute façon */ }
     }
 
     function addMsg(txt,type){
@@ -603,9 +711,19 @@
         svg.setAttribute('stroke',i<n?'var(--sage)':'var(--mist)');
       });
     }
-    function submitReview(){
+    async function submitReview(){
       closeModal('review-modal');
       const lang = window.currentLang || 'fr';
+      if (rating >= 1) {
+        const text = document.querySelector('.rev-ta')?.value.trim()
+          || (lang==='en' ? '(no comment)' : '(sans commentaire)');
+        try {
+          await fetch('/api/reviews', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ stars: rating, text, pseudo, vol_name: selVol?.name, domain: selVol?.tags?.[0] || null }),
+          });
+        } catch (e) { /* avis best-effort, on n'en informe pas l'utilisateur */ }
+      }
       const c=document.getElementById('chat-messages'),t=document.getElementById('typing');
       const s=document.createElement('div');s.className='msg-sys';
       s.textContent=lang==='en'?'Thank you for your anonymous review. It helps us improve the service.':'Merci pour votre avis anonyme. Il nous aide à améliorer le service.';
@@ -624,8 +742,13 @@
       document.getElementById('end-confirm-btn').disabled=false;
     }
 
-    function confirmEnd(){
+    async function confirmEnd(){
       closeModal('end-modal');
+      if (currentRequestId && !chatEnded) {
+        chatEnded = true;
+        stopRequestPoll();
+        try { await fetch(requestUrl('/end'), { method:'POST' }); } catch (e) {}
+      }
       if(endChoice==='delete'){
         document.getElementById('chat-messages').innerHTML='';
       }

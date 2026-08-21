@@ -809,58 +809,21 @@
 
 const STATUS_LABEL = { online:'En ligne', away:'Absent·e', offline:'Hors ligne' };
 
-const SCENARIOS = [
-  {
-    first: "Bonjour… j'avais besoin de parler à quelqu'un ce soir.",
-    seq: [
-      { d:7000,  t:"Je me sens assez seul·e depuis quelques semaines." },
-      { d:18000, t:"Je n'ose pas en parler à mon entourage, ils ne comprendraient pas." },
-      { d:38000, t:"Ça fait vraiment du bien d'avoir quelqu'un qui écoute." },
-    ]
-  },
-  {
-    first: "Bonsoir. Je traverse une période compliquée au travail.",
-    seq: [
-      { d:9000,  t:"Mon manager est de plus en plus exigeant, je n'en peux plus." },
-      { d:22000, t:"Je rentre épuisé·e tous les soirs. Je ne sais plus quoi faire." },
-      { d:45000, t:"Vous comprenez vraiment bien, merci." },
-    ]
-  },
-  {
-    first: "Bonjour, j'ai perdu quelqu'un de proche il y a peu.",
-    seq: [
-      { d:11000, t:"C'est encore très récent, je n'arrive pas à en parler autour de moi." },
-      { d:28000, t:"Je pleure souvent sans trop savoir pourquoi." },
-    ]
-  },
-  {
-    first: "Salut. J'ai des conflits avec ma famille depuis un moment.",
-    seq: [
-      { d:8000,  t:"Avec mes parents surtout. On ne se parle presque plus." },
-      { d:20000, t:"C'est pesant, ça prend beaucoup de place dans ma tête." },
-      { d:40000, t:"Ça aide vraiment d'en parler avec quelqu'un de neutre." },
-    ]
-  },
-];
-
-const PENDING_NAMES   = ['Anonyme','Alex27','Riverflow','Nuit42','Anonyme','Soleil'];
-const PENDING_DOMAINS = ['Anxiété','Solitude','Général','Relations','Deuil','Travail'];
-
 // ══════════════════════════════════════════
 // STATE
 // ══════════════════════════════════════════
 let me = null;            // { id, name, init, isAnon }
+let volToken = null;      // token bénévole (Authorization: Bearer), reçu au login
 let volStatus = 'online';
-let pendingUsers = [
-  { id:'pu1', pseudo:'Anonyme', domain:'Anxiété', since: new Date(Date.now()-210000), init:'?' },
-  { id:'pu2', pseudo:'Lucie42', domain:'Solitude', since: new Date(Date.now()-75000),  init:'L' },
-];
+let pendingUsers = [];
 let currentUser = null;
-let currentScenario = null;
-let scenarioTimers = [];
+let currentRequestId = null;   // id de la demande de chat en cours (backend)
+let renderedMsgCount = 0;      // nb de messages déjà affichés pour la conversation en cours
+let activeChatEnded = false;
+let pendingPollTimer = null;
+let chatPollTimer = null;
 let waitTimer = null;
 let exchangeCount = 3;
-let newArrivalScheduled = false;
 
 // ══════════════════════════════════════════
 // NAVIGATION ÉCRANS
@@ -899,6 +862,7 @@ async function doVolLogin() {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Erreur');
     me = { id: data.id, name: data.name, init: data.name.charAt(0).toUpperCase(), isAnon: false };
+    volToken = data.token;
     document.getElementById('vol-pass-input').value = '';
     loadLobby();
   } catch (e) {
@@ -920,11 +884,52 @@ function loadLobby() {
   // Timer : mise à jour des temps d'attente
   if (waitTimer) clearInterval(waitTimer);
   waitTimer = setInterval(updateWaitTimes, 30000);
-  // Simulation : un nouvel utilisateur arrive après 40 secondes
-  if (!newArrivalScheduled) {
-    newArrivalScheduled = true;
-    setTimeout(simulateNewUser, 40000);
-  }
+  // Poll des demandes réelles en attente — tourne en continu tant que la
+  // session dure (même pendant un chat), comme l'ancienne simulation.
+  startPendingPoll();
+}
+
+function startPendingPoll() {
+  stopPendingPoll();
+  pollPending();
+  pendingPollTimer = setInterval(pollPending, 3000);
+}
+function stopPendingPoll() {
+  if (pendingPollTimer) clearInterval(pendingPollTimer);
+  pendingPollTimer = null;
+}
+
+async function pollPending() {
+  if (!volToken) return;
+  try {
+    const res = await fetch('/api/chat-requests/pending', { headers: { 'Authorization': 'Bearer ' + volToken } });
+    if (!res.ok) return;
+    const rows = await res.json();
+
+    const previous = pendingUsers;
+    const newIds = [];
+    pendingUsers = rows.map(r => {
+      const existing = previous.find(u => u.id === r.id);
+      if (existing) { existing.isNew = false; return existing; }
+      newIds.push(r.id);
+      return {
+        id: r.id, pseudo: r.user_pseudo, domain: r.domain || 'Général',
+        since: new Date(r.created_at),
+        init: r.user_pseudo && r.user_pseudo !== 'Anonyme' ? r.user_pseudo[0].toUpperCase() : '?',
+        isNew: true,
+      };
+    });
+    renderPending();
+
+    pendingUsers.filter(u => newIds.includes(u.id)).forEach(u => {
+      document.getElementById('back-badge').classList.add('show');
+      showToast(`${u.pseudo} attend · ${u.domain}`);
+      setTimeout(() => {
+        const el = document.getElementById(`pi-${u.id}`);
+        if (el) el.classList.remove('new-user');
+      }, 4000);
+    });
+  } catch (e) { /* le poll suivant retentera */ }
 }
 
 function updateNavIdentity() {
@@ -962,6 +967,11 @@ function setStatus(s) {
   document.getElementById('vn-dot').className        = `vn-status-dot si-${s}`;
   document.getElementById('vn-status-ind').className = `s-ind si-${s}`;
   updateGreeting();
+  fetch('/api/volunteers/status', {
+    method: 'PATCH',
+    headers: { 'Authorization': 'Bearer ' + volToken, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status: s }),
+  }).catch(() => {});
 }
 
 function renderPending() {
@@ -1015,27 +1025,23 @@ function updateWaitTimes() {
   });
 }
 
-function simulateNewUser() {
-  const pseudo = PENDING_NAMES[Math.floor(Math.random() * PENDING_NAMES.length)];
-  const domain = PENDING_DOMAINS[Math.floor(Math.random() * PENDING_DOMAINS.length)];
-  const u = { id:'pu'+Date.now(), pseudo, domain, since:new Date(), init: pseudo==='Anonyme'?'?':pseudo[0].toUpperCase(), isNew:true };
-  pendingUsers.push(u);
-  renderPending();
-  // Badge sur bouton retour si en chat
-  document.getElementById('back-badge').classList.add('show');
-  showToast(`${pseudo} attend · ${domain}`);
-  // Retire le style "new-user" après 4s
-  setTimeout(() => {
-    const el = document.getElementById(`pi-${u.id}`);
-    if (el) el.classList.remove('new-user');
-  }, 4000);
-  // Planifier un autre dans 90s
-  setTimeout(simulateNewUser, 90000);
-}
-
-function acceptUser(uid) {
+async function acceptUser(uid) {
   const u = pendingUsers.find(x => x.id === uid);
   if (!u) return;
+  try {
+    const res = await fetch(`/api/chat-requests/${uid}/accept`, {
+      method: 'POST', headers: { 'Authorization': 'Bearer ' + volToken },
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      showToast(data.error || 'Cette demande n\'est plus disponible.');
+      pollPending();
+      return;
+    }
+  } catch (e) {
+    showToast('Erreur réseau, réessayez.');
+    return;
+  }
   pendingUsers = pendingUsers.filter(x => x.id !== uid);
   currentUser = u;
   exchangeCount++;
@@ -1064,36 +1070,47 @@ function loadChat(user) {
   // Message système
   addDateSep();
   addSys(`Vous avez accepté l'échange avec ${user.pseudo}. Restez bienveillant·e.`);
+  document.getElementById('msg-input').disabled = false;
 
-  // Choisir un scénario
-  currentScenario = SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)];
-  scenarioTimers.forEach(clearTimeout);
-  scenarioTimers = [];
-
-  // Premier message utilisateur (après typing)
-  setTimeout(() => {
-    setTyping(true);
-    setTimeout(() => {
-      setTyping(false);
-      addMsg(currentScenario.first, 'from-user', user.pseudo);
-      scheduleSeq();
-    }, 2000 + Math.random() * 1000);
-  }, 1500);
+  currentRequestId = user.id;
+  renderedMsgCount = 0;
+  activeChatEnded = false;
+  startChatPoll();
 
   setTimeout(() => document.getElementById('msg-input').focus(), 100);
 }
 
-function scheduleSeq() {
-  currentScenario.seq.forEach(item => {
-    const t = setTimeout(() => {
-      setTyping(true);
-      setTimeout(() => {
-        setTyping(false);
-        addMsg(item.t, 'from-user', currentUser.pseudo);
-      }, 1600 + Math.random() * 800);
-    }, item.d);
-    scenarioTimers.push(t);
-  });
+function startChatPoll() {
+  stopChatPoll();
+  pollChatOnce();
+  chatPollTimer = setInterval(pollChatOnce, 2500);
+}
+function stopChatPoll() {
+  if (chatPollTimer) clearInterval(chatPollTimer);
+  chatPollTimer = null;
+}
+
+async function pollChatOnce() {
+  if (!currentRequestId) return;
+  try {
+    const res = await fetch(`/api/chat-requests/${currentRequestId}`, {
+      headers: { 'Authorization': 'Bearer ' + volToken },
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+
+    for (let i = renderedMsgCount; i < data.messages.length; i++) {
+      if (data.messages[i].from === 'user') addMsg(data.messages[i].text, 'from-user', currentUser?.pseudo);
+    }
+    renderedMsgCount = data.messages.length;
+
+    if (data.status === 'ended' && !activeChatEnded) {
+      activeChatEnded = true;
+      stopChatPoll();
+      addSys('L\'utilisateur·rice a quitté la conversation.');
+      document.getElementById('msg-input').disabled = true;
+    }
+  } catch (e) { /* le poll suivant retentera */ }
 }
 
 function addDateSep() {
@@ -1142,12 +1159,20 @@ function setTyping(on) {
   if (ind) { ind.classList.toggle('on', on); if (on) scrollBot(); }
 }
 
-function sendMsg() {
+async function sendMsg() {
   const inp = document.getElementById('msg-input');
   const txt = inp.value.trim();
-  if (!txt) return;
+  if (!txt || !currentRequestId || activeChatEnded) return;
   addMsg(txt, 'from-me', me.name);
   inp.value = ''; inp.style.height = 'auto'; inp.focus();
+  try {
+    const res = await fetch(`/api/chat-requests/${currentRequestId}/messages`, {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + volToken, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: txt }),
+    });
+    if (res.ok) pollChatOnce();
+  } catch (e) { /* le poll régulier retentera */ }
 }
 
 function handleKey(e) { if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); } }
@@ -1166,17 +1191,25 @@ function tryBackToLobby() {
   goBackToLobby();
 }
 
-function endConversation() {
+async function endConversation() {
   closeModal('end-modal');
+  if (currentRequestId && !activeChatEnded) {
+    activeChatEnded = true;
+    stopChatPoll();
+    try {
+      await fetch(`/api/chat-requests/${currentRequestId}/end`, {
+        method: 'POST', headers: { 'Authorization': 'Bearer ' + volToken },
+      });
+    } catch (e) {}
+  }
   addSys("L'échange a été terminé. Merci pour votre présence.");
   setTimeout(goBackToLobby, 1200);
 }
 
 function goBackToLobby() {
-  scenarioTimers.forEach(clearTimeout);
-  scenarioTimers = [];
+  stopChatPoll();
+  currentRequestId = null;
   currentUser = null;
-  currentScenario = null;
   document.getElementById('back-badge').classList.remove('show');
   renderPending();
   showScreen('screen-lobby');
@@ -1184,12 +1217,11 @@ function goBackToLobby() {
 
 function doLogout() {
   if (waitTimer) clearInterval(waitTimer);
-  scenarioTimers.forEach(clearTimeout);
-  me = null; currentUser = null; volStatus = 'online'; newArrivalScheduled = false;
-  pendingUsers = [
-    { id:'pu1', pseudo:'Anonyme', domain:'Anxiété', since:new Date(Date.now()-210000), init:'?' },
-    { id:'pu2', pseudo:'Lucie42', domain:'Solitude', since:new Date(Date.now()-75000),  init:'L' },
-  ];
+  stopPendingPoll();
+  stopChatPoll();
+  volToken = null; currentRequestId = null;
+  me = null; currentUser = null; volStatus = 'online';
+  pendingUsers = [];
   // Réinitialiser le formulaire de connexion
   document.getElementById('vol-login-input').value  = '';
   document.getElementById('vol-pass-input').value   = '';

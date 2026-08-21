@@ -3,7 +3,7 @@ const router  = express.Router();
 const bcrypt  = require('bcryptjs');
 const db      = require('../database');
 const ah      = require('../asyncHandler');
-const { requireAdmin } = require('./auth');
+const { requireAdmin, requireVolunteer } = require('./auth');
 
 const VALID_STATUSES = ['online', 'away', 'offline'];
 
@@ -59,6 +59,18 @@ router.post('/', requireAdmin, ah(async (req, res) => {
     }
     throw e;
   }
+}));
+
+// PATCH /api/volunteers/status — { status } — self-service, le bénévole
+// change son propre statut (En ligne / Absent·e / Hors ligne). Enregistrée
+// avant PATCH /:id pour que "status" ne soit pas capturé par :id.
+router.patch('/status', requireVolunteer, ah(async (req, res) => {
+  const { status } = req.body;
+  if (!VALID_STATUSES.includes(status))
+    return res.status(400).json({ error: 'Statut invalide.' });
+
+  await db.run('UPDATE volunteers SET status = ? WHERE id = ?', [status, req.volunteerId]);
+  res.json({ ok: true, status });
 }));
 
 // PATCH /api/volunteers/:id

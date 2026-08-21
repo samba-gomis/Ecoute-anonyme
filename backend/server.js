@@ -12,6 +12,7 @@ const conversationsRouter = require('./routes/conversations');
 const reviewsRouter       = require('./routes/reviews');
 const authRouter          = require('./routes/auth');
 const applicationsRouter  = require('./routes/applications');
+const chatRequestsRouter  = require('./routes/chatRequests');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -64,6 +65,7 @@ app.use('/api/volunteers',    volunteersRouter);
 app.use('/api/conversations', conversationsRouter);
 app.use('/api/reviews',       reviewsRouter);
 app.use('/api/applications',  applicationsRouter);
+app.use('/api/chat-requests', chatRequestsRouter);
 
 // 404 for unknown /api routes
 app.use('/api', (req, res) => {

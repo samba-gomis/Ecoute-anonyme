@@ -81,4 +81,5 @@ router.delete('/:id', requireAdmin, ah(async (req, res) => {
   res.status(204).end();
 }));
 
+router.generateShareId = generateShareId;
 module.exports = router;

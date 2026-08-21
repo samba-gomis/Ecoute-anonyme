@@ -54,6 +54,20 @@ async function init() {
       value TEXT NOT NULL
     );
 
+    CREATE TABLE IF NOT EXISTS chat_requests (
+      id            SERIAL      PRIMARY KEY,
+      session_token TEXT        NOT NULL UNIQUE,
+      volunteer_id  INTEGER     NOT NULL REFERENCES volunteers(id) ON DELETE CASCADE,
+      user_pseudo   TEXT        NOT NULL,
+      domain        TEXT,
+      status        TEXT        NOT NULL DEFAULT 'pending'
+                                 CHECK (status IN ('pending','accepted','declined','ended','expired')),
+      messages      TEXT        NOT NULL DEFAULT '[]',
+      created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+      accepted_at   TIMESTAMPTZ,
+      ended_at      TIMESTAMPTZ
+    );
+
     CREATE TABLE IF NOT EXISTS applications (
       id          SERIAL      PRIMARY KEY,
       prenom      TEXT        NOT NULL,

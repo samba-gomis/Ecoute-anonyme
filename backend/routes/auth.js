@@ -56,6 +56,32 @@ setInterval(() => {
   }
 }, 60 * 60 * 1000).unref();
 
+// Session bénévole : même principe que adminSessions ci-dessus, mais portée
+// par un token Bearer plutôt qu'un cookie (le panneau bénévole est utilisé
+// depuis la même page que le chat public, pas besoin d'un cookie dédié).
+// Nécessaire pour que /api/chat-requests sache quel bénévole authentifié
+// fait l'appel (liste d'attente, acceptation, envoi de message, statut...).
+const volSessions = new Map(); // token -> { volunteerId, expiresAt }
+
+function requireVolunteer(req, res, next) {
+  const header = req.get('authorization') || '';
+  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
+  const entry = token && volSessions.get(token);
+  if (!entry || entry.expiresAt < Date.now()) {
+    if (token) volSessions.delete(token);
+    return res.status(401).json({ error: 'Authentification bénévole requise.' });
+  }
+  req.volunteerId = entry.volunteerId;
+  next();
+}
+
+setInterval(() => {
+  const now = Date.now();
+  for (const [token, entry] of volSessions) {
+    if (entry.expiresAt < now) volSessions.delete(token);
+  }
+}, 60 * 60 * 1000).unref();
+
 // POST /api/auth/volunteer  — { login, password }
 router.post('/volunteer', rateLimitLogin, ah(async (req, res) => {
   const { login, password } = req.body;
@@ -66,8 +92,11 @@ router.post('/volunteer', rateLimitLogin, ah(async (req, res) => {
   if (!vol?.password_hash || !bcrypt.compareSync(password, vol.password_hash))
     return res.status(401).json({ error: 'Identifiants incorrects.' });
 
+  const token = crypto.randomBytes(32).toString('hex');
+  volSessions.set(token, { volunteerId: vol.id, expiresAt: Date.now() + SESSION_MAX_AGE });
+
   const { password_hash, setup_token, setup_token_expires, ...safe } = vol;
-  res.json({ ...safe, tags: JSON.parse(safe.tags) });
+  res.json({ ...safe, tags: JSON.parse(safe.tags), token });
 }));
 
 // POST /api/auth/volunteer/setup — { token, password }
@@ -183,5 +212,15 @@ router.patch('/admin', requireAdmin, ah(async (req, res) => {
   res.json({ ok: true });
 }));
 
+// Utilisé par chat-requests.js pour accepter soit un cookie admin, soit un
+// Bearer bénévole, sans dupliquer la logique de volSessions ici.
+function resolveVolunteerToken(token) {
+  const entry = token && volSessions.get(token);
+  if (!entry || entry.expiresAt < Date.now()) return null;
+  return entry.volunteerId;
+}
+
 router.requireAdmin = requireAdmin;
+router.requireVolunteer = requireVolunteer;
+router.resolveVolunteerToken = resolveVolunteerToken;
 module.exports = router;
