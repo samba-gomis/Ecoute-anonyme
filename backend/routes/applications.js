@@ -1,5 +1,6 @@
 const express    = require('express');
 const bcrypt     = require('bcryptjs');
+const crypto     = require('crypto');
 const router     = express.Router();
 const db         = require('../database');
 const ah         = require('../asyncHandler');
@@ -10,6 +11,7 @@ const SITE_URL       = process.env.SITE_URL || 'http://localhost:3000';
 const VALID_STATUSES = ['online', 'away', 'offline'];
 
 const EMAIL_CONFIGURED = Boolean(process.env.BREVO_API_KEY && process.env.BREVO_SENDER_EMAIL);
+const SETUP_TOKEN_TTL  = 48 * 60 * 60 * 1000; // 48h pour créer son mot de passe
 
 // Render blocks outbound SMTP (ports 465 and 587 both timed out), so emails
 // go through Brevo's HTTPS API instead — port 443 is never blocked.
@@ -38,28 +40,31 @@ router.get('/', requireAdmin, ah(async (req, res) => {
   res.json(rows.map(r => ({ ...r, dispos: JSON.parse(r.dispos) })));
 }));
 
-// POST /api/applications/:id/accept — { login, password, tags?, status?, name?, email? }
+// POST /api/applications/:id/accept — { login, tags?, status?, name?, email? }
+// Le mot de passe n'est plus choisi par l'admin ni envoyé par email : un lien
+// à usage unique est envoyé au bénévole pour qu'il/elle définisse lui/elle-même
+// son mot de passe (backend/routes/auth.js, POST /auth/volunteer/setup).
 router.post('/:id/accept', requireAdmin, ah(async (req, res) => {
   const app = await db.get('SELECT * FROM applications WHERE id = ?', [req.params.id]);
   if (!app) return res.status(404).json({ error: 'Candidature introuvable.' });
 
-  const { login, password, tags, status } = req.body;
+  const { login, tags, status } = req.body;
   if (!login?.trim()) return res.status(400).json({ error: 'Un identifiant de connexion est requis.' });
-  if (!password || password.length < 6) return res.status(400).json({ error: 'Le mot de passe doit faire au moins 6 caractères.' });
 
   const finalName  = req.body.name?.trim()  || `${app.prenom} ${app.nom}`;
   const finalEmail = req.body.email?.trim() || app.email;
   const finalDescription = req.body.description?.trim() || app.description || null;
   const safeStatus = VALID_STATUSES.includes(status) ? status : 'offline';
   const tagsJson   = JSON.stringify(Array.isArray(tags) ? tags : (app.domaine ? [app.domaine] : []));
-  const passwordHash = bcrypt.hashSync(password, 10);
+  const setupToken   = crypto.randomBytes(32).toString('hex');
+  const setupExpires = new Date(Date.now() + SETUP_TOKEN_TTL).toISOString();
 
   let volunteer;
   try {
     const info = await db.run(`
-      INSERT INTO volunteers (name, email, tags, status, login, password_hash, description)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `, [finalName, finalEmail, tagsJson, safeStatus, login.trim(), passwordHash, finalDescription], 'id');
+      INSERT INTO volunteers (name, email, tags, status, login, password_hash, description, setup_token, setup_token_expires)
+      VALUES (?, ?, ?, ?, ?, NULL, ?, ?, ?)
+    `, [finalName, finalEmail, tagsJson, safeStatus, login.trim(), finalDescription, setupToken, setupExpires], 'id');
     volunteer = await db.get('SELECT * FROM volunteers WHERE id = ?', [info.lastInsertRowid]);
   } catch (e) {
     if (e.message.includes('duplicate key')) {
@@ -82,13 +87,12 @@ router.post('/:id/accept', requireAdmin, ah(async (req, res) => {
         '',
         'Bonne nouvelle : votre candidature pour devenir bénévole sur Écoute Anonyme a été acceptée !',
         '',
-        'Voici vos identifiants pour accéder à l\'espace bénévole :',
-        `Identifiant : ${login.trim()}`,
-        `Mot de passe : ${password}`,
+        `Votre identifiant de connexion : ${login.trim()}`,
         '',
-        `Connectez-vous ici : ${SITE_URL}/espace-benevole`,
+        'Pour finaliser votre compte, créez votre mot de passe via ce lien (valable 48h) :',
+        `${SITE_URL}/espace-benevole?setup=${setupToken}`,
         '',
-        'Une fois connecté·e, vous pourrez modifier votre identifiant et votre mot de passe depuis "Mon compte".',
+        'Une fois votre mot de passe créé, vous pourrez vous connecter à l\'espace bénévole.',
         '',
         'Merci pour votre engagement,',
         'L\'équipe Écoute Anonyme',
@@ -98,7 +102,7 @@ router.post('/:id/accept', requireAdmin, ah(async (req, res) => {
     console.warn('BREVO_API_KEY / BREVO_SENDER_EMAIL absents du .env — bénévole créé mais aucun email de confirmation envoyé.');
   }
 
-  const { password_hash, ...safeVolunteer } = volunteer;
+  const { password_hash, setup_token, setup_token_expires, ...safeVolunteer } = volunteer;
   res.status(201).json({ ok: true, volunteer: { ...safeVolunteer, tags: JSON.parse(safeVolunteer.tags) } });
 }));
 

@@ -9,8 +9,8 @@ const VALID_STATUSES = ['online', 'away', 'offline'];
 
 function parseRow(row) {
   if (!row) return null;
-  // Never expose password_hash to the client
-  const { password_hash, ...safe } = row;
+  // Never expose password_hash or the one-time setup token to the client
+  const { password_hash, setup_token, setup_token_expires, ...safe } = row;
   return { ...safe, tags: JSON.parse(safe.tags) };
 }
 

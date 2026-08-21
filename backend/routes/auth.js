@@ -7,17 +7,57 @@ const ah      = require('../asyncHandler');
 
 const SESSION_COOKIE = 'ea_admin_session';
 const SESSION_MAX_AGE = 12 * 60 * 60 * 1000; // 12h
-const adminSessions = new Set();
+const adminSessions = new Map(); // token -> expiresAt
 
 function requireAdmin(req, res, next) {
   const token = req.cookies?.[SESSION_COOKIE];
-  if (!token || !adminSessions.has(token))
+  const expiresAt = token && adminSessions.get(token);
+  if (!expiresAt || expiresAt < Date.now()) {
+    if (token) adminSessions.delete(token);
     return res.status(401).json({ error: 'Authentification admin requise.' });
+  }
   next();
 }
 
+// Purge périodique des sessions expirées pour éviter une fuite mémoire
+// (le Set/Map n'était sinon jamais nettoyé que sur logout explicite).
+setInterval(() => {
+  const now = Date.now();
+  for (const [token, expiresAt] of adminSessions) {
+    if (expiresAt < now) adminSessions.delete(token);
+  }
+}, 60 * 60 * 1000).unref();
+
+// Anti brute-force sur les routes de connexion : n'importe quel appelant
+// (pas de whitelist par utilisateur) est limité à quelques tentatives par
+// fenêtre de temps et par IP. `trust proxy` (server.js) fait que req.ip
+// reflète bien l'IP du client derrière le proxy Render.
+const loginAttempts = new Map(); // ip -> { count, resetAt }
+const LOGIN_WINDOW_MS = 15 * 60 * 1000;
+const LOGIN_MAX_ATTEMPTS = 10;
+
+function rateLimitLogin(req, res, next) {
+  const now = Date.now();
+  let entry = loginAttempts.get(req.ip);
+  if (!entry || entry.resetAt < now) {
+    entry = { count: 0, resetAt: now + LOGIN_WINDOW_MS };
+    loginAttempts.set(req.ip, entry);
+  }
+  entry.count++;
+  if (entry.count > LOGIN_MAX_ATTEMPTS)
+    return res.status(429).json({ error: 'Trop de tentatives de connexion. Réessayez plus tard.' });
+  next();
+}
+
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, entry] of loginAttempts) {
+    if (entry.resetAt < now) loginAttempts.delete(ip);
+  }
+}, 60 * 60 * 1000).unref();
+
 // POST /api/auth/volunteer  — { login, password }
-router.post('/volunteer', ah(async (req, res) => {
+router.post('/volunteer', rateLimitLogin, ah(async (req, res) => {
   const { login, password } = req.body;
   if (!login?.trim() || !password)
     return res.status(400).json({ error: 'Identifiants requis.' });
@@ -26,8 +66,31 @@ router.post('/volunteer', ah(async (req, res) => {
   if (!vol?.password_hash || !bcrypt.compareSync(password, vol.password_hash))
     return res.status(401).json({ error: 'Identifiants incorrects.' });
 
-  const { password_hash, ...safe } = vol;
+  const { password_hash, setup_token, setup_token_expires, ...safe } = vol;
   res.json({ ...safe, tags: JSON.parse(safe.tags) });
+}));
+
+// POST /api/auth/volunteer/setup — { token, password }
+// Consomme le lien à usage unique envoyé par email lors de l'acceptation
+// d'une candidature (backend/routes/applications.js) pour que le/la
+// bénévole choisisse lui/elle-même son mot de passe, au lieu de le recevoir
+// en clair par email.
+router.post('/volunteer/setup', rateLimitLogin, ah(async (req, res) => {
+  const { token, password } = req.body;
+  if (!token) return res.status(400).json({ error: 'Lien invalide.' });
+  if (!password || password.length < 6)
+    return res.status(400).json({ error: 'Le mot de passe doit faire au moins 6 caractères.' });
+
+  const vol = await db.get('SELECT * FROM volunteers WHERE setup_token = ?', [token]);
+  if (!vol || !vol.setup_token_expires || new Date(vol.setup_token_expires).getTime() < Date.now())
+    return res.status(400).json({ error: 'Ce lien est invalide ou a expiré. Contactez l\'équipe pour en recevoir un nouveau.' });
+
+  await db.run(
+    'UPDATE volunteers SET password_hash = ?, setup_token = NULL, setup_token_expires = NULL WHERE id = ?',
+    [bcrypt.hashSync(password, 10), vol.id]
+  );
+
+  res.json({ ok: true, login: vol.login });
 }));
 
 // PATCH /api/auth/volunteer — { id, current_password, new_login?, new_password? }
@@ -60,7 +123,7 @@ router.patch('/volunteer', ah(async (req, res) => {
 }));
 
 // POST /api/auth/admin  — { login, password }
-router.post('/admin', ah(async (req, res) => {
+router.post('/admin', rateLimitLogin, ah(async (req, res) => {
   const { login, password } = req.body;
   if (!login || !password)
     return res.status(400).json({ error: 'Identifiants requis.' });
@@ -75,7 +138,7 @@ router.post('/admin', ah(async (req, res) => {
     return res.status(401).json({ error: 'Identifiants incorrects.' });
 
   const token = crypto.randomBytes(32).toString('hex');
-  adminSessions.add(token);
+  adminSessions.set(token, Date.now() + SESSION_MAX_AGE);
   res.cookie(SESSION_COOKIE, token, {
     httpOnly: true,
     secure: req.secure,

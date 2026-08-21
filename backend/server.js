@@ -19,9 +19,24 @@ const PORT = process.env.PORT || 3000;
 // Nécessaire pour que req.secure reflète le protocole d'origine derrière le proxy de Render
 app.set('trust proxy', 1);
 
-// Allow requests from file://, Live Server, and same origin
+// Allow requests from file://, Live Server, localhost, and our own deployed
+// origins (Netlify front + this Render backend). Tout le reste est refusé —
+// en pratique le site n'appelle jamais l'API en cross-origin (tous les
+// fetch() du front utilisent des chemins relatifs "/api/..."), donc cette
+// liste ne sert que de garde-fou, pas de mécanisme dont l'app dépend.
+const ALLOWED_ORIGIN_PATTERNS = [
+  /^https?:\/\/localhost(:\d+)?$/,
+  /^https?:\/\/127\.0\.0\.1(:\d+)?$/,
+  /\.onrender\.com$/,
+  /\.netlify\.app$/,
+  ...(process.env.SITE_URL ? [new RegExp(`^${process.env.SITE_URL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`)] : []),
+];
 app.use(cors({
-  origin: (origin, cb) => cb(null, true),
+  origin: (origin, cb) => {
+    // Pas d'en-tête Origin (file://, curl, requêtes serveur-à-serveur) : autorisé.
+    if (!origin) return cb(null, true);
+    cb(null, ALLOWED_ORIGIN_PATTERNS.some(re => re.test(origin)));
+  },
   methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
 }));
 

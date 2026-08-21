@@ -23,7 +23,9 @@ async function init() {
       login         TEXT        UNIQUE,
       password_hash TEXT,
       description   TEXT,
-      created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+      created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+      setup_token           TEXT UNIQUE,
+      setup_token_expires   TIMESTAMPTZ
     );
 
     CREATE TABLE IF NOT EXISTS conversations (
@@ -66,6 +68,14 @@ async function init() {
                               CHECK (status IN ('pending','accepted','rejected')),
       created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
     );
+  `);
+
+  // Migration pour les bases créées avant l'ajout du flux "lien de création
+  // de mot de passe" (CREATE TABLE IF NOT EXISTS ne modifie pas une table
+  // déjà existante).
+  await pool.query(`
+    ALTER TABLE volunteers ADD COLUMN IF NOT EXISTS setup_token TEXT UNIQUE;
+    ALTER TABLE volunteers ADD COLUMN IF NOT EXISTS setup_token_expires TIMESTAMPTZ;
   `);
 }
 
