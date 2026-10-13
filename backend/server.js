@@ -83,14 +83,16 @@ app.use((err, req, res, _next) => {
 async function start() {
   await db.init();
 
-  // Seed des identifiants admin par défaut si absents
+  // Seed des identifiants admin par défaut si absents. En production,
+  // ADMIN_PASSWORD évite qu'une base neuve démarre avec "admin123", connu de
+  // tous ceux qui lisent ce dépôt public.
   await db.run(
     'INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT (key) DO NOTHING',
     ['admin_login', 'admin']
   );
   await db.run(
     'INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT (key) DO NOTHING',
-    ['admin_password_hash', bcrypt.hashSync('admin123', 10)]
+    ['admin_password_hash', bcrypt.hashSync(process.env.ADMIN_PASSWORD || 'admin123', 10)]
   );
 
   app.listen(PORT, () => {
