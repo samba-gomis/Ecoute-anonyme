@@ -123,7 +123,10 @@ router.post('/volunteer/setup', rateLimitLogin, ah(async (req, res) => {
 }));
 
 // PATCH /api/auth/volunteer — { id, current_password, new_login?, new_password? }
-router.patch('/volunteer', ah(async (req, res) => {
+// rateLimitLogin car cette route vérifie un mot de passe comme un login : sans
+// elle, `id` (un entier trivial à énumérer) permettrait de bruteforcer le mot
+// de passe de n'importe quel·le bénévole sans aucune limite de tentatives.
+router.patch('/volunteer', rateLimitLogin, ah(async (req, res) => {
   const { id, current_password, new_login, new_password } = req.body;
   if (!id || !current_password)
     return res.status(400).json({ error: 'Mot de passe actuel requis.' });

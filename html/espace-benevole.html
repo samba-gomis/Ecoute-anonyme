@@ -360,6 +360,9 @@
     }
     .from-me .msg-bubble { background: var(--sage); color: #fff; border-bottom-right-radius: 4px; }
     .msg-time { font-size: 10px; color: var(--mist); padding: 0 4px; }
+    .msg-failed { font-size: 10px; color: var(--danger); padding: 0 4px; }
+    .msg-retry { background: none; border: none; font-family: inherit; cursor: pointer; text-decoration: underline; }
+    .modal-card .rep-error { display: none; font-size: 12px; color: var(--danger); margin: -6px 0 12px; }
     .msg-sys {
       text-align: center; font-size: 12px; color: var(--mist);
       background: rgba(139,175,138,0.09); border-radius: var(--radius-pill);
@@ -748,6 +751,7 @@
       <label class="rep-opt"><input type="radio" name="rep" value="inapp" onchange="pickRep(this)"> Contenu inapproprié</label>
       <label class="rep-opt"><input type="radio" name="rep" value="autre" onchange="pickRep(this)"> Autre motif</label>
     </div>
+    <p class="rep-error" id="rep-error"></p>
     <div class="m-actions">
       <button class="m-btn m-cancel" onclick="closeModal('report-modal')">Annuler</button>
       <button class="m-btn m-red" id="rep-btn" onclick="submitReport()" disabled>Signaler</button>
@@ -1007,7 +1011,7 @@ function renderPending() {
           </span>
         </div>
       </div>
-      <button class="accept-btn" onclick="acceptUser('${u.id}')">Accepter</button>
+      <button class="accept-btn" onclick="acceptUser(${u.id})">Accepter</button>
     </div>
   `).join('');
 }
@@ -1152,6 +1156,34 @@ function addMsg(txt, type, senderName) {
   g.appendChild(tm);
   msgs.insertBefore(g, ind);
   scrollBot();
+  return g;
+}
+
+// retryTxt : texte à renvoyer au clic, ou null quand réessayer n'a pas de
+// sens (l'échange est terminé).
+function markSendFailed(group, retryTxt) {
+  if (!retryTxt) {
+    const warn = document.createElement('span');
+    warn.className   = 'msg-failed';
+    warn.textContent = 'Non envoyé — l\'échange est terminé';
+    group.appendChild(warn);
+    return;
+  }
+  const warn = document.createElement('button');
+  warn.type        = 'button';
+  warn.className   = 'msg-failed msg-retry';
+  warn.textContent = 'Non envoyé — cliquez pour réessayer';
+  warn.onclick = () => {
+    warn.remove();
+    // Le message renvoyé arrive après ceux échangés entre-temps : on descend
+    // la bulle en bas pour garder le même ordre que chez l'utilisateur·rice.
+    const msgs = document.getElementById('chat-messages');
+    group.querySelector('.msg-time').textContent = fmtTime(new Date());
+    msgs.insertBefore(group, document.getElementById('typing-ind'));
+    scrollBot();
+    postMsg(retryTxt, group);
+  };
+  group.appendChild(warn);
 }
 
 function setTyping(on) {
@@ -1163,16 +1195,24 @@ async function sendMsg() {
   const inp = document.getElementById('msg-input');
   const txt = inp.value.trim();
   if (!txt || !currentRequestId || activeChatEnded) return;
-  addMsg(txt, 'from-me', me.name);
+  const bubble = addMsg(txt, 'from-me', me.name);
   inp.value = ''; inp.style.height = 'auto'; inp.focus();
+  postMsg(txt, bubble);
+}
+
+async function postMsg(txt, bubble) {
   try {
     const res = await fetch(`/api/chat-requests/${currentRequestId}/messages`, {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + volToken, 'Content-Type': 'application/json' },
       body: JSON.stringify({ text: txt }),
     });
-    if (res.ok) pollChatOnce();
-  } catch (e) { /* le poll régulier retentera */ }
+    if (res.ok) { pollChatOnce(); return; }
+    // 409 : la conversation vient de se terminer côté utilisateur·rice, le
+    // message n'a pas été reçu — pollChatOnce() affiche en plus le message système.
+    if (res.status === 409) { markSendFailed(bubble, null); pollChatOnce(); return; }
+    markSendFailed(bubble, txt);
+  } catch (e) { markSendFailed(bubble, txt); }
 }
 
 function handleKey(e) { if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); } }
@@ -1319,7 +1359,32 @@ function pickRep(el) {
   el.closest('.rep-opt').classList.add('sel');
   document.getElementById('rep-btn').disabled = false;
 }
-function submitReport() {
+async function submitReport() {
+  const picked = document.querySelector('input[name="rep"]:checked');
+  const reason = picked ? picked.value : 'autre';
+  const btn = document.getElementById('rep-btn');
+  const err = document.getElementById('rep-error');
+  err.style.display = 'none';
+  btn.disabled = true;
+  let ok = false;
+  if (currentRequestId) {
+    try {
+      const res = await fetch(`/api/chat-requests/${currentRequestId}/report`, {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + volToken, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reason }),
+      });
+      ok = res.ok;
+    } catch (e) { /* réseau : traité comme un échec ci-dessous */ }
+  }
+  btn.disabled = false;
+  // On ne confirme que si le serveur a bien enregistré le signalement :
+  // une fausse confirmation ferait croire que l'équipe a été alertée.
+  if (!ok) {
+    err.textContent = 'Le signalement n\'a pas pu être envoyé. Réessayez.';
+    err.style.display = 'block';
+    return;
+  }
   closeModal('report-modal');
   openModal('report-ok-modal');
 }

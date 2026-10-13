@@ -137,6 +137,9 @@
     .msg-group.user .msg-bubble { background: var(--sage); color: #fff; border-bottom-right-radius: 4px; }
     .msg-group.vol .msg-bubble { background: var(--bg-card); color: var(--stone-dark); border: 1px solid var(--border); border-bottom-left-radius: 4px; transition: background 0.3s; }
     .msg-time { font-size: 10px; color: var(--mist); padding: 0 4px; }
+    .msg-failed { font-size: 10px; color: var(--danger); padding: 0 4px; }
+    .msg-retry { background: none; border: none; font-family: inherit; cursor: pointer; text-decoration: underline; }
+    .modal-card .rep-error { display: none; font-size: 12px; color: var(--danger); margin: -6px 0 12px; }
     .msg-sys { text-align: center; font-size: 12px; color: var(--mist); background: rgba(139,175,138,0.09); border-radius: var(--radius-pill); padding: 6px 16px; align-self: center; max-width: 85%; line-height: 1.5; }
     .typing-ind { display: none; align-self: flex-start; }
     .typing-ind.on { display: flex; }
@@ -375,6 +378,7 @@
         <label class="rep-opt"><input type="radio" name="rep" value="comportement" onchange="pickRep(this)"> <span data-i18n="rep_opt4">Comportement inapproprié</span></label>
         <label class="rep-opt"><input type="radio" name="rep" value="autre" onchange="pickRep(this)"> <span data-i18n="rep_opt5">Autre motif</span></label>
       </div>
+      <p class="rep-error" id="rep-error"></p>
       <div class="m-actions">
         <button class="m-btn m-cancel" onclick="closeModal('report-modal')" data-i18n="modal_report_cancel">Annuler</button>
         <button class="m-btn m-red" id="rep-btn" onclick="submitReport()" disabled data-i18n="modal_report_submit">Signaler</button>
@@ -665,14 +669,22 @@
       const inp=document.getElementById('msg-input');
       const txt=inp.value.trim();
       if(!txt||!currentRequestId||chatEnded)return;
-      addMsg(txt,'user');inp.value='';inp.style.height='auto';inp.focus();
+      const bubble=addMsg(txt,'user');inp.value='';inp.style.height='auto';inp.focus();
+      postMsg(txt,bubble);
+    }
+
+    async function postMsg(txt,bubble){
       try {
         const res = await fetch(requestUrl('/messages'), {
           method:'POST', headers:{'Content-Type':'application/json'},
           body: JSON.stringify({ text: txt }),
         });
-        if (res.ok) pollRequestOnce(); // récupère aussitôt une éventuelle réponse déjà arrivée
-      } catch (e) { /* le poll régulier retentera de toute façon */ }
+        if (res.ok) { pollRequestOnce(); return; } // récupère aussitôt une éventuelle réponse déjà arrivée
+        // 409 : le bénévole vient de terminer l'échange, le message n'a pas
+        // été reçu — pollRequestOnce() affiche en plus le message système.
+        if (res.status === 409) { markSendFailed(bubble,null); pollRequestOnce(); return; }
+        markSendFailed(bubble,txt);
+      } catch (e) { markSendFailed(bubble,txt); }
     }
 
     function addMsg(txt,type){
@@ -683,6 +695,31 @@
       const b=document.createElement('div');b.className='msg-bubble';b.textContent=txt;g.appendChild(b);
       const tm=document.createElement('span');tm.className='msg-time';tm.textContent=fmtTime(new Date());g.appendChild(tm);
       c.insertBefore(g,t);scrollBot();
+      return g;
+    }
+
+    // retryTxt : texte à renvoyer au clic, ou null quand réessayer n'a pas de
+    // sens (l'échange est terminé).
+    function markSendFailed(group,retryTxt){
+      const lang = window.currentLang || 'fr';
+      if(!retryTxt){
+        const warn=document.createElement('span');warn.className='msg-failed';
+        warn.textContent = lang==='en' ? 'Not sent — the conversation has ended' : 'Non envoyé — l\'échange est terminé';
+        group.appendChild(warn);
+        return;
+      }
+      const warn=document.createElement('button');warn.type='button';warn.className='msg-failed msg-retry';
+      warn.textContent = lang==='en' ? 'Not sent — click to retry' : 'Non envoyé — cliquez pour réessayer';
+      warn.onclick=()=>{
+        warn.remove();
+        // Le message renvoyé arrive après ceux échangés entre-temps : on
+        // descend la bulle en bas pour garder le même ordre que chez le bénévole.
+        const c=document.getElementById('chat-messages'),t=document.getElementById('typing');
+        group.querySelector('.msg-time').textContent=fmtTime(new Date());
+        c.insertBefore(group,t);scrollBot();
+        postMsg(retryTxt,group);
+      };
+      group.appendChild(warn);
     }
 
     function scrollBot(){const c=document.getElementById('chat-messages');c.scrollTop=c.scrollHeight;}
@@ -732,7 +769,34 @@
 
     /* SIGNALEMENT */
     function pickRep(el){document.querySelectorAll('.rep-opt').forEach(o=>o.classList.remove('sel'));el.closest('.rep-opt').classList.add('sel');document.getElementById('rep-btn').disabled=false;}
-    function submitReport(){closeModal('report-modal');openModal('report-ok-modal');}
+    async function submitReport(){
+      const lang = window.currentLang || 'fr';
+      const picked = document.querySelector('input[name="rep"]:checked');
+      const reason = picked ? picked.value : 'autre';
+      const btn = document.getElementById('rep-btn'), err = document.getElementById('rep-error');
+      err.style.display = 'none';
+      btn.disabled = true;
+      let ok = false;
+      if (currentRequestId) {
+        try {
+          const res = await fetch(requestUrl('/report'), {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ reason }),
+          });
+          ok = res.ok;
+        } catch (e) { /* réseau : traité comme un échec ci-dessous */ }
+      }
+      btn.disabled = false;
+      // On ne confirme que si le serveur a bien enregistré le signalement :
+      // une fausse confirmation ferait croire que l'équipe a été alertée.
+      if (!ok) {
+        err.textContent = lang==='en' ? 'The report could not be sent. Please try again.' : 'Le signalement n\'a pas pu être envoyé. Réessayez.';
+        err.style.display = 'block';
+        return;
+      }
+      closeModal('report-modal');
+      openModal('report-ok-modal');
+    }
 
     /* FIN DE SESSION */
     function selectEndChoice(choice){

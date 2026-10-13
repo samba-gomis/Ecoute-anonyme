@@ -68,6 +68,15 @@ async function init() {
       ended_at      TIMESTAMPTZ
     );
 
+    CREATE TABLE IF NOT EXISTS reports (
+      id               SERIAL      PRIMARY KEY,
+      chat_request_id  INTEGER     REFERENCES chat_requests(id) ON DELETE SET NULL,
+      reporter_role    TEXT        NOT NULL CHECK (reporter_role IN ('user','vol')),
+      reported_name    TEXT,
+      reason           TEXT        NOT NULL,
+      created_at       TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+
     CREATE TABLE IF NOT EXISTS applications (
       id          SERIAL      PRIMARY KEY,
       prenom      TEXT        NOT NULL,

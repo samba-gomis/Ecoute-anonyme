@@ -116,13 +116,37 @@ router.post('/:id/messages', ah(async (req, res) => {
 
   const access = await resolveAccess(req, res);
   if (!access) return;
-  if (access.row.status !== 'accepted')
-    return res.status(409).json({ error: 'Cette conversation n\'est pas active.' });
 
-  const messages = JSON.parse(access.row.messages);
-  messages.push({ from: access.role, text: text.trim(), at: new Date().toISOString() });
+  const entry = JSON.stringify([{ from: access.role, text: text.trim(), at: new Date().toISOString() }]);
+  // Ajout atomique côté SQL plutôt qu'un lire-modifier-écrire en JS : si
+  // l'utilisateur·rice et le/la bénévole envoient un message au même instant,
+  // un read-modify-write ferait perdre l'un des deux (le second UPDATE
+  // écraserait le tableau "messages" lu avant l'écriture du premier).
+  const info = await db.run(`
+    UPDATE chat_requests SET messages = (messages::jsonb || ?::jsonb)::text
+    WHERE id = ? AND status = 'accepted'
+  `, [entry, req.params.id]);
 
-  await db.run('UPDATE chat_requests SET messages = ? WHERE id = ?', [JSON.stringify(messages), req.params.id]);
+  if (!info.changes) return res.status(409).json({ error: 'Cette conversation n\'est pas active.' });
+  res.status(201).json({ ok: true });
+}));
+
+// POST /api/chat-requests/:id/report — { reason } (+ ?token= côté utilisateur)
+// Signalement par l'une ou l'autre partie d'une conversation (abus,
+// comportement inapproprié...). resolveAccess garantit que seul·e un·e
+// participant·e réel·le de cette conversation peut signaler.
+router.post('/:id/report', ah(async (req, res) => {
+  const { reason } = req.body;
+  if (!reason?.trim()) return res.status(400).json({ error: 'Motif requis.' });
+
+  const access = await resolveAccess(req, res);
+  if (!access) return;
+
+  const reportedName = access.role === 'user' ? access.row.vol_name : access.row.user_pseudo;
+  await db.run(
+    'INSERT INTO reports (chat_request_id, reporter_role, reported_name, reason) VALUES (?, ?, ?, ?)',
+    [access.row.id, access.role, reportedName, reason.trim()]
+  );
   res.status(201).json({ ok: true });
 }));
 
