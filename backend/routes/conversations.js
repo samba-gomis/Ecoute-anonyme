@@ -30,45 +30,18 @@ router.get('/', requireAdmin, ah(async (req, res) => {
   res.json(rows);
 }));
 
-// GET /api/conversations/:id
-router.get('/:id', ah(async (req, res) => {
+// GET /api/conversations/:id — transcript complet, réservé à l'admin : un
+// code à 8 caractères ne suffit pas à protéger un échange confidentiel, et
+// aucune page publique ne l'utilise. (Les transcripts sont écrits par
+// POST /api/chat-requests/:id/end ; il n'y a plus de route publique de
+// création, qui permettait à n'importe qui d'en fabriquer.)
+router.get('/:id', requireAdmin, ah(async (req, res) => {
   const row = await db.get(
     'SELECT * FROM conversations WHERE share_id = ?',
     [req.params.id.toUpperCase()]
   );
   if (!row) return res.status(404).json({ error: 'Conversation introuvable. Vérifiez votre identifiant.' });
   res.json(parseRow(row));
-}));
-
-// POST /api/conversations  — save a conversation, returns share_id
-router.post('/', ah(async (req, res) => {
-  const { user_pseudo, vol_display, domain, messages, started_at, ended_at } = req.body;
-
-  if (!user_pseudo?.trim())
-    return res.status(400).json({ error: 'Le champ "user_pseudo" est requis.' });
-  if (!Array.isArray(messages))
-    return res.status(400).json({ error: 'Le champ "messages" doit être un tableau.' });
-  if (!messages.length)
-    return res.status(400).json({ error: 'Impossible de sauvegarder une conversation vide.' });
-
-  const share_id = await generateShareId();
-
-  await db.run(`
-    INSERT INTO conversations (share_id, user_pseudo, vol_display, domain, messages, started_at, ended_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `, [
-    share_id,
-    user_pseudo.trim(),
-    vol_display?.trim() || 'Bénévole',
-    domain?.trim()      || null,
-    JSON.stringify(messages),
-    started_at || null,
-    ended_at   || null,
-  ]);
-
-  res.status(201).json(parseRow(
-    await db.get('SELECT * FROM conversations WHERE share_id = ?', [share_id])
-  ));
 }));
 
 // DELETE /api/conversations/:id

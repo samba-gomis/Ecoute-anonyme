@@ -331,7 +331,7 @@
 
     <div class="chat-input-area">
       <div class="input-row">
-        <textarea id="msg-input" data-i18n-placeholder="chat_input_pl" placeholder="Écrivez votre message…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <textarea id="msg-input" maxlength="2000" data-i18n-placeholder="chat_input_pl" placeholder="Écrivez votre message…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
         <button class="send-btn" onclick="sendMsg()" title="Envoyer">
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M10 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
@@ -355,7 +355,7 @@
         <button class="s-btn" onclick="setRating(4)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--mist)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
         <button class="s-btn" onclick="setRating(5)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--mist)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
       </div>
-      <textarea class="rev-ta" data-i18n-placeholder="modal_review_pl" placeholder="Un commentaire ? (optionnel)"></textarea>
+      <textarea class="rev-ta" maxlength="1000" data-i18n-placeholder="modal_review_pl" placeholder="Un commentaire ? (optionnel)"></textarea>
       <div class="m-actions">
         <button class="m-btn m-cancel" onclick="closeModal('review-modal')" data-i18n="modal_review_skip">Passer</button>
         <button class="m-btn m-sage" onclick="submitReview()" data-i18n="modal_review_send">Envoyer</button>
@@ -549,6 +549,17 @@
       currentRequestId = null; currentSessionToken = null;
       showScreen('screen-volunteer');
     }
+
+    // Fermer l'onglet, recharger ou cliquer sur « Retour » perd la session
+    // (rien n'est gardé dans le navigateur) : on termine la demande pour que
+    // le/la bénévole ne reste pas à attendre. keepalive laisse la requête
+    // aboutir pendant la fermeture de la page.
+    window.addEventListener('pagehide', () => {
+      if (currentRequestId && !chatEnded) {
+        chatEnded = true;
+        fetch(requestUrl('/end'), { method:'POST', keepalive:true }).catch(()=>{});
+      }
+    });
 
     function requestUrl(path){
       return `/api/chat-requests/${currentRequestId}${path}?token=${encodeURIComponent(currentSessionToken)}`;
@@ -751,19 +762,26 @@
     async function submitReview(){
       closeModal('review-modal');
       const lang = window.currentLang || 'fr';
-      if (rating >= 1) {
-        const text = document.querySelector('.rev-ta')?.value.trim()
-          || (lang==='en' ? '(no comment)' : '(sans commentaire)');
-        try {
-          await fetch('/api/reviews', {
-            method:'POST', headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({ stars: rating, text, pseudo, vol_name: selVol?.name, domain: selVol?.tags?.[0] || null }),
-          });
-        } catch (e) { /* avis best-effort, on n'en informe pas l'utilisateur */ }
-      }
+      if (rating < 1) return;
+      const text = document.querySelector('.rev-ta')?.value.trim()
+        || (lang==='en' ? '(no comment)' : '(sans commentaire)');
+      let status = 0;
+      try {
+        const res = await fetch('/api/reviews', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ stars: rating, text, request_id: currentRequestId, token: currentSessionToken }),
+        });
+        status = res.status;
+      } catch (e) { /* réseau : traité comme un échec ci-dessous */ }
+      // On ne remercie que si l'avis a vraiment été enregistré.
+      const msg = status === 201
+        ? (lang==='en' ? 'Thank you for your anonymous review. It helps us improve the service.' : 'Merci pour votre avis anonyme. Il nous aide à améliorer le service.')
+        : status === 409
+          ? (lang==='en' ? 'You have already left a review for this conversation.' : 'Vous avez déjà laissé un avis pour cet échange.')
+          : (lang==='en' ? 'Your review could not be sent. Please try again.' : 'Votre avis n\'a pas pu être envoyé. Réessayez.');
       const c=document.getElementById('chat-messages'),t=document.getElementById('typing');
       const s=document.createElement('div');s.className='msg-sys';
-      s.textContent=lang==='en'?'Thank you for your anonymous review. It helps us improve the service.':'Merci pour votre avis anonyme. Il nous aide à améliorer le service.';
+      s.textContent=msg;
       c.insertBefore(s,t);scrollBot();
     }
 

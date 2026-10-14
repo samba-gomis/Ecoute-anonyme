@@ -2,7 +2,10 @@ const express = require('express');
 const router  = express.Router();
 const db      = require('../database');
 const ah      = require('../asyncHandler');
+const numericId = require('../numericId');
 const { requireAdmin } = require('./auth');
+
+router.param('id', numericId);
 
 // GET /api/reports — signalements créés via POST /api/chat-requests/:id/report
 router.get('/', requireAdmin, ah(async (req, res) => {

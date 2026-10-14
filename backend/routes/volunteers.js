@@ -3,7 +3,10 @@ const router  = express.Router();
 const bcrypt  = require('bcryptjs');
 const db      = require('../database');
 const ah      = require('../asyncHandler');
+const numericId = require('../numericId');
 const { requireAdmin, requireVolunteer } = require('./auth');
+
+router.param('id', numericId);
 
 const VALID_STATUSES = ['online', 'away', 'offline'];
 
@@ -18,6 +21,25 @@ function parseRow(row) {
 router.get('/', ah(async (req, res) => {
   const rows = await db.all('SELECT * FROM volunteers ORDER BY created_at ASC');
   res.json(rows.map(parseRow));
+}));
+
+// GET /api/volunteers/me/stats — chiffres du salon de l'espace bénévole,
+// pour le/la bénévole connecté·e : échanges acceptés aujourd'hui (heure de
+// Paris), note moyenne de ses avis, durée moyenne de ses échanges terminés.
+router.get('/me/stats', requireVolunteer, ah(async (req, res) => {
+  const id = req.volunteerId;
+  res.json(await db.get(`
+    SELECT
+      (SELECT count(*)::int FROM chat_requests
+        WHERE volunteer_id = ?
+          AND accepted_at >= date_trunc('day', now() AT TIME ZONE 'Europe/Paris') AT TIME ZONE 'Europe/Paris'
+      ) AS exchanges_today,
+      (SELECT round(avg(stars), 1)::float FROM reviews WHERE volunteer_id = ?) AS avg_rating,
+      (SELECT count(*)::int FROM reviews WHERE volunteer_id = ?) AS review_count,
+      (SELECT round(avg(extract(epoch FROM ended_at - accepted_at)) / 60)::int FROM chat_requests
+        WHERE volunteer_id = ? AND accepted_at IS NOT NULL AND ended_at IS NOT NULL
+      ) AS avg_duration_min
+  `, [id, id, id, id]));
 }));
 
 // GET /api/volunteers/:id

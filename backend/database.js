@@ -99,6 +99,11 @@ async function init() {
   await pool.query(`
     ALTER TABLE volunteers ADD COLUMN IF NOT EXISTS setup_token TEXT UNIQUE;
     ALTER TABLE volunteers ADD COLUMN IF NOT EXISTS setup_token_expires TIMESTAMPTZ;
+
+    -- Avis rattachés à l'échange réel dont ils parlent : sert à la note
+    -- moyenne de l'espace bénévole et limite à un avis par échange.
+    ALTER TABLE reviews ADD COLUMN IF NOT EXISTS volunteer_id INTEGER REFERENCES volunteers(id) ON DELETE SET NULL;
+    ALTER TABLE reviews ADD COLUMN IF NOT EXISTS chat_request_id INTEGER UNIQUE REFERENCES chat_requests(id) ON DELETE SET NULL;
   `);
 }
 

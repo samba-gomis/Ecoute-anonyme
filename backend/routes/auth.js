@@ -29,9 +29,11 @@ setInterval(() => {
 }, 60 * 60 * 1000).unref();
 
 // Anti brute-force sur les routes de connexion : n'importe quel appelant
-// (pas de whitelist par utilisateur) est limité à quelques tentatives par
-// fenêtre de temps et par IP. `trust proxy` (server.js) fait que req.ip
-// reflète bien l'IP du client derrière le proxy Render.
+// (pas de whitelist par utilisateur) est bloqué après quelques échecs par
+// fenêtre de temps et par IP (req.ip = adresse vue par le proxy Render, cf.
+// `trust proxy` dans server.js). Seuls les échecs (400/401) comptent : avant,
+// chaque connexion réussie comptait aussi, et un·e bénévole qui se
+// reconnectait souvent finissait bloqué·e.
 const loginAttempts = new Map(); // ip -> { count, resetAt }
 const LOGIN_WINDOW_MS = 15 * 60 * 1000;
 const LOGIN_MAX_ATTEMPTS = 10;
@@ -43,9 +45,11 @@ function rateLimitLogin(req, res, next) {
     entry = { count: 0, resetAt: now + LOGIN_WINDOW_MS };
     loginAttempts.set(req.ip, entry);
   }
-  entry.count++;
-  if (entry.count > LOGIN_MAX_ATTEMPTS)
+  if (entry.count >= LOGIN_MAX_ATTEMPTS)
     return res.status(429).json({ error: 'Trop de tentatives de connexion. Réessayez plus tard.' });
+  res.on('finish', () => {
+    if (res.statusCode === 400 || res.statusCode === 401) entry.count++;
+  });
   next();
 }
 

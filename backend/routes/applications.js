@@ -4,7 +4,10 @@ const crypto     = require('crypto');
 const router     = express.Router();
 const db         = require('../database');
 const ah         = require('../asyncHandler');
+const numericId  = require('../numericId');
 const { requireAdmin } = require('./auth');
+
+router.param('id', numericId);
 
 const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'ecoute.anonyme26@gmail.com';
 const SITE_URL       = process.env.SITE_URL || 'http://localhost:3000';

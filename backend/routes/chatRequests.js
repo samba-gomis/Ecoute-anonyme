@@ -3,8 +3,16 @@ const router  = express.Router();
 const crypto  = require('crypto');
 const db      = require('../database');
 const ah      = require('../asyncHandler');
+const numericId = require('../numericId');
 const { requireVolunteer, resolveVolunteerToken } = require('./auth');
 const { generateShareId } = require('./conversations');
+
+router.param('id', numericId);
+
+const MAX_MESSAGE_LENGTH = 2000;
+// Codes des motifs proposés dans chat.html et espace-benevole.html (admin.html
+// les traduit en libellés).
+const REPORT_REASONS = ['argent', 'info', 'hors', 'comportement', 'menace', 'harcel', 'inapp', 'autre'];
 
 function parseRow(row) {
   if (!row) return null;
@@ -45,8 +53,13 @@ async function resolveAccess(req, res) {
 // POST /api/chat-requests — { volunteer_id, user_pseudo, domain? }
 router.post('/', ah(async (req, res) => {
   const { volunteer_id, user_pseudo, domain } = req.body;
-  if (!volunteer_id) return res.status(400).json({ error: 'Bénévole requis.' });
-  if (!user_pseudo?.trim()) return res.status(400).json({ error: 'Pseudo requis.' });
+  if (!Number.isInteger(volunteer_id)) return res.status(400).json({ error: 'Bénévole requis.' });
+  if (typeof user_pseudo !== 'string' || !user_pseudo.trim()) return res.status(400).json({ error: 'Pseudo requis.' });
+  // Même limite que le champ du formulaire (maxlength 30).
+  if (user_pseudo.trim().length > 30) return res.status(400).json({ error: 'Pseudo trop long (30 caractères maximum).' });
+  // Le domaine vient du premier tag du/de la bénévole : tronqué plutôt que
+  // refusé, pour qu'un tag trop long saisi dans l'admin ne bloque pas le chat.
+  const safeDomain = typeof domain === 'string' ? domain.trim().slice(0, 50) || null : null;
 
   const vol = await db.get('SELECT * FROM volunteers WHERE id = ?', [volunteer_id]);
   if (!vol) return res.status(404).json({ error: 'Bénévole introuvable.' });
@@ -55,7 +68,7 @@ router.post('/', ah(async (req, res) => {
   const session_token = crypto.randomBytes(24).toString('hex');
   const info = await db.run(
     'INSERT INTO chat_requests (session_token, volunteer_id, user_pseudo, domain) VALUES (?, ?, ?, ?)',
-    [session_token, volunteer_id, user_pseudo.trim(), domain?.trim() || null],
+    [session_token, volunteer_id, user_pseudo.trim(), safeDomain],
     'id'
   );
 
@@ -112,7 +125,9 @@ router.get('/:id', ah(async (req, res) => {
 // POST /api/chat-requests/:id/messages — { text } (+ ?token= côté utilisateur)
 router.post('/:id/messages', ah(async (req, res) => {
   const { text } = req.body;
-  if (!text?.trim()) return res.status(400).json({ error: 'Message vide.' });
+  if (typeof text !== 'string' || !text.trim()) return res.status(400).json({ error: 'Message vide.' });
+  if (text.length > MAX_MESSAGE_LENGTH)
+    return res.status(400).json({ error: `Message trop long (${MAX_MESSAGE_LENGTH} caractères maximum).` });
 
   const access = await resolveAccess(req, res);
   if (!access) return;
@@ -137,7 +152,7 @@ router.post('/:id/messages', ah(async (req, res) => {
 // participant·e réel·le de cette conversation peut signaler.
 router.post('/:id/report', ah(async (req, res) => {
   const { reason } = req.body;
-  if (!reason?.trim()) return res.status(400).json({ error: 'Motif requis.' });
+  if (!REPORT_REASONS.includes(reason)) return res.status(400).json({ error: 'Motif requis.' });
 
   const access = await resolveAccess(req, res);
   if (!access) return;

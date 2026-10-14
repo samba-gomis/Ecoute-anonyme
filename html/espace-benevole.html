@@ -607,7 +607,7 @@
           <span class="live-dot"></span>
           <h2>Personnes en attente</h2>
         </div>
-        <span class="ps-count" id="ps-count">2</span>
+        <span class="ps-count" id="ps-count">0</span>
       </div>
       <div id="pending-list"></div>
     </div>
@@ -615,15 +615,15 @@
     <!-- Stats du jour -->
     <div class="lobby-stats">
       <div class="ls-card">
-        <div class="ls-val" id="stat-exchanges">3</div>
+        <div class="ls-val" id="stat-exchanges">—</div>
         <div class="ls-lbl">Échanges aujourd'hui</div>
       </div>
       <div class="ls-card">
-        <div class="ls-val">4,8</div>
-        <div class="ls-lbl">Note moyenne</div>
+        <div class="ls-val" id="stat-rating">—</div>
+        <div class="ls-lbl" id="stat-rating-lbl">Note moyenne</div>
       </div>
       <div class="ls-card">
-        <div class="ls-val">12 min</div>
+        <div class="ls-val" id="stat-duration">—</div>
         <div class="ls-lbl">Durée moyenne</div>
       </div>
     </div>
@@ -699,7 +699,7 @@
 
   <div class="chat-input-area">
     <div class="input-row">
-      <textarea id="msg-input" placeholder="Répondez à l'utilisateur…" rows="1"
+      <textarea id="msg-input" maxlength="2000" placeholder="Répondez à l'utilisateur…" rows="1"
                 onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
       <button class="send-btn" onclick="sendMsg()">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M10 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -827,7 +827,6 @@ let activeChatEnded = false;
 let pendingPollTimer = null;
 let chatPollTimer = null;
 let waitTimer = null;
-let exchangeCount = 3;
 
 // ══════════════════════════════════════════
 // NAVIGATION ÉCRANS
@@ -883,14 +882,44 @@ async function doVolLogin() {
 function loadLobby() {
   showScreen('screen-lobby');
   updateNavIdentity();
-  updateGreeting();
+  // Se connecter = être disponible : le serveur gardait sinon le dernier
+  // statut connu (souvent « Hors ligne » depuis la dernière déconnexion)
+  // alors que le salon affichait « En ligne ».
+  setStatus('online');
   renderPending();
+  loadStats();
   // Timer : mise à jour des temps d'attente
   if (waitTimer) clearInterval(waitTimer);
   waitTimer = setInterval(updateWaitTimes, 30000);
   // Poll des demandes réelles en attente — tourne en continu tant que la
   // session dure (même pendant un chat), comme l'ancienne simulation.
   startPendingPoll();
+}
+
+// Chiffres réels du salon (GET /api/volunteers/me/stats), rechargés à
+// l'arrivée dans le salon, à chaque échange accepté et à chaque retour.
+function resetStats() {
+  ['stat-exchanges', 'stat-rating', 'stat-duration'].forEach(id => {
+    document.getElementById(id).textContent = '—';
+  });
+  document.getElementById('stat-rating-lbl').textContent = 'Note moyenne';
+}
+
+async function loadStats() {
+  try {
+    const res = await fetch('/api/volunteers/me/stats', {
+      headers: { 'Authorization': 'Bearer ' + volToken },
+    });
+    if (!res.ok) return;
+    const s = await res.json();
+    document.getElementById('stat-exchanges').textContent = s.exchanges_today;
+    document.getElementById('stat-rating').textContent =
+      s.avg_rating == null ? '—' : String(s.avg_rating).replace('.', ',');
+    document.getElementById('stat-rating-lbl').textContent =
+      s.review_count ? `Note moyenne · ${s.review_count} avis` : 'Note moyenne';
+    document.getElementById('stat-duration').textContent =
+      s.avg_duration_min == null ? '—' : s.avg_duration_min < 1 ? '< 1 min' : `${s.avg_duration_min} min`;
+  } catch (e) { /* non bloquant : on garde l'affichage précédent */ }
 }
 
 function startPendingPoll() {
@@ -997,11 +1026,11 @@ function renderPending() {
   }
   list.innerHTML = pendingUsers.map(u => `
     <div class="pending-item ${u.isNew?'new-user':''}" id="pi-${u.id}">
-      <div class="pi-av">${u.init}</div>
+      <div class="pi-av">${escHtml(u.init)}</div>
       <div class="pi-info">
-        <div class="pi-name">${u.pseudo}</div>
+        <div class="pi-name">${escHtml(u.pseudo)}</div>
         <div class="pi-meta">
-          <span class="pi-tag">${u.domain}</span>
+          <span class="pi-tag">${escHtml(u.domain)}</span>
           <span>
             <svg width="10" height="10" viewBox="0 0 12 12" fill="none" style="vertical-align:middle;margin-right:3px;">
               <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/>
@@ -1048,8 +1077,7 @@ async function acceptUser(uid) {
   }
   pendingUsers = pendingUsers.filter(x => x.id !== uid);
   currentUser = u;
-  exchangeCount++;
-  document.getElementById('stat-exchanges').textContent = exchangeCount;
+  loadStats();
   loadChat(u);
 }
 
@@ -1252,16 +1280,36 @@ function goBackToLobby() {
   currentUser = null;
   document.getElementById('back-badge').classList.remove('show');
   renderPending();
+  loadStats();
   showScreen('screen-lobby');
 }
 
+// Quitter l'espace (bouton Quitter, fermeture ou rechargement de l'onglet) :
+// termine l'échange en cours pour que l'utilisateur·rice n'attende pas
+// indéfiniment, et passe hors ligne pour ne plus recevoir de demandes.
+// keepalive laisse la requête aboutir même pendant la fermeture de la page.
+function leaveSpace() {
+  if (!volToken) return;
+  const headers = { 'Authorization': 'Bearer ' + volToken, 'Content-Type': 'application/json' };
+  if (currentRequestId && !activeChatEnded) {
+    activeChatEnded = true;
+    fetch(`/api/chat-requests/${currentRequestId}/end`, { method: 'POST', headers, keepalive: true }).catch(() => {});
+  }
+  fetch('/api/volunteers/status', {
+    method: 'PATCH', headers, keepalive: true, body: JSON.stringify({ status: 'offline' }),
+  }).catch(() => {});
+}
+window.addEventListener('pagehide', leaveSpace);
+
 function doLogout() {
+  leaveSpace();
   if (waitTimer) clearInterval(waitTimer);
   stopPendingPoll();
   stopChatPoll();
   volToken = null; currentRequestId = null;
   me = null; currentUser = null; volStatus = 'online';
   pendingUsers = [];
+  resetStats();
   // Réinitialiser le formulaire de connexion
   document.getElementById('vol-login-input').value  = '';
   document.getElementById('vol-pass-input').value   = '';
