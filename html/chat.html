@@ -193,18 +193,7 @@
     .rep-opt.sel{border-color:var(--danger);background:var(--danger-pale);color:var(--danger)}
     .rep-opt input{accent-color:var(--danger)}
 
-    /* Don + fin de session */
-    .end-choices { display:flex;flex-direction:column;gap:10px;margin-top:8px; }
-    .end-choice-card {
-      background: var(--cream); border: 1.5px solid var(--border); border-radius: var(--radius-md);
-      padding: 16px 20px; cursor: pointer; transition: border-color 0.2s, background 0.2s;
-      display: flex; align-items: center; gap: 14px;
-    }
-    .end-choice-card:hover { border-color: var(--sage-light); background: var(--sage-pale); }
-    .end-choice-card.selected { border-color: var(--sage); background: var(--sage-pale); }
-    .end-choice-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--sage-pale); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .end-choice-text h5 { font-size: 14px; font-weight: 500; color: var(--stone-dark); }
-    .end-choice-text p { font-size: 12px; color: var(--stone); line-height: 1.5; }
+    /* Fin de session */
     .end-info { background:var(--sage-pale);border-radius:var(--radius-sm);padding:12px 15px;font-size:13px;color:var(--stone);line-height:1.65;margin-bottom:14px;border:1px solid var(--border); }
 
     @media (max-width:600px){
@@ -393,45 +382,24 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
       <h3 data-i18n="modal_end_title">Terminer l'échange</h3>
-      <div class="end-info" data-i18n="modal_end_info">Souhaitez-vous conserver cette conversation ou la supprimer définitivement ?</div>
-      <div class="end-choices">
-        <div class="end-choice-card" id="choice-keep" onclick="selectEndChoice('keep')">
-          <div class="end-choice-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.5" stroke-linecap="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-          </div>
-          <div class="end-choice-text">
-            <h5 data-i18n="modal_end_keep_title">Conserver la conversation</h5>
-            <p data-i18n="modal_end_keep_p">Vos messages restent accessibles lors de vos prochaines visites.</p>
-          </div>
-        </div>
-        <div class="end-choice-card" id="choice-delete" onclick="selectEndChoice('delete')">
-          <div class="end-choice-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.5" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
-          </div>
-          <div class="end-choice-text">
-            <h5 data-i18n="modal_end_del_title">Supprimer définitivement</h5>
-            <p data-i18n="modal_end_del_p">Tous vos messages seront effacés de façon irréversible.</p>
-          </div>
-        </div>
-      </div>
+      <div class="end-info" data-i18n="modal_end_info">Le contenu de cet échange ne sera pas conservé : il est effacé quelques minutes après la fin.</div>
       <div class="m-actions" style="margin-top:14px;">
         <button class="m-btn m-cancel" onclick="closeModal('end-modal')" data-i18n="modal_end_cancel">Annuler</button>
-        <button class="m-btn m-sage" id="end-confirm-btn" onclick="confirmEnd()" disabled data-i18n="modal_end_confirm">Continuer</button>
+        <button class="m-btn m-sage" id="end-confirm-btn" onclick="confirmEnd()" data-i18n="modal_end_confirm">Terminer</button>
       </div>
     </div>
   </div>
 
-  <!-- MODALE DON -->
-  <div class="modal-overlay" id="don-modal">
+  <!-- MODALE FIN D'ÉCHANGE -->
+  <div class="modal-overlay" id="bye-modal">
     <div class="modal-card">
       <div class="m-icon" style="background:var(--warm-pale);">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warm)" stroke-width="1.5" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
       </div>
-      <h3 data-i18n="modal_don_title">Soutenir l'association</h3>
-      <p data-i18n="modal_don_p">Ce service est entièrement gratuit et bénévole. Si vous souhaitez contribuer à sa pérennité, c'est possible — mais absolument pas obligatoire.</p>
+      <h3 data-i18n="modal_bye_title">Merci d'avoir échangé</h3>
+      <p data-i18n="modal_bye_p">Prenez soin de vous. En cas de détresse, le 3114 répond gratuitement, 24h/24.</p>
       <div class="m-actions" style="flex-direction:column;gap:9px;">
-        <a href="soutenir" class="m-btn m-sage" style="text-decoration:none;display:block;text-align:center;" data-i18n="modal_don_btn">Faire un don</a>
-        <button class="m-btn m-cancel" onclick="skipDon()" data-i18n="modal_don_skip">Non merci, terminer</button>
+        <button class="m-btn m-sage" onclick="goHome()" data-i18n="modal_bye_btn">Retour à l'accueil</button>
       </div>
     </div>
   </div>
@@ -483,7 +451,7 @@
     const statusCls = { online:'v-s-online', away:'v-s-away', offline:'v-s-off' };
     const dotCls    = { online:'v-online', away:'v-away', offline:'v-offline' };
 
-    let pseudo='Anonyme', selVol=null, rating=0, endChoice=null;
+    let pseudo='Anonyme', selVol=null, rating=0;
 
     // État de la demande de chat réelle (remplace l'ancien bot simulé) :
     // id/session_token identifient la demande côté backend, requestPollTimer
@@ -747,7 +715,7 @@
     function closeModal(id){document.getElementById(id).classList.remove('open');}
     function ddToggle(){document.getElementById('dd-menu').classList.toggle('open');}
     document.addEventListener('click',e=>{if(!e.target.closest('.dropdown'))document.getElementById('dd-menu').classList.remove('open');});
-    document.addEventListener('keydown',e=>{if(e.key==='Escape')['review-modal','report-modal','end-modal','don-modal','report-ok-modal'].forEach(closeModal);});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')['review-modal','report-modal','end-modal','bye-modal','report-ok-modal'].forEach(closeModal);});
 
     /* AVIS */
     function setRating(n){
@@ -817,13 +785,6 @@
     }
 
     /* FIN DE SESSION */
-    function selectEndChoice(choice){
-      endChoice=choice;
-      document.querySelectorAll('.end-choice-card').forEach(c=>c.classList.remove('selected'));
-      document.getElementById('choice-'+choice).classList.add('selected');
-      document.getElementById('end-confirm-btn').disabled=false;
-    }
-
     async function confirmEnd(){
       closeModal('end-modal');
       if (currentRequestId && !chatEnded) {
@@ -831,14 +792,11 @@
         stopRequestPoll();
         try { await fetch(requestUrl('/end'), { method:'POST' }); } catch (e) {}
       }
-      if(endChoice==='delete'){
-        document.getElementById('chat-messages').innerHTML='';
-      }
-      setTimeout(()=>openModal('don-modal'),200);
+      setTimeout(()=>openModal('bye-modal'),200);
     }
 
-    function skipDon(){
-      closeModal('don-modal');
+    function goHome(){
+      closeModal('bye-modal');
       window.location.href='/';
     }
   </script>

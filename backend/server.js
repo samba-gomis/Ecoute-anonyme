@@ -8,7 +8,6 @@ const cookieParser = require('cookie-parser');
 
 const db                  = require('./database');
 const volunteersRouter    = require('./routes/volunteers');
-const conversationsRouter = require('./routes/conversations');
 const reviewsRouter       = require('./routes/reviews');
 const authRouter          = require('./routes/auth');
 const applicationsRouter  = require('./routes/applications');
@@ -63,7 +62,6 @@ app.use(express.static(path.join(__dirname, '..'), { extensions: ['html'] }));
 // API
 app.use('/api/auth',          authRouter);
 app.use('/api/volunteers',    volunteersRouter);
-app.use('/api/conversations', conversationsRouter);
 app.use('/api/reviews',       reviewsRouter);
 app.use('/api/applications',  applicationsRouter);
 app.use('/api/chat-requests', chatRequestsRouter);
@@ -94,6 +92,14 @@ async function start() {
     'INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT (key) DO NOTHING',
     ['admin_password_hash', bcrypt.hashSync(process.env.ADMIN_PASSWORD || 'admin123', 10)]
   );
+
+  // Effacement régulier du contenu des échanges terminés (voir purgeChats
+  // dans routes/chatRequests.js). Lancé aussi au démarrage, car l'instance
+  // gratuite Render s'endort et les intervalles ne tournent pas pendant ce temps.
+  const purge = () => chatRequestsRouter.purgeChats()
+    .catch(err => console.error('Purge des échanges terminés :', err.message));
+  await purge();
+  setInterval(purge, 60 * 1000).unref();
 
   app.listen(PORT, () => {
     console.log(`

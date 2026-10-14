@@ -274,8 +274,8 @@
         <div class="stat-icon">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E67E22" stroke-width="1.6" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
         </div>
-        <div class="stat-val" id="stat-convs">—</div>
-        <div class="stat-lbl">Conversations</div>
+        <div class="stat-val" id="stat-exchanges">—</div>
+        <div class="stat-lbl">Échanges</div>
       </div>
       <div class="stat-card info">
         <div class="stat-icon">
@@ -345,33 +345,6 @@
           </tr>
         </thead>
         <tbody id="vols-tbody"></tbody>
-      </table>
-    </div>
-
-    <!-- ── Conversations ── -->
-    <div class="admin-section">
-      <div class="admin-section-header">
-        <div class="admin-section-header-left">
-          <div class="section-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.6" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-          </div>
-          <h2>Conversations sauvegardées</h2>
-        </div>
-        <span class="count-badge" id="badge-convs">—</span>
-      </div>
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>Code</th>
-            <th>Utilisateur</th>
-            <th>Bénévole</th>
-            <th>Domaine</th>
-            <th>Messages</th>
-            <th>Date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="convs-tbody"></tbody>
       </table>
     </div>
 
@@ -541,7 +514,7 @@ const API = '/api';
 
 // ── State ────────────────────────────────────────
 let volunteers    = [];
-let conversations = [];
+let chatStats    = { exchanges: 0 };
 let reviews       = [];
 let applications  = [];
 let reports       = [];
@@ -645,9 +618,9 @@ async function doLogout() {
 async function loadAll() {
   renderLoadingStates();
   try {
-    [volunteers, conversations, reviews, applications, reports] = await Promise.all([
+    [volunteers, chatStats, reviews, applications, reports] = await Promise.all([
       apiFetch('/volunteers'),
-      apiFetch('/conversations'),
+      apiFetch('/chat-requests/stats'),
       apiFetch('/reviews'),
       apiFetch('/applications'),
       apiFetch('/reports'),
@@ -657,7 +630,6 @@ async function loadAll() {
   }
   updateStats();
   renderVolunteers();
-  renderConversations();
   renderReviews();
   renderApplications();
   renderReports();
@@ -665,7 +637,6 @@ async function loadAll() {
 
 function renderLoadingStates() {
   document.getElementById('vols-tbody').innerHTML  = loadingRow(6);
-  document.getElementById('convs-tbody').innerHTML = loadingRow(7);
   document.getElementById('apps-tbody').innerHTML  = loadingRow(6);
   document.getElementById('admin-reviews-list').innerHTML = '<div style="text-align:center;padding:32px;color:var(--mist);"><span class="spinner"></span>Chargement…</div>';
   document.getElementById('admin-reports-list').innerHTML = '<div style="text-align:center;padding:32px;color:var(--mist);"><span class="spinner"></span>Chargement…</div>';
@@ -678,12 +649,11 @@ function updateStats() {
     : '—';
 
   document.getElementById('stat-vols').textContent  = volunteers.length;
-  document.getElementById('stat-convs').textContent = conversations.length;
+  document.getElementById('stat-exchanges').textContent = chatStats.exchanges;
   document.getElementById('stat-avis').textContent  = reviews.length;
   document.getElementById('stat-note').textContent  = avg;
 
   document.getElementById('badge-vols').textContent  = volunteers.length + ' bénévole' + (volunteers.length > 1 ? 's' : '');
-  document.getElementById('badge-convs').textContent = conversations.length + ' conversation' + (conversations.length > 1 ? 's' : '');
   document.getElementById('badge-avis').textContent  = reviews.length + ' avis' + (reviews.length > 0 ? ` · Moy. ${avg}/5` : '');
   document.getElementById('badge-apps').textContent  = applications.length + ' candidature' + (applications.length > 1 ? 's' : '');
   document.getElementById('badge-reports').textContent = reports.length + ' signalement' + (reports.length > 1 ? 's' : '');
@@ -780,30 +750,6 @@ function renderApplications() {
           <button class="a-btn a-btn-ghost" onclick="openAppDetail(${a.id})">Voir</button>
           <button class="a-btn a-btn-primary" onclick="acceptApplication(${a.id})">Accepter</button>
           <button class="a-btn a-btn-danger" onclick="confirmRejectApp(${a.id})">Refuser</button>
-        </div>
-      </td>
-    </tr>
-  `).join('');
-}
-
-// ── Render conversations ──────────────────────────
-function renderConversations() {
-  const tbody = document.getElementById('convs-tbody');
-  if (!conversations.length) {
-    tbody.innerHTML = emptyRow(7, 'Aucune conversation sauvegardée pour le moment.');
-    return;
-  }
-  tbody.innerHTML = conversations.map(c => `
-    <tr>
-      <td><span class="share-id">${escHtml(c.share_id)}</span></td>
-      <td style="color:var(--stone-dark);font-weight:500;">${escHtml(c.user_pseudo)}</td>
-      <td>${escHtml(c.vol_display)}</td>
-      <td>${c.domain ? `<span class="tag-chip">${escHtml(c.domain)}</span>` : '<span style="color:var(--mist)">—</span>'}</td>
-      <td style="color:var(--mist);">${c.message_count ?? '—'} msg</td>
-      <td style="font-size:12px;color:var(--mist);">${fmtDate(c.created_at)}</td>
-      <td>
-        <div class="action-btns">
-          <button class="a-btn a-btn-danger" onclick="confirmDeleteConv('${escHtml(c.share_id)}')">Supprimer</button>
         </div>
       </td>
     </tr>
@@ -1032,19 +978,6 @@ function confirmDeleteVol(id) {
       volunteers = volunteers.filter(v => v.id !== id);
       updateStats();
       renderVolunteers();
-    }
-  );
-}
-
-function confirmDeleteConv(shareId) {
-  openConfirm(
-    'Supprimer la conversation',
-    `Supprimer définitivement la conversation ${shareId} ? Les données seront perdues.`,
-    async () => {
-      await apiFetch(`/conversations/${shareId}`, { method: 'DELETE' });
-      conversations = conversations.filter(c => c.share_id !== shareId);
-      updateStats();
-      renderConversations();
     }
   );
 }

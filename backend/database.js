@@ -28,17 +28,6 @@ async function init() {
       setup_token_expires   TIMESTAMPTZ
     );
 
-    CREATE TABLE IF NOT EXISTS conversations (
-      share_id    TEXT        PRIMARY KEY,
-      user_pseudo TEXT        NOT NULL,
-      vol_display TEXT        NOT NULL DEFAULT 'Bénévole',
-      domain      TEXT,
-      messages    TEXT        NOT NULL DEFAULT '[]',
-      started_at  TEXT,
-      ended_at    TEXT,
-      created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
-    );
-
     CREATE TABLE IF NOT EXISTS reviews (
       id         SERIAL      PRIMARY KEY,
       stars      INTEGER     NOT NULL CHECK (stars BETWEEN 1 AND 5),

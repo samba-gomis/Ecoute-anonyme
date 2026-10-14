@@ -4,8 +4,7 @@ const crypto  = require('crypto');
 const db      = require('../database');
 const ah      = require('../asyncHandler');
 const numericId = require('../numericId');
-const { requireVolunteer, resolveVolunteerToken } = require('./auth');
-const { generateShareId } = require('./conversations');
+const { requireAdmin, requireVolunteer, resolveVolunteerToken } = require('./auth');
 
 router.param('id', numericId);
 
@@ -73,6 +72,14 @@ router.post('/', ah(async (req, res) => {
   );
 
   res.status(201).json({ id: info.lastInsertRowid, session_token });
+}));
+
+// GET /api/chat-requests/stats — nombre d'échanges ayant eu lieu (acceptés),
+// pour le tableau de bord admin. Aucun contenu.
+router.get('/stats', requireAdmin, ah(async (req, res) => {
+  res.json(await db.get(
+    'SELECT count(*)::int AS exchanges FROM chat_requests WHERE accepted_at IS NOT NULL'
+  ));
 }));
 
 // GET /api/chat-requests/pending — demandes en attente pour le bénévole connecté
@@ -165,30 +172,41 @@ router.post('/:id/report', ah(async (req, res) => {
   res.status(201).json({ ok: true });
 }));
 
-// POST /api/chat-requests/:id/end — termine la session, sauvegarde le
-// transcript dans `conversations` si la discussion avait bien démarré.
+// POST /api/chat-requests/:id/end — termine la session (idempotent). Le
+// contenu n'est pas conservé : purgeChats() l'efface peu après.
 router.post('/:id/end', ah(async (req, res) => {
   const access = await resolveAccess(req, res);
   if (!access) return;
-  const { row } = access;
 
-  if (row.status === 'ended') return res.json({ ok: true, share_id: null }); // idempotent
-
-  await db.run(`UPDATE chat_requests SET status = 'ended', ended_at = now() WHERE id = ?`, [row.id]);
-
-  let share_id = null;
-  if (row.accepted_at) {
-    share_id = await generateShareId();
-    await db.run(`
-      INSERT INTO conversations (share_id, user_pseudo, vol_display, domain, messages, started_at, ended_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `, [
-      share_id, row.user_pseudo, row.vol_name, row.domain,
-      row.messages, new Date(row.accepted_at).toISOString(), new Date().toISOString(),
-    ]);
-  }
-
-  res.json({ ok: true, share_id });
+  await db.run(`
+    UPDATE chat_requests SET status = 'ended', ended_at = now()
+    WHERE id = ? AND status IN ('pending', 'accepted')
+  `, [access.row.id]);
+  res.json({ ok: true });
 }));
 
+// Rien n'est gardé d'un échange terminé (cf. charte de confidentialité) :
+// messages et pseudo sont effacés 2 min après la fin, le temps que l'autre
+// partie récupère les derniers messages par son poll. On ne garde que les
+// horaires et le/la bénévole, pour les statistiques. Les demandes jamais
+// reprises expirent, et les échanges abandonnés sans fin explicite (onglet
+// planté, réseau coupé) sont clos au bout de 12 h.
+async function purgeChats() {
+  await db.run(`
+    UPDATE chat_requests SET status = 'expired'
+    WHERE status = 'pending' AND created_at < now() - interval '2 minutes'
+  `);
+  await db.run(`
+    UPDATE chat_requests SET status = 'ended', ended_at = now()
+    WHERE status = 'accepted' AND accepted_at < now() - interval '12 hours'
+  `);
+  await db.run(`
+    UPDATE chat_requests SET messages = '[]', user_pseudo = 'Anonyme'
+    WHERE status IN ('ended', 'declined', 'expired')
+      AND coalesce(ended_at, created_at) < now() - interval '2 minutes'
+      AND (messages <> '[]' OR user_pseudo <> 'Anonyme')
+  `);
+}
+
+router.purgeChats = purgeChats;
 module.exports = router;
