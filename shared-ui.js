@@ -288,12 +288,7 @@ const LANG = {
     page_sout_label:'Faire un don',
     page_sout_h1:'Soutenir <em>Écoute Anonyme</em>',
     page_sout_lead:"Le service est 100 % gratuit. Votre soutien aide à couvrir les frais techniques et à pérenniser l'initiative. Aucune obligation.",
-    don_impact_label:'Impact de votre don',
     don_closed_title:'Les dons ouvriront bientôt', don_closed_text:"Nous mettons en place un moyen de paiement sécurisé. En attendant, le meilleur soutien est de parler du service autour de vous, ou de rejoindre l'équipe d'écoute.", don_closed_btn:'Devenir bénévole',
-    don_impact_title:'Ce que vous <em>rendez possible</em>',
-    impact_1_text:"Couvre 1 mois d'hébergement sécurisé pour la plateforme",
-    impact_2_text:'Finance la formation continue de 2 bénévoles',
-    impact_3_text:"Permet d'accueillir 50 nouvelles personnes sur la plateforme",
   },
 
   en: {
@@ -581,12 +576,7 @@ const LANG = {
     page_sout_label:'Make a donation',
     page_sout_h1:'Support <em>Écoute Anonyme</em>',
     page_sout_lead:"The service is 100% free. Your support helps cover technical costs and sustain the initiative. No obligation.",
-    don_impact_label:'Impact of your donation',
     don_closed_title:'Donations will open soon', don_closed_text:'We are setting up a secure payment method. In the meantime, the best support is to tell people about the service, or to join the listening team.', don_closed_btn:'Become a volunteer',
-    don_impact_title:'What you <em>make possible</em>',
-    impact_1_text:'Covers 1 month of secure hosting for the platform',
-    impact_2_text:'Funds ongoing training for 2 volunteers',
-    impact_3_text:'Allows 50 new people to join the platform',
   }
 };
 

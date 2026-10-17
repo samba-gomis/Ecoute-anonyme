@@ -17,15 +17,6 @@
     .don-closed { max-width: 560px; margin: 0 auto; text-align: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 44px 36px; transition: background 0.3s; }
     .don-closed h2 { font-family: var(--font-display); font-size: 30px; font-weight: 300; color: var(--stone-dark); margin-bottom: 12px; }
     .don-closed p { font-size: 15px; color: var(--stone); line-height: 1.75; margin-bottom: 26px; }
-
-    /* Impact visuels */
-    .impact-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 52px; }
-    .impact-card { background: var(--bg-card); border-radius: var(--radius-md); border: 1px solid var(--border); padding: 24px 20px; text-align: center; transition: background 0.3s; }
-    .impact-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--warm-pale); border: 1px solid rgba(196,168,130,0.2); display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
-    .impact-num { font-family: var(--font-display); font-size: 30px; font-weight: 300; color: var(--warm); margin-bottom: 4px; }
-    .impact-desc { font-size: 13px; color: var(--stone); line-height: 1.6; }
-
-    @media (max-width:600px){ .impact-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -80,38 +71,6 @@
         <p data-i18n="don_closed_text">Nous mettons en place un moyen de paiement sécurisé. En attendant, le meilleur soutien est de parler du service autour de vous, ou de rejoindre l'équipe d'écoute.</p>
         <a href="benevoles" class="btn btn-primary" data-i18n="don_closed_btn">Devenir bénévole</a>
       </div>
-
-      <!-- Impact -->
-      <div style="margin-top:64px;">
-        <div style="text-align:center;margin-bottom:8px;">
-          <span class="section-label" data-i18n="don_impact_label">Impact de votre don</span>
-          <h2 class="section-title" data-i18n-html="don_impact_title">Ce que vous <em>rendez possible</em></h2>
-        </div>
-        <div class="impact-grid">
-          <div class="impact-card">
-            <div class="impact-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warm)" stroke-width="1.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            </div>
-            <div class="impact-num">5€</div>
-            <p class="impact-desc" data-i18n="impact_1_text">Couvre 1 mois d'hébergement sécurisé pour la plateforme</p>
-          </div>
-          <div class="impact-card">
-            <div class="impact-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warm)" stroke-width="1.5" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-            </div>
-            <div class="impact-num">10€</div>
-            <p class="impact-desc" data-i18n="impact_2_text">Finance la formation continue de 2 bénévoles</p>
-          </div>
-          <div class="impact-card">
-            <div class="impact-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warm)" stroke-width="1.5" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-            </div>
-            <div class="impact-num">20€</div>
-            <p class="impact-desc" data-i18n="impact_3_text">Permet d'accueillir 50 nouvelles personnes sur la plateforme</p>
-          </div>
-        </div>
-      </div>
-
     </div>
   </section>
 
