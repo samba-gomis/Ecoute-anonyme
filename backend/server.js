@@ -67,6 +67,24 @@ app.use('/api/applications',  applicationsRouter);
 app.use('/api/chat-requests', chatRequestsRouter);
 app.use('/api/reports',       reportsRouter);
 
+// TEMPORAIRE — diagnostic du proxy Netlify → Render, pour corriger le
+// limiteur de connexion (quelle IP voit-on vraiment ?). Renvoie à l'appelant
+// uniquement ses propres en-têtes, rien n'est journalisé. À retirer.
+app.get('/api/_diag/ip', (req, res) => {
+  const h = name => req.get(name) || null;
+  res.set('Cache-Control', 'no-store').json({
+    ip: req.ip,
+    ips: req.ips,
+    socket: req.socket.remoteAddress,
+    xForwardedFor: h('x-forwarded-for'),
+    xNfClientConnectionIp: h('x-nf-client-connection-ip'),
+    xRealIp: h('x-real-ip'),
+    trueClientIp: h('true-client-ip'),
+    cfConnectingIp: h('cf-connecting-ip'),
+    headerNames: Object.keys(req.headers).sort(),
+  });
+});
+
 // 404 for unknown /api routes
 app.use('/api', (req, res) => {
   res.status(404).json({ error: 'Route API introuvable.' });
