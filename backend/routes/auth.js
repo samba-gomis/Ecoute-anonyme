@@ -37,7 +37,7 @@ setInterval(() => {
 // un·e bénévole qui se reconnectait souvent finissait bloqué·e.
 const loginAttempts = new Map(); // ip -> { count, resetAt }
 const LOGIN_WINDOW_MS = 15 * 60 * 1000;
-const LOGIN_MAX_ATTEMPTS = 10;
+const LOGIN_MAX_ATTEMPTS = 5;
 
 function rateLimitLogin(req, res, next) {
   const now = Date.now();
