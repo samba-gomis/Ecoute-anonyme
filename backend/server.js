@@ -67,6 +67,31 @@ app.use('/api/applications',  applicationsRouter);
 app.use('/api/chat-requests', chatRequestsRouter);
 app.use('/api/reports',       reportsRouter);
 
+// TEMPORAIRE — diagnostic de la signature Netlify (X-Nf-Sign). Écrit dans
+// les logs Render uniquement des oui/non et les champs publics du jeton
+// (alg, iss, exp) ; rien n'est renvoyé à l'appelant. À retirer.
+app.get('/api/_diag/sign', (req, res) => {
+  const crypto = require('crypto');
+  const secret = process.env.NETLIFY_PROXY_SECRET || '';
+  const token = req.get('x-nf-sign') || '';
+  const [h = '', p = '', sig = ''] = token.split('.');
+  const dec = x => { try { return JSON.parse(Buffer.from(x, 'base64url').toString()); } catch { return {}; } };
+  const mac = secret && crypto.createHmac('sha256', secret).update(`${h}.${p}`).digest();
+  const { alg, typ } = dec(h);
+  const { iss, exp } = dec(p);
+  console.log('[diag-sign]', JSON.stringify({
+    secretSet: Boolean(secret),
+    signPresent: Boolean(token),
+    parts: token ? token.split('.').length : 0,
+    alg, typ, iss,
+    expInSeconds: typeof exp === 'number' ? exp - Math.floor(Date.now() / 1000) : null,
+    matchBase64url: Boolean(mac) && mac.toString('base64url') === sig,
+    matchBase64: Boolean(mac) && mac.toString('base64').replace(/=+$/, '') === sig.replace(/=+$/, ''),
+    nfClientIpPresent: Boolean(req.get('x-nf-client-connection-ip')),
+  }));
+  res.status(204).end();
+});
+
 // 404 for unknown /api routes
 app.use('/api', (req, res) => {
   res.status(404).json({ error: 'Route API introuvable.' });
