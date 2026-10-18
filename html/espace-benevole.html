@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Espace Bénévole — Écoute Anonyme</title>
+  <title data-i18n="vs_title">Espace Bénévole — Écoute Anonyme</title>
   <link rel="icon" href="../logo.png" />
   <link rel="stylesheet" href="../css/styles.css" />
   <style>
@@ -476,31 +476,31 @@
       <img src="../logo.png" alt="Logo" />
       <span>Écoute Anonyme</span>
     </a>
-    <h2>Espace <em>bénévole</em></h2>
-    <p class="lcard-sub">Connectez-vous avec vos identifiants personnels.</p>
+    <h2 data-i18n-html="vs_login_h2">Espace <em>bénévole</em></h2>
+    <p class="lcard-sub" data-i18n="vs_login_sub">Connectez-vous avec vos identifiants personnels.</p>
 
     <div class="vol-login-error" id="vol-login-error"></div>
 
     <div class="vol-field">
-      <label>Identifiant</label>
-      <input type="text" id="vol-login-input" placeholder="Votre identifiant"
+      <label data-i18n="vs_username">Identifiant</label>
+      <input type="text" id="vol-login-input" placeholder="Votre identifiant" data-i18n-placeholder="vs_username_ph"
              autocomplete="username"
              onkeydown="if(event.key==='Enter') document.getElementById('vol-pass-input').focus()" />
     </div>
     <div class="vol-field">
-      <label>Mot de passe</label>
+      <label data-i18n="vs_password">Mot de passe</label>
       <input type="password" id="vol-pass-input" placeholder="••••••••"
              autocomplete="current-password"
              onkeydown="if(event.key==='Enter') doVolLogin()" />
     </div>
 
-    <button class="vol-submit-btn" id="vol-login-btn" onclick="doVolLogin()">
+    <button class="vol-submit-btn" id="vol-login-btn" onclick="doVolLogin()" data-i18n="vs_login_btn">
       Se connecter
     </button>
 
     <p class="anon-note" style="text-align:center;margin-top:18px;">
-      Accès réservé aux bénévoles validés. Pas encore de compte ?
-      <a href="benevoles" style="color:var(--sage-dark);font-weight:500;">Postuler →</a>
+      <span data-i18n="vs_login_note">Accès réservé aux bénévoles validés. Pas encore de compte ?</span>
+      <a href="benevoles" style="color:var(--sage-dark);font-weight:500;" data-i18n="vs_apply">Postuler →</a>
     </p>
   </div>
 </div>
@@ -514,23 +514,23 @@
       <img src="../logo.png" alt="Logo" />
       <span>Écoute Anonyme</span>
     </a>
-    <h2>Créez votre <em>mot de passe</em></h2>
-    <p class="lcard-sub">Votre candidature a été acceptée. Choisissez un mot de passe pour accéder à l'espace bénévole.</p>
+    <h2 data-i18n-html="vs_setup_h2">Créez votre <em>mot de passe</em></h2>
+    <p class="lcard-sub" data-i18n="vs_setup_sub">Votre candidature a été acceptée. Choisissez un mot de passe pour accéder à l'espace bénévole.</p>
 
     <div class="vol-login-error" id="setup-error"></div>
 
     <div class="vol-field">
-      <label>Mot de passe</label>
-      <input type="password" id="setup-pass-input" placeholder="Min. 6 caractères" autocomplete="new-password" />
+      <label data-i18n="vs_password">Mot de passe</label>
+      <input type="password" id="setup-pass-input" placeholder="Min. 6 caractères" data-i18n-placeholder="vs_pass_min_ph" autocomplete="new-password" />
     </div>
     <div class="vol-field">
-      <label>Confirmer le mot de passe</label>
-      <input type="password" id="setup-pass2-input" placeholder="Répéter"
+      <label data-i18n="vs_confirm_pass">Confirmer le mot de passe</label>
+      <input type="password" id="setup-pass2-input" placeholder="Répéter" data-i18n-placeholder="vs_repeat_ph"
              autocomplete="new-password"
              onkeydown="if(event.key==='Enter') doSetupPassword()" />
     </div>
 
-    <button class="vol-submit-btn" id="setup-submit-btn" onclick="doSetupPassword()">
+    <button class="vol-submit-btn" id="setup-submit-btn" onclick="doSetupPassword()" data-i18n="vs_setup_btn">
       Créer mon mot de passe
     </button>
   </div>
@@ -555,25 +555,25 @@
           <span class="vn-status-dot si-online" id="vn-dot"></span>
         </div>
         <span class="vn-name" id="vn-name">Marie</span>
-        <span class="vn-badge">Bénévole</span>
+        <span class="vn-badge" data-i18n="vs_badge">Bénévole</span>
       </div>
     </div>
     <div class="vn-right">
       <div class="vn-status-select">
         <span class="s-ind si-online" id="vn-status-ind"></span>
         <select id="status-select" onchange="setStatus(this.value)">
-          <option value="online">En ligne</option>
-          <option value="away">Absent·e</option>
-          <option value="offline">Hors ligne</option>
+          <option value="online" data-i18n="vs_st_online">En ligne</option>
+          <option value="away" data-i18n="vs_st_away">Absent·e</option>
+          <option value="offline" data-i18n="vs_st_offline">Hors ligne</option>
         </select>
       </div>
       <button class="vn-logout" onclick="openAccountModal()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09A1.65 1.65 0 0015.4 4.6a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-        Mon compte
+        <span data-i18n="vs_account">Mon compte</span>
       </button>
       <button class="vn-logout" onclick="doLogout()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-        Quitter
+        <span data-i18n="vs_quit">Quitter</span>
       </button>
     </div>
   </div>
@@ -582,7 +582,7 @@
 
     <!-- Titre -->
     <div class="lobby-greeting">
-      <span class="section-label">Espace bénévole</span>
+      <span class="section-label" data-i18n="vs_section_label">Espace bénévole</span>
       <h1 id="lobby-h1">Bonsoir, <em>Marie</em></h1>
       <p id="lobby-sub">Vous êtes en ligne et disponible pour écouter.</p>
     </div>
@@ -590,13 +590,13 @@
     <!-- Statut rapide -->
     <div class="status-pills">
       <button class="spill sp-active" data-s="online" onclick="setStatus('online')">
-        <span class="s-ind si-online"></span>En ligne
+        <span class="s-ind si-online"></span><span data-i18n="vs_st_online">En ligne</span>
       </button>
       <button class="spill" data-s="away" onclick="setStatus('away')">
-        <span class="s-ind si-away"></span>Absent·e
+        <span class="s-ind si-away"></span><span data-i18n="vs_st_away">Absent·e</span>
       </button>
       <button class="spill" data-s="offline" onclick="setStatus('offline')">
-        <span class="s-ind si-offline"></span>Hors ligne
+        <span class="s-ind si-offline"></span><span data-i18n="vs_st_offline">Hors ligne</span>
       </button>
     </div>
 
@@ -605,7 +605,7 @@
       <div class="ps-header">
         <div class="ps-header-left">
           <span class="live-dot"></span>
-          <h2>Personnes en attente</h2>
+          <h2 data-i18n="vs_pending_h2">Personnes en attente</h2>
         </div>
         <span class="ps-count" id="ps-count">0</span>
       </div>
@@ -616,15 +616,15 @@
     <div class="lobby-stats">
       <div class="ls-card">
         <div class="ls-val" id="stat-exchanges">—</div>
-        <div class="ls-lbl">Échanges aujourd'hui</div>
+        <div class="ls-lbl" data-i18n="vs_stat_exchanges">Échanges aujourd'hui</div>
       </div>
       <div class="ls-card">
         <div class="ls-val" id="stat-rating">—</div>
-        <div class="ls-lbl" id="stat-rating-lbl">Note moyenne</div>
+        <div class="ls-lbl" id="stat-rating-lbl" data-i18n="vs_stat_rating">Note moyenne</div>
       </div>
       <div class="ls-card">
         <div class="ls-val" id="stat-duration">—</div>
-        <div class="ls-lbl">Durée moyenne</div>
+        <div class="ls-lbl" data-i18n="vs_stat_duration">Durée moyenne</div>
       </div>
     </div>
 
@@ -634,8 +634,8 @@
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       </div>
       <div class="charter-text">
-        <h4>Rappel de la charte</h4>
-        <p>Vous êtes un·e accompagnant·e, pas un·e thérapeute. Votre rôle est d'écouter avec bienveillance, sans juger ni prodiguer de conseils médicaux. En cas d'urgence, orientez vers le 3114.</p>
+        <h4 data-i18n="vs_charter_h4">Rappel de la charte</h4>
+        <p data-i18n="vs_charter_p">Vous êtes un·e accompagnant·e, pas un·e thérapeute. Votre rôle est d'écouter avec bienveillance, sans juger ni prodiguer de conseils médicaux. En cas d'urgence, orientez vers le 3114.</p>
       </div>
     </div>
 
@@ -651,14 +651,14 @@
     <div class="ct-left">
       <button class="back-btn" onclick="tryBackToLobby()">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Salon
+        <span data-i18n="vs_lobby">Salon</span>
         <span class="back-badge" id="back-badge"></span>
       </button>
       <div class="ct-user">
         <div class="ct-user-av" id="ct-av">?</div>
         <div>
           <div class="ct-user-name" id="ct-user-name">Anonyme</div>
-          <span class="ct-user-status">Connecté·e</span>
+          <span class="ct-user-status" data-i18n="vs_connected">Connecté·e</span>
         </div>
       </div>
     </div>
@@ -667,7 +667,7 @@
         <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="4" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 10.5c0-2.2 2-4 4.5-4s4.5 1.8 4.5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
         <span id="my-id-badge">Marie</span>
       </div>
-      <button class="ct-btn danger" onclick="openModal('report-modal')" title="Signaler l'utilisateur">
+      <button class="ct-btn danger" onclick="openModal('report-modal')" title="Signaler l'utilisateur" data-i18n-title="vs_report_user">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.5" fill="currentColor"/></svg>
       </button>
       <div class="dropdown">
@@ -677,12 +677,12 @@
         <div class="dd-menu" id="dd-menu">
           <button class="dd-item" onclick="openModal('end-modal');ddClose()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-            Terminer l'échange
+            <span data-i18n="vs_end">Terminer l'échange</span>
           </button>
           <div class="dd-sep"></div>
           <button class="dd-item dd-danger" onclick="openModal('report-modal');ddClose()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
-            Signaler l'utilisateur
+            <span data-i18n="vs_report_user">Signaler l'utilisateur</span>
           </button>
         </div>
       </div>
@@ -699,13 +699,13 @@
 
   <div class="chat-input-area">
     <div class="input-row">
-      <textarea id="msg-input" maxlength="2000" placeholder="Répondez à l'utilisateur…" rows="1"
+      <textarea id="msg-input" maxlength="2000" placeholder="Répondez à l'utilisateur…" data-i18n-placeholder="vs_msg_ph" rows="1"
                 onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
       <button class="send-btn" onclick="sendMsg()">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M10 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
     </div>
-    <p class="input-hint">Entrée pour envoyer · Maj+Entrée pour un saut de ligne</p>
+    <p class="input-hint" data-i18n="vs_hint">Entrée pour envoyer · Maj+Entrée pour un saut de ligne</p>
   </div>
 </div>
 
@@ -725,11 +725,11 @@
     <div class="m-icon" style="background:var(--sage-pale);">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
-    <h3>Terminer l'échange</h3>
-    <p>Souhaitez-vous mettre fin à cette conversation et retourner au salon d'attente ?</p>
+    <h3 data-i18n="vs_end">Terminer l'échange</h3>
+    <p data-i18n="vs_end_q">Souhaitez-vous mettre fin à cette conversation et retourner au salon d'attente ?</p>
     <div class="m-actions">
-      <button class="m-btn m-cancel" onclick="closeModal('end-modal')">Annuler</button>
-      <button class="m-btn m-sage" onclick="endConversation()">Terminer</button>
+      <button class="m-btn m-cancel" onclick="closeModal('end-modal')" data-i18n="vs_cancel">Annuler</button>
+      <button class="m-btn m-sage" onclick="endConversation()" data-i18n="vs_end_btn">Terminer</button>
     </div>
   </div>
 </div>
@@ -742,19 +742,19 @@
     <div class="m-icon" style="background:var(--danger-pale);">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.5" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
     </div>
-    <h3>Signaler cet utilisateur</h3>
-    <p>Notre équipe sera alertée et examinera le signalement.</p>
+    <h3 data-i18n="vs_report_h3">Signaler cet utilisateur</h3>
+    <p data-i18n="vs_report_sub">Notre équipe sera alertée et examinera le signalement.</p>
     <div class="rep-opts">
-      <label class="rep-opt"><input type="radio" name="rep" value="menace" onchange="pickRep(this)"> Menaces ou violence verbale</label>
-      <label class="rep-opt"><input type="radio" name="rep" value="harcel" onchange="pickRep(this)"> Harcèlement</label>
-      <label class="rep-opt"><input type="radio" name="rep" value="info" onchange="pickRep(this)"> Demande d'informations personnelles</label>
-      <label class="rep-opt"><input type="radio" name="rep" value="inapp" onchange="pickRep(this)"> Contenu inapproprié</label>
-      <label class="rep-opt"><input type="radio" name="rep" value="autre" onchange="pickRep(this)"> Autre motif</label>
+      <label class="rep-opt"><input type="radio" name="rep" value="menace" onchange="pickRep(this)"> <span data-i18n="vs_rep_menace">Menaces ou violence verbale</span></label>
+      <label class="rep-opt"><input type="radio" name="rep" value="harcel" onchange="pickRep(this)"> <span data-i18n="vs_rep_harcel">Harcèlement</span></label>
+      <label class="rep-opt"><input type="radio" name="rep" value="info" onchange="pickRep(this)"> <span data-i18n="vs_rep_info">Demande d'informations personnelles</span></label>
+      <label class="rep-opt"><input type="radio" name="rep" value="inapp" onchange="pickRep(this)"> <span data-i18n="vs_rep_inapp">Contenu inapproprié</span></label>
+      <label class="rep-opt"><input type="radio" name="rep" value="autre" onchange="pickRep(this)"> <span data-i18n="vs_rep_autre">Autre motif</span></label>
     </div>
     <p class="rep-error" id="rep-error"></p>
     <div class="m-actions">
-      <button class="m-btn m-cancel" onclick="closeModal('report-modal')">Annuler</button>
-      <button class="m-btn m-red" id="rep-btn" onclick="submitReport()" disabled>Signaler</button>
+      <button class="m-btn m-cancel" onclick="closeModal('report-modal')" data-i18n="vs_cancel">Annuler</button>
+      <button class="m-btn m-red" id="rep-btn" onclick="submitReport()" disabled data-i18n="vs_report_btn">Signaler</button>
     </div>
   </div>
 </div>
@@ -767,9 +767,9 @@
     <div class="m-icon" style="background:var(--sage-pale);margin:0 auto 16px;">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
-    <h3>Signalement envoyé</h3>
-    <p>Notre équipe examinera votre signalement dans les meilleurs délais. Merci.</p>
-    <button class="m-btn m-sage" onclick="closeModal('report-ok-modal')" style="display:block;width:100%;">Fermer</button>
+    <h3 data-i18n="vs_report_ok_h3">Signalement envoyé</h3>
+    <p data-i18n="vs_report_ok_p">Notre équipe examinera votre signalement dans les meilleurs délais. Merci.</p>
+    <button class="m-btn m-sage" onclick="closeModal('report-ok-modal')" style="display:block;width:100%;" data-i18n="vs_close">Fermer</button>
   </div>
 </div>
 
@@ -778,28 +778,28 @@
 ════════════════════════════════════════════ -->
 <div class="modal-overlay" id="account-modal">
   <div class="modal-card" style="max-width:400px;">
-    <h3>Mon compte</h3>
-    <p>Modifiez votre identifiant et/ou votre mot de passe de connexion.</p>
+    <h3 data-i18n="vs_account">Mon compte</h3>
+    <p data-i18n="vs_account_sub">Modifiez votre identifiant et/ou votre mot de passe de connexion.</p>
     <div class="vol-field">
-      <label>Mot de passe actuel *</label>
+      <label data-i18n="vs_current_pass">Mot de passe actuel *</label>
       <input type="password" id="acc-current" placeholder="••••••••" autocomplete="current-password" />
     </div>
     <div class="vol-field">
-      <label>Nouvel identifiant</label>
-      <input type="text" id="acc-new-login" placeholder="Laisser vide pour ne pas changer" autocomplete="username" />
+      <label data-i18n="vs_new_login">Nouvel identifiant</label>
+      <input type="text" id="acc-new-login" placeholder="Laisser vide pour ne pas changer" data-i18n-placeholder="vs_keep_ph" autocomplete="username" />
     </div>
     <div class="vol-field">
-      <label>Nouveau mot de passe</label>
-      <input type="password" id="acc-new-pass" placeholder="Min. 6 caractères (vide = inchangé)" autocomplete="new-password" />
+      <label data-i18n="vs_new_pass">Nouveau mot de passe</label>
+      <input type="password" id="acc-new-pass" placeholder="Min. 6 caractères (vide = inchangé)" data-i18n-placeholder="vs_new_pass_ph" autocomplete="new-password" />
     </div>
     <div class="vol-field">
-      <label>Confirmer le nouveau mot de passe</label>
-      <input type="password" id="acc-new-pass2" placeholder="Répéter" autocomplete="new-password" />
+      <label data-i18n="vs_confirm_new_pass">Confirmer le nouveau mot de passe</label>
+      <input type="password" id="acc-new-pass2" placeholder="Répéter" data-i18n-placeholder="vs_repeat_ph" autocomplete="new-password" />
     </div>
     <div id="acc-msg" style="display:none;font-size:13px;padding:10px 14px;border-radius:var(--radius-sm);margin-bottom:14px;"></div>
     <div class="m-actions">
-      <button class="m-btn m-cancel" onclick="closeModal('account-modal')">Annuler</button>
-      <button class="m-btn m-sage" id="acc-save-btn" onclick="saveVolAccount()">Enregistrer</button>
+      <button class="m-btn m-cancel" onclick="closeModal('account-modal')" data-i18n="vs_cancel">Annuler</button>
+      <button class="m-btn m-sage" id="acc-save-btn" onclick="saveVolAccount()" data-i18n="vs_save">Enregistrer</button>
     </div>
   </div>
 </div>
@@ -807,11 +807,204 @@
 <script src="../shared-ui.js"></script>
 <script>
 // ══════════════════════════════════════════
+// TEXTES FR / EN
+// ══════════════════════════════════════════
+// Ajoutés au dictionnaire de shared-ui.js : seule cette page en a besoin.
+// Le HTML les reçoit via data-i18n*, le JS via tr().
+Object.assign(LANG.fr, {
+  vs_title: 'Espace Bénévole — Écoute Anonyme',
+  vs_login_h2: 'Espace <em>bénévole</em>',
+  vs_login_sub: 'Connectez-vous avec vos identifiants personnels.',
+  vs_username: 'Identifiant',
+  vs_username_ph: 'Votre identifiant',
+  vs_password: 'Mot de passe',
+  vs_login_btn: 'Se connecter',
+  vs_login_note: 'Accès réservé aux bénévoles validés. Pas encore de compte ?',
+  vs_apply: 'Postuler →',
+  vs_setup_h2: 'Créez votre <em>mot de passe</em>',
+  vs_setup_sub: "Votre candidature a été acceptée. Choisissez un mot de passe pour accéder à l'espace bénévole.",
+  vs_pass_min_ph: 'Min. 6 caractères',
+  vs_confirm_pass: 'Confirmer le mot de passe',
+  vs_repeat_ph: 'Répéter',
+  vs_setup_btn: 'Créer mon mot de passe',
+  vs_badge: 'Bénévole',
+  vs_st_online: 'En ligne',
+  vs_st_away: 'Absent·e',
+  vs_st_offline: 'Hors ligne',
+  vs_account: 'Mon compte',
+  vs_quit: 'Quitter',
+  vs_section_label: 'Espace bénévole',
+  vs_pending_h2: 'Personnes en attente',
+  vs_stat_exchanges: "Échanges aujourd'hui",
+  vs_stat_rating: 'Note moyenne',
+  vs_stat_rating_1: 'Note moyenne · {n} avis',
+  vs_stat_rating_n: 'Note moyenne · {n} avis',
+  vs_stat_duration: 'Durée moyenne',
+  vs_charter_h4: 'Rappel de la charte',
+  vs_charter_p: "Vous êtes un·e accompagnant·e, pas un·e thérapeute. Votre rôle est d'écouter avec bienveillance, sans juger ni prodiguer de conseils médicaux. En cas d'urgence, orientez vers le 3114.",
+  vs_lobby: 'Salon',
+  vs_connected: 'Connecté·e',
+  vs_report_user: "Signaler l'utilisateur",
+  vs_end: "Terminer l'échange",
+  vs_msg_ph: "Répondez à l'utilisateur…",
+  vs_hint: 'Entrée pour envoyer · Maj+Entrée pour un saut de ligne',
+  vs_end_q: "Souhaitez-vous mettre fin à cette conversation et retourner au salon d'attente ?",
+  vs_cancel: 'Annuler',
+  vs_end_btn: 'Terminer',
+  vs_report_h3: 'Signaler cet utilisateur',
+  vs_report_sub: 'Notre équipe sera alertée et examinera le signalement.',
+  vs_rep_menace: 'Menaces ou violence verbale',
+  vs_rep_harcel: 'Harcèlement',
+  vs_rep_info: "Demande d'informations personnelles",
+  vs_rep_inapp: 'Contenu inapproprié',
+  vs_rep_autre: 'Autre motif',
+  vs_report_btn: 'Signaler',
+  vs_report_ok_h3: 'Signalement envoyé',
+  vs_report_ok_p: 'Notre équipe examinera votre signalement dans les meilleurs délais. Merci.',
+  vs_close: 'Fermer',
+  vs_account_sub: 'Modifiez votre identifiant et/ou votre mot de passe de connexion.',
+  vs_current_pass: 'Mot de passe actuel *',
+  vs_new_login: 'Nouvel identifiant',
+  vs_keep_ph: 'Laisser vide pour ne pas changer',
+  vs_new_pass: 'Nouveau mot de passe',
+  vs_new_pass_ph: 'Min. 6 caractères (vide = inchangé)',
+  vs_confirm_new_pass: 'Confirmer le nouveau mot de passe',
+  vs_save: 'Enregistrer',
+  // Contenu généré en JS
+  vs_err_fill: 'Veuillez renseigner vos identifiants.',
+  vs_signing_in: 'Connexion…',
+  vs_err_generic: 'Erreur',
+  vs_err_server: 'Erreur serveur.',
+  vs_domain_general: 'Général',
+  vs_toast_waiting: '{pseudo} attend · {domain}',
+  vs_hello_morning: 'Bonjour',
+  vs_hello_afternoon: 'Bon après-midi',
+  vs_hello_evening: 'Bonsoir',
+  vs_sub_online: 'Vous êtes en ligne · les personnes en attente peuvent vous être attribuées.',
+  vs_sub_away: 'Vous êtes marqué·e absent·e · vous ne recevrez pas de nouvelles demandes.',
+  vs_sub_offline: 'Vous êtes hors ligne · passez en ligne pour commencer à écouter.',
+  vs_empty: 'Aucune personne en attente pour le moment.',
+  vs_accept: 'Accepter',
+  vs_req_unavailable: "Cette demande n'est plus disponible.",
+  vs_network: 'Erreur réseau, réessayez.',
+  vs_sys_accepted: "Vous avez accepté l'échange avec {pseudo}. Restez bienveillant·e.",
+  vs_sys_user_left: "L'utilisateur·rice a quitté la conversation.",
+  vs_sys_ended: "L'échange a été terminé. Merci pour votre présence.",
+  vs_today: "Aujourd'hui",
+  vs_user_fallback: 'Utilisateur·ice',
+  vs_not_sent_ended: "Non envoyé — l'échange est terminé",
+  vs_not_sent_retry: 'Non envoyé — cliquez pour réessayer',
+  vs_acc_need_current: 'Le mot de passe actuel est requis.',
+  vs_acc_min: 'Le nouveau mot de passe doit faire au moins 6 caractères.',
+  vs_acc_mismatch: 'Les nouveaux mots de passe ne correspondent pas.',
+  vs_acc_nothing: 'Aucune modification à enregistrer.',
+  vs_saving: 'Enregistrement…',
+  vs_acc_ok: 'Identifiants mis à jour avec succès.',
+  vs_report_failed: "Le signalement n'a pas pu être envoyé. Réessayez.",
+  vs_setup_min: 'Le mot de passe doit faire au moins 6 caractères.',
+  vs_setup_mismatch: 'Les mots de passe ne correspondent pas.',
+  vs_creating: 'Création…',
+  vs_setup_done: 'Mot de passe créé ! Vous pouvez vous connecter.',
+});
+Object.assign(LANG.en, {
+  vs_title: 'Volunteer Area — Écoute Anonyme',
+  vs_login_h2: 'Volunteer <em>area</em>',
+  vs_login_sub: 'Sign in with your personal credentials.',
+  vs_username: 'Username',
+  vs_username_ph: 'Your username',
+  vs_password: 'Password',
+  vs_login_btn: 'Sign in',
+  vs_login_note: "Only for approved volunteers. Don't have an account yet?",
+  vs_apply: 'Apply →',
+  vs_setup_h2: 'Create your <em>password</em>',
+  vs_setup_sub: 'Your application has been accepted. Choose a password to access the volunteer area.',
+  vs_pass_min_ph: 'At least 6 characters',
+  vs_confirm_pass: 'Confirm password',
+  vs_repeat_ph: 'Repeat',
+  vs_setup_btn: 'Create my password',
+  vs_badge: 'Volunteer',
+  vs_st_online: 'Online',
+  vs_st_away: 'Away',
+  vs_st_offline: 'Offline',
+  vs_account: 'My account',
+  vs_quit: 'Sign out',
+  vs_section_label: 'Volunteer area',
+  vs_pending_h2: 'People waiting',
+  vs_stat_exchanges: 'Conversations today',
+  vs_stat_rating: 'Average rating',
+  vs_stat_rating_1: 'Average rating · {n} review',
+  vs_stat_rating_n: 'Average rating · {n} reviews',
+  vs_stat_duration: 'Average length',
+  vs_charter_h4: 'Charter reminder',
+  vs_charter_p: 'You are a listener, not a therapist. Your role is to listen with kindness, without judging or giving medical advice. In an emergency, refer the person to the 3114 helpline.',
+  vs_lobby: 'Lobby',
+  vs_connected: 'Online',
+  vs_report_user: 'Report user',
+  vs_end: 'End conversation',
+  vs_msg_ph: 'Reply to the user…',
+  vs_hint: 'Enter to send · Shift+Enter for a new line',
+  vs_end_q: 'Do you want to end this conversation and go back to the lobby?',
+  vs_cancel: 'Cancel',
+  vs_end_btn: 'End',
+  vs_report_h3: 'Report this user',
+  vs_report_sub: 'Our team will be alerted and will review the report.',
+  vs_rep_menace: 'Threats or verbal abuse',
+  vs_rep_harcel: 'Harassment',
+  vs_rep_info: 'Asking for personal information',
+  vs_rep_inapp: 'Inappropriate content',
+  vs_rep_autre: 'Other reason',
+  vs_report_btn: 'Report',
+  vs_report_ok_h3: 'Report sent',
+  vs_report_ok_p: 'Our team will review your report as soon as possible. Thank you.',
+  vs_close: 'Close',
+  vs_account_sub: 'Change your username and/or your password.',
+  vs_current_pass: 'Current password *',
+  vs_new_login: 'New username',
+  vs_keep_ph: 'Leave empty to keep it',
+  vs_new_pass: 'New password',
+  vs_new_pass_ph: 'At least 6 characters (empty = unchanged)',
+  vs_confirm_new_pass: 'Confirm new password',
+  vs_save: 'Save',
+  vs_err_fill: 'Please enter your username and password.',
+  vs_signing_in: 'Signing in…',
+  vs_err_generic: 'Error',
+  vs_err_server: 'Server error.',
+  vs_domain_general: 'General',
+  vs_toast_waiting: '{pseudo} is waiting · {domain}',
+  vs_hello_morning: 'Good morning',
+  vs_hello_afternoon: 'Good afternoon',
+  vs_hello_evening: 'Good evening',
+  vs_sub_online: 'You are online · people waiting can be assigned to you.',
+  vs_sub_away: 'You are marked as away · you will not get new requests.',
+  vs_sub_offline: 'You are offline · go online to start listening.',
+  vs_empty: 'Nobody is waiting right now.',
+  vs_accept: 'Accept',
+  vs_req_unavailable: 'This request is no longer available.',
+  vs_network: 'Network error, please try again.',
+  vs_sys_accepted: 'You accepted the conversation with {pseudo}. Stay kind.',
+  vs_sys_user_left: 'The user has left the conversation.',
+  vs_sys_ended: 'The conversation has ended. Thank you for being there.',
+  vs_today: 'Today',
+  vs_user_fallback: 'User',
+  vs_not_sent_ended: 'Not sent — the conversation has ended',
+  vs_not_sent_retry: 'Not sent — click to retry',
+  vs_acc_need_current: 'Your current password is required.',
+  vs_acc_min: 'The new password must be at least 6 characters long.',
+  vs_acc_mismatch: 'The new passwords do not match.',
+  vs_acc_nothing: 'No changes to save.',
+  vs_saving: 'Saving…',
+  vs_acc_ok: 'Your credentials have been updated.',
+  vs_report_failed: 'The report could not be sent. Please try again.',
+  vs_setup_min: 'The password must be at least 6 characters long.',
+  vs_setup_mismatch: 'The passwords do not match.',
+  vs_creating: 'Creating…',
+  vs_setup_done: 'Password created! You can now sign in.',
+});
+
+// ══════════════════════════════════════════
 // DONNÉES
 // ══════════════════════════════════════════
 // me est populé par doVolLogin() après authentification réussie
-
-const STATUS_LABEL = { online:'En ligne', away:'Absent·e', offline:'Hors ligne' };
 
 // ══════════════════════════════════════════
 // STATE
@@ -827,6 +1020,7 @@ let activeChatEnded = false;
 let pendingPollTimer = null;
 let chatPollTimer = null;
 let waitTimer = null;
+let lastStats = null;           // dernières stats reçues, réaffichées au changement de langue
 
 // ══════════════════════════════════════════
 // NAVIGATION ÉCRANS
@@ -850,12 +1044,12 @@ async function doVolLogin() {
 
   errEl.style.cssText = 'display:none;'; // efface un éventuel style "succès" laissé par doSetupPassword()
   if (!login || !password) {
-    errEl.textContent = 'Veuillez renseigner vos identifiants.';
+    errEl.textContent = tr('vs_err_fill');
     errEl.style.display = 'block';
     return;
   }
 
-  btn.disabled = true; btn.textContent = 'Connexion…';
+  btn.disabled = true; btn.textContent = tr('vs_signing_in');
   try {
     const res  = await fetch('/api/auth/volunteer', {
       method: 'POST',
@@ -863,7 +1057,7 @@ async function doVolLogin() {
       body: JSON.stringify({ login, password }),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Erreur');
+    if (!res.ok) throw new Error(apiErrorText(data.error) || tr('vs_err_generic'));
     me = { id: data.id, name: data.name, init: data.name.charAt(0).toUpperCase(), isAnon: false };
     volToken = data.token;
     document.getElementById('vol-pass-input').value = '';
@@ -872,7 +1066,7 @@ async function doVolLogin() {
     errEl.textContent = e.message;
     errEl.style.display = 'block';
   } finally {
-    btn.disabled = false; btn.textContent = 'Se connecter';
+    btn.disabled = false; btn.textContent = tr('vs_login_btn');
   }
 }
 
@@ -899,10 +1093,19 @@ function loadLobby() {
 // Chiffres réels du salon (GET /api/volunteers/me/stats), rechargés à
 // l'arrivée dans le salon, à chaque échange accepté et à chaque retour.
 function resetStats() {
-  ['stat-exchanges', 'stat-rating', 'stat-duration'].forEach(id => {
-    document.getElementById(id).textContent = '—';
-  });
-  document.getElementById('stat-rating-lbl').textContent = 'Note moyenne';
+  lastStats = null;
+  renderStats();
+}
+
+function renderStats() {
+  const s = lastStats;
+  document.getElementById('stat-exchanges').textContent = s ? s.exchanges_today : '—';
+  document.getElementById('stat-rating').textContent =
+    s?.avg_rating == null ? '—' : currentLang === 'fr' ? String(s.avg_rating).replace('.', ',') : String(s.avg_rating);
+  document.getElementById('stat-rating-lbl').textContent =
+    s?.review_count ? tr(s.review_count === 1 ? 'vs_stat_rating_1' : 'vs_stat_rating_n', { n: s.review_count }) : tr('vs_stat_rating');
+  document.getElementById('stat-duration').textContent =
+    s?.avg_duration_min == null ? '—' : s.avg_duration_min < 1 ? '< 1 min' : `${s.avg_duration_min} min`;
 }
 
 async function loadStats() {
@@ -911,14 +1114,8 @@ async function loadStats() {
       headers: { 'Authorization': 'Bearer ' + volToken },
     });
     if (!res.ok) return;
-    const s = await res.json();
-    document.getElementById('stat-exchanges').textContent = s.exchanges_today;
-    document.getElementById('stat-rating').textContent =
-      s.avg_rating == null ? '—' : String(s.avg_rating).replace('.', ',');
-    document.getElementById('stat-rating-lbl').textContent =
-      s.review_count ? `Note moyenne · ${s.review_count} avis` : 'Note moyenne';
-    document.getElementById('stat-duration').textContent =
-      s.avg_duration_min == null ? '—' : s.avg_duration_min < 1 ? '< 1 min' : `${s.avg_duration_min} min`;
+    lastStats = await res.json();
+    renderStats();
   } catch (e) { /* non bloquant : on garde l'affichage précédent */ }
 }
 
@@ -946,7 +1143,7 @@ async function pollPending() {
       if (existing) { existing.isNew = false; return existing; }
       newIds.push(r.id);
       return {
-        id: r.id, pseudo: r.user_pseudo, domain: r.domain || 'Général',
+        id: r.id, pseudo: r.user_pseudo, domain: r.domain || tr('vs_domain_general'),
         since: new Date(r.created_at),
         init: r.user_pseudo && r.user_pseudo !== 'Anonyme' ? r.user_pseudo[0].toUpperCase() : '?',
         isNew: true,
@@ -956,7 +1153,7 @@ async function pollPending() {
 
     pendingUsers.filter(u => newIds.includes(u.id)).forEach(u => {
       document.getElementById('back-badge').classList.add('show');
-      showToast(`${u.pseudo} attend · ${u.domain}`);
+      showToast(tr('vs_toast_waiting', { pseudo: u.pseudo, domain: u.domain }));
       setTimeout(() => {
         const el = document.getElementById(`pi-${u.id}`);
         if (el) el.classList.remove('new-user');
@@ -977,15 +1174,10 @@ function escHtml(s) {
 
 function updateGreeting() {
   const h = new Date().getHours();
-  const moment = h < 12 ? 'Bonjour' : h < 18 ? 'Bon après-midi' : 'Bonsoir';
+  const moment = tr(h < 12 ? 'vs_hello_morning' : h < 18 ? 'vs_hello_afternoon' : 'vs_hello_evening');
   const nameStr = me.isAnon ? '' : `, <em>${escHtml(me.name)}</em>`;
   document.getElementById('lobby-h1').innerHTML = `${moment}${nameStr}`;
-  const subs = {
-    online:  'Vous êtes en ligne · les personnes en attente peuvent vous être attribuées.',
-    away:    'Vous êtes marqué·e absent·e · vous ne recevrez pas de nouvelles demandes.',
-    offline: 'Vous êtes hors ligne · passez en ligne pour commencer à écouter.',
-  };
-  document.getElementById('lobby-sub').textContent = subs[volStatus];
+  document.getElementById('lobby-sub').textContent = tr(`vs_sub_${volStatus}`);
 }
 
 function setStatus(s) {
@@ -1020,7 +1212,7 @@ function renderPending() {
             <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
           </svg>
         </div>
-        Aucune personne en attente pour le moment.
+        ${tr('vs_empty')}
       </div>`;
     return;
   }
@@ -1040,7 +1232,7 @@ function renderPending() {
           </span>
         </div>
       </div>
-      <button class="accept-btn" onclick="acceptUser(${u.id})">Accepter</button>
+      <button class="accept-btn" onclick="acceptUser(${u.id})">${tr('vs_accept')}</button>
     </div>
   `).join('');
 }
@@ -1067,12 +1259,12 @@ async function acceptUser(uid) {
     });
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
-      showToast(data.error || 'Cette demande n\'est plus disponible.');
+      showToast(apiErrorText(data.error) || tr('vs_req_unavailable'));
       pollPending();
       return;
     }
   } catch (e) {
-    showToast('Erreur réseau, réessayez.');
+    showToast(tr('vs_network'));
     return;
   }
   pendingUsers = pendingUsers.filter(x => x.id !== uid);
@@ -1101,7 +1293,7 @@ function loadChat(user) {
 
   // Message système
   addDateSep();
-  addSys(`Vous avez accepté l'échange avec ${user.pseudo}. Restez bienveillant·e.`);
+  addSys(tr('vs_sys_accepted', { pseudo: user.pseudo }));
   document.getElementById('msg-input').disabled = false;
 
   currentRequestId = user.id;
@@ -1139,7 +1331,7 @@ async function pollChatOnce() {
     if (data.status === 'ended' && !activeChatEnded) {
       activeChatEnded = true;
       stopChatPoll();
-      addSys('L\'utilisateur·rice a quitté la conversation.');
+      addSys(tr('vs_sys_user_left'));
       document.getElementById('msg-input').disabled = true;
     }
   } catch (e) { /* le poll suivant retentera */ }
@@ -1150,7 +1342,7 @@ function addDateSep() {
   const ind  = document.getElementById('typing-ind');
   const div  = document.createElement('div');
   div.className = 'date-sep';
-  div.innerHTML = `<span>Aujourd'hui</span>`;
+  div.innerHTML = `<span>${tr('vs_today')}</span>`;
   msgs.insertBefore(div, ind);
 }
 
@@ -1171,7 +1363,7 @@ function addMsg(txt, type, senderName) {
   if (type === 'from-user') {
     const s = document.createElement('span');
     s.className   = 'msg-sender';
-    s.textContent = senderName || 'Utilisateur·ice';
+    s.textContent = senderName || tr('vs_user_fallback');
     g.appendChild(s);
   }
   const b = document.createElement('div');
@@ -1193,14 +1385,14 @@ function markSendFailed(group, retryTxt) {
   if (!retryTxt) {
     const warn = document.createElement('span');
     warn.className   = 'msg-failed';
-    warn.textContent = 'Non envoyé — l\'échange est terminé';
+    warn.textContent = tr('vs_not_sent_ended');
     group.appendChild(warn);
     return;
   }
   const warn = document.createElement('button');
   warn.type        = 'button';
   warn.className   = 'msg-failed msg-retry';
-  warn.textContent = 'Non envoyé — cliquez pour réessayer';
+  warn.textContent = tr('vs_not_sent_retry');
   warn.onclick = () => {
     warn.remove();
     // Le message renvoyé arrive après ceux échangés entre-temps : on descend
@@ -1246,7 +1438,7 @@ async function postMsg(txt, bubble) {
 function handleKey(e) { if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); } }
 function autoResize(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,110)+'px'; }
 function scrollBot() { const m=document.getElementById('chat-messages'); m.scrollTop=m.scrollHeight; }
-function fmtTime(d) { return d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}); }
+function fmtTime(d) { return d.toLocaleTimeString(uiLocale(),{hour:'2-digit',minute:'2-digit'}); }
 
 // ══════════════════════════════════════════
 // NAVIGATION CHAT → LOBBY
@@ -1270,7 +1462,7 @@ async function endConversation() {
       });
     } catch (e) {}
   }
-  addSys("L'échange a été terminé. Merci pour votre présence.");
+  addSys(tr('vs_sys_ended'));
   setTimeout(goBackToLobby, 1200);
 }
 
@@ -1354,12 +1546,12 @@ async function saveVolAccount() {
   const btn      = document.getElementById('acc-save-btn');
 
   msgEl.style.display = 'none';
-  if (!current) return showAccMsg('Le mot de passe actuel est requis.', false);
-  if (newPass && newPass.length < 6) return showAccMsg('Le nouveau mot de passe doit faire au moins 6 caractères.', false);
-  if (newPass && newPass !== newPass2) return showAccMsg('Les nouveaux mots de passe ne correspondent pas.', false);
-  if (!newLogin && !newPass) return showAccMsg('Aucune modification à enregistrer.', false);
+  if (!current) return showAccMsg(tr('vs_acc_need_current'), false);
+  if (newPass && newPass.length < 6) return showAccMsg(tr('vs_acc_min'), false);
+  if (newPass && newPass !== newPass2) return showAccMsg(tr('vs_acc_mismatch'), false);
+  if (!newLogin && !newPass) return showAccMsg(tr('vs_acc_nothing'), false);
 
-  btn.disabled = true; btn.textContent = 'Enregistrement…';
+  btn.disabled = true; btn.textContent = tr('vs_saving');
   try {
     const res = await fetch('/api/auth/volunteer', {
       method: 'PATCH',
@@ -1372,17 +1564,17 @@ async function saveVolAccount() {
       }),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Erreur serveur.');
+    if (!res.ok) throw new Error(apiErrorText(data.error) || tr('vs_err_server'));
 
     document.getElementById('acc-current').value   = '';
     document.getElementById('acc-new-login').value = '';
     document.getElementById('acc-new-pass').value  = '';
     document.getElementById('acc-new-pass2').value = '';
-    showAccMsg('Identifiants mis à jour avec succès.', true);
+    showAccMsg(tr('vs_acc_ok'), true);
   } catch (e) {
     showAccMsg(e.message, false);
   } finally {
-    btn.disabled = false; btn.textContent = 'Enregistrer';
+    btn.disabled = false; btn.textContent = tr('vs_save');
   }
 }
 
@@ -1429,7 +1621,7 @@ async function submitReport() {
   // On ne confirme que si le serveur a bien enregistré le signalement :
   // une fausse confirmation ferait croire que l'équipe a été alertée.
   if (!ok) {
-    err.textContent = 'Le signalement n\'a pas pu être envoyé. Réessayez.';
+    err.textContent = tr('vs_report_failed');
     err.style.display = 'block';
     return;
   }
@@ -1448,17 +1640,17 @@ async function doSetupPassword() {
 
   errEl.style.display = 'none';
   if (!password || password.length < 6) {
-    errEl.textContent = 'Le mot de passe doit faire au moins 6 caractères.';
+    errEl.textContent = tr('vs_setup_min');
     errEl.style.display = 'block';
     return;
   }
   if (password !== password2) {
-    errEl.textContent = 'Les mots de passe ne correspondent pas.';
+    errEl.textContent = tr('vs_setup_mismatch');
     errEl.style.display = 'block';
     return;
   }
 
-  btn.disabled = true; btn.textContent = 'Création…';
+  btn.disabled = true; btn.textContent = tr('vs_creating');
   try {
     const res  = await fetch('/api/auth/volunteer/setup', {
       method: 'POST',
@@ -1466,20 +1658,20 @@ async function doSetupPassword() {
       body: JSON.stringify({ token: setupToken, password }),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Erreur');
+    if (!res.ok) throw new Error(apiErrorText(data.error) || tr('vs_err_generic'));
 
     history.replaceState(null, '', location.pathname);
     setupToken = null;
     showScreen('screen-login');
     document.getElementById('vol-login-input').value = data.login || '';
-    document.getElementById('vol-login-error').textContent = 'Mot de passe créé ! Vous pouvez vous connecter.';
+    document.getElementById('vol-login-error').textContent = tr('vs_setup_done');
     document.getElementById('vol-login-error').style.cssText = 'display:block;color:var(--sage-dark);background:rgba(139,175,138,0.10);';
     document.getElementById('vol-pass-input').focus();
   } catch (e) {
     errEl.textContent = e.message;
     errEl.style.display = 'block';
   } finally {
-    btn.disabled = false; btn.textContent = 'Créer mon mot de passe';
+    btn.disabled = false; btn.textContent = tr('vs_setup_btn');
   }
 }
 
@@ -1487,6 +1679,15 @@ async function doSetupPassword() {
 // INIT
 // ══════════════════════════════════════════
 let setupToken = new URLSearchParams(location.search).get('setup') || null;
+
+// Appelé par shared-ui.js après chaque changement de langue. Les messages
+// déjà affichés dans le chat restent dans la langue où ils sont apparus.
+window.onLangChange = () => {
+  if (!me) return;
+  updateGreeting();
+  renderPending();
+  renderStats();
+};
 
 document.addEventListener('DOMContentLoaded', () => {
   if (setupToken) {

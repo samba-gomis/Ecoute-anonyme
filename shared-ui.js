@@ -583,6 +583,70 @@ const LANG = {
 let currentLang = localStorage.getItem('ea-lang') || 'fr';
 let isDark = localStorage.getItem('ea-dark') === '1';
 
+// Texte d'une clé dans la langue courante (repli sur le français), pour le
+// contenu généré en JS. {nom} est remplacé par vars.nom.
+function tr(key, vars) {
+  let s = LANG[currentLang][key] ?? LANG.fr[key] ?? key;
+  if (vars) s = s.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m));
+  return s;
+}
+
+// Locale pour les dates et heures (toLocaleDateString, toLocaleTimeString…).
+function uiLocale() { return currentLang === 'en' ? 'en-GB' : 'fr-FR'; }
+
+// L'API renvoie ses messages d'erreur en français : en anglais, on affiche
+// la traduction connue, sinon le message d'origine.
+const API_ERRORS_EN = {
+  'Accès refusé.': 'Access denied.',
+  'Aucune modification à enregistrer.': 'No changes to save.',
+  'Authentification admin requise.': 'Admin sign-in required.',
+  'Authentification bénévole requise.': 'Volunteer sign-in required.',
+  'Avis introuvable.': 'Review not found.',
+  'Avis trop long (1000 caractères maximum).': 'Review too long (1000 characters maximum).',
+  'Bénévole introuvable.': 'Volunteer not found.',
+  'Bénévole requis.': 'Volunteer required.',
+  'Candidature introuvable.': 'Application not found.',
+  "Ce bénévole n'est plus disponible.": 'This volunteer is no longer available.',
+  "Ce lien est invalide ou a expiré. Contactez l'équipe pour en recevoir un nouveau.": 'This link is invalid or has expired. Contact the team to get a new one.',
+  'Cet email est déjà utilisé par un autre bénévole.': 'This email is already used by another volunteer.',
+  'Cet email est déjà utilisé.': 'This email is already in use.',
+  'Cet identifiant est déjà utilisé.': 'This username is already taken.',
+  "Cette conversation n'est pas active.": 'This conversation is not active.',
+  "Cette demande n'est plus disponible.": 'This request is no longer available.',
+  'Configuration admin manquante.': 'Admin configuration missing.',
+  'Demande introuvable.': 'Request not found.',
+  'Erreur serveur interne.': 'Internal server error.',
+  'Identifiants incorrects.': 'Incorrect username or password.',
+  'Identifiants requis.': 'Username and password required.',
+  'La note doit être un entier entre 1 et 5.': 'The rating must be a whole number from 1 to 5.',
+  'Le champ "name" est requis.': 'The name is required.',
+  'Le mot de passe doit faire au moins 6 caractères.': 'The password must be at least 6 characters long.',
+  'Le nouveau mot de passe doit faire au moins 6 caractères.': 'The new password must be at least 6 characters long.',
+  "Le texte de l'avis est requis.": 'The review text is required.',
+  'Lien invalide.': 'Invalid link.',
+  'Message trop long (2000 caractères maximum).': 'Message too long (2000 characters maximum).',
+  'Message vide.': 'Empty message.',
+  'Mot de passe actuel incorrect.': 'Current password is incorrect.',
+  'Mot de passe actuel requis.': 'Current password required.',
+  'Motif requis.': 'Reason required.',
+  'Pseudo requis.': 'Nickname required.',
+  'Pseudo trop long (30 caractères maximum).': 'Nickname too long (30 characters maximum).',
+  'Ressource introuvable.': 'Not found.',
+  'Route API introuvable.': 'API route not found.',
+  'Seule une personne ayant eu un échange peut laisser un avis.': 'Only someone who had a conversation can leave a review.',
+  'Signalement introuvable.': 'Report not found.',
+  'Statut invalide.': 'Invalid status.',
+  'Tous les champs obligatoires doivent être remplis.': 'All required fields must be filled in.',
+  'Trop de tentatives de connexion. Réessayez plus tard.': 'Too many sign-in attempts. Try again later.',
+  'Un avis a déjà été laissé pour cet échange.': 'A review has already been left for this conversation.',
+  'Un identifiant de connexion est requis.': 'A username is required.',
+  'Un mot de passe est requis.': 'A password is required.',
+  'Veuillez sélectionner au moins une disponibilité.': 'Please select at least one availability.',
+};
+function apiErrorText(msg) {
+  return currentLang === 'en' && API_ERRORS_EN[msg] ? API_ERRORS_EN[msg] : msg;
+}
+
 function injectUtilBar() {
   const bar = document.createElement('div');
   bar.className = 'util-bar';
@@ -630,6 +694,12 @@ function applyLang() {
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
     const k = el.getAttribute('data-i18n-placeholder');
     if (t[k] !== undefined) el.placeholder = t[k];
+  });
+
+  // data-i18n-title → infobulle (boutons-icônes)
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    const k = el.getAttribute('data-i18n-title');
+    if (t[k] !== undefined) el.title = t[k];
   });
 
   // Bouton langue + label mode

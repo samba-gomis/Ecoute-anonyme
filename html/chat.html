@@ -440,7 +440,7 @@
     loadVolunteers();
 
     function getStatusTxt(status) {
-      const lang = window.currentLang || 'fr';
+      const lang = currentLang;
       const map = {
         fr: { online:'En ligne', away:'Disponible bientôt', offline:'Hors ligne' },
         en: { online:'Online', away:'Available soon', offline:'Offline' }
@@ -473,7 +473,7 @@
       const v=volunteers.find(x=>x.id===id);
       if(!v||v.status==='offline')return;
       selVol=v;
-      const lang = window.currentLang || 'fr';
+      const lang = currentLang;
 
       document.getElementById('waiting-spinner').style.display='';
       document.getElementById('waiting-cancel-btn').style.display='';
@@ -491,7 +491,7 @@
           body: JSON.stringify({ volunteer_id: v.id, user_pseudo: pseudo, domain: v.tags?.[0] || null }),
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Erreur');
+        if (!res.ok) throw new Error(apiErrorText(data.error) || (lang === 'en' ? 'Error' : 'Erreur'));
         currentRequestId = data.id;
         currentSessionToken = data.session_token;
         renderedMsgCount = 0;
@@ -545,7 +545,7 @@
 
     async function pollRequestOnce(){
       if (!currentRequestId) return;
-      const lang = window.currentLang || 'fr';
+      const lang = currentLang;
       try {
         const res = await fetch(requestUrl(''));
         if (!res.ok) return; // raté ponctuel (réseau, cold start…) : le poll suivant retentera
@@ -605,7 +605,7 @@
 
     /* BÉNÉVOLES */
     function renderVols(){
-      const lang = window.currentLang || 'fr';
+      const lang = currentLang;
       const grid = document.getElementById('vol-grid');
 
       if (!volunteersLoaded) {
@@ -667,7 +667,7 @@
     }
 
     function addMsg(txt,type){
-      const lang = window.currentLang || 'fr';
+      const lang = currentLang;
       const c=document.getElementById('chat-messages'),t=document.getElementById('typing');
       const g=document.createElement('div');g.className=`msg-group ${type}`;
       if(type==='vol'){const s=document.createElement('span');s.className='msg-sender';s.textContent=(selVol?selVol.name:(lang==='en'?'Volunteer':'Bénévole'))+' · '+(lang==='en'?'Volunteer':'Bénévole');g.appendChild(s);}
@@ -680,7 +680,7 @@
     // retryTxt : texte à renvoyer au clic, ou null quand réessayer n'a pas de
     // sens (l'échange est terminé).
     function markSendFailed(group,retryTxt){
-      const lang = window.currentLang || 'fr';
+      const lang = currentLang;
       if(!retryTxt){
         const warn=document.createElement('span');warn.className='msg-failed';
         warn.textContent = lang==='en' ? 'Not sent — the conversation has ended' : 'Non envoyé — l\'échange est terminé';
@@ -704,7 +704,7 @@
     function scrollBot(){const c=document.getElementById('chat-messages');c.scrollTop=c.scrollHeight;}
     function fmtTime(d){return d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
     function fmtDate(d){
-      const lang = window.currentLang || 'fr';
+      const lang = currentLang;
       const t=new Date();
       if(d.toDateString()===t.toDateString()) return lang==='en'?'Today':'Aujourd\'hui';
       return d.toLocaleDateString(lang==='en'?'en-GB':'fr-FR',{weekday:'long',day:'numeric',month:'long'});
@@ -729,7 +729,7 @@
     }
     async function submitReview(){
       closeModal('review-modal');
-      const lang = window.currentLang || 'fr';
+      const lang = currentLang;
       if (rating < 1) return;
       const text = document.querySelector('.rev-ta')?.value.trim()
         || (lang==='en' ? '(no comment)' : '(sans commentaire)');
@@ -756,7 +756,7 @@
     /* SIGNALEMENT */
     function pickRep(el){document.querySelectorAll('.rep-opt').forEach(o=>o.classList.remove('sel'));el.closest('.rep-opt').classList.add('sel');document.getElementById('rep-btn').disabled=false;}
     async function submitReport(){
-      const lang = window.currentLang || 'fr';
+      const lang = currentLang;
       const picked = document.querySelector('input[name="rep"]:checked');
       const reason = picked ? picked.value : 'autre';
       const btn = document.getElementById('rep-btn'), err = document.getElementById('rep-error');

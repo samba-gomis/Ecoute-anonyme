@@ -221,18 +221,18 @@
       <img src="logo.png" alt="Logo" />
       <span>Écoute Anonyme</span>
     </div>
-    <h2>Espace administrateur</h2>
-    <p class="login-sub">Accès réservé à l'équipe de gestion.</p>
+    <h2 data-i18n="adm_login_h2">Espace administrateur</h2>
+    <p class="login-sub" data-i18n="adm_login_sub">Accès réservé à l'équipe de gestion.</p>
     <div class="login-error" id="login-error">Identifiants incorrects. Veuillez réessayer.</div>
     <div class="login-field">
-      <label>Identifiant</label>
+      <label data-i18n="adm_username">Identifiant</label>
       <input type="text" id="login-user" placeholder="admin" />
     </div>
     <div class="login-field">
-      <label>Mot de passe</label>
+      <label data-i18n="adm_password">Mot de passe</label>
       <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()" />
     </div>
-    <button class="login-btn" id="login-btn" onclick="doLogin()">Se connecter</button>
+    <button class="login-btn" id="login-btn" onclick="doLogin()" data-i18n="adm_login_btn">Se connecter</button>
   </div>
 </div>
 
@@ -249,7 +249,7 @@
       <span class="admin-nav-time" id="admin-clock"></span>
       <button class="admin-logout" onclick="doLogout()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-        Déconnexion
+        <span data-i18n="adm_logout">Déconnexion</span>
       </button>
     </div>
   </div>
@@ -257,8 +257,8 @@
   <div class="admin-body">
 
     <div class="admin-page-title">
-      <span class="section-label">Tableau de bord</span>
-      <h1>Vue d'ensemble · <em>Gestion</em></h1>
+      <span class="section-label" data-i18n="adm_dash_label">Tableau de bord</span>
+      <h1 data-i18n-html="adm_h1">Vue d'ensemble · <em>Gestion</em></h1>
     </div>
 
     <!-- Stats -->
@@ -268,28 +268,28 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.6" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>
         </div>
         <div class="stat-val" id="stat-vols">—</div>
-        <div class="stat-lbl">Bénévoles</div>
+        <div class="stat-lbl" data-i18n="adm_stat_vols">Bénévoles</div>
       </div>
       <div class="stat-card warn">
         <div class="stat-icon">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E67E22" stroke-width="1.6" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
         </div>
         <div class="stat-val" id="stat-exchanges">—</div>
-        <div class="stat-lbl">Échanges</div>
+        <div class="stat-lbl" data-i18n="adm_stat_exchanges">Échanges</div>
       </div>
       <div class="stat-card info">
         <div class="stat-icon">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3A8FB5" stroke-width="1.6" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         </div>
         <div class="stat-val" id="stat-avis">—</div>
-        <div class="stat-lbl">Avis reçus</div>
+        <div class="stat-lbl" data-i18n="adm_stat_reviews">Avis reçus</div>
       </div>
       <div class="stat-card">
         <div class="stat-icon">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--mist)" stroke-width="1.6" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         </div>
         <div class="stat-val" id="stat-note">—</div>
-        <div class="stat-lbl">Note moyenne</div>
+        <div class="stat-lbl" data-i18n="adm_avg_rating">Note moyenne</div>
       </div>
     </div>
 
@@ -300,19 +300,19 @@
           <div class="section-icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.6" stroke-linecap="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg>
           </div>
-          <h2>Candidatures bénévoles</h2>
+          <h2 data-i18n="adm_apps_h2">Candidatures bénévoles</h2>
         </div>
         <span class="count-badge info" id="badge-apps">—</span>
       </div>
       <table class="admin-table">
         <thead>
           <tr>
-            <th>Nom</th>
-            <th>Email</th>
-            <th>Domaine</th>
-            <th>Disponibilités</th>
-            <th>Reçue le</th>
-            <th>Actions</th>
+            <th data-i18n="adm_th_name">Nom</th>
+            <th data-i18n="adm_th_email">Email</th>
+            <th data-i18n="adm_th_domain">Domaine</th>
+            <th data-i18n="adm_th_dispos">Disponibilités</th>
+            <th data-i18n="adm_th_received">Reçue le</th>
+            <th data-i18n="adm_th_actions">Actions</th>
           </tr>
         </thead>
         <tbody id="apps-tbody"></tbody>
@@ -326,22 +326,22 @@
           <div class="section-icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.6" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>
           </div>
-          <h2>Bénévoles</h2>
+          <h2 data-i18n="adm_vols_h2">Bénévoles</h2>
         </div>
         <div class="admin-section-header-right">
           <span class="count-badge" id="badge-vols">—</span>
-          <button class="a-btn a-btn-primary" onclick="openAddVolModal()">+ Ajouter</button>
+          <button class="a-btn a-btn-primary" onclick="openAddVolModal()" data-i18n="adm_add_btn">+ Ajouter</button>
         </div>
       </div>
       <table class="admin-table">
         <thead>
           <tr>
-            <th>Nom</th>
-            <th>Email</th>
-            <th>Domaines</th>
-            <th>Statut</th>
-            <th>Depuis</th>
-            <th>Actions</th>
+            <th data-i18n="adm_th_name">Nom</th>
+            <th data-i18n="adm_th_email">Email</th>
+            <th data-i18n="adm_th_domains">Domaines</th>
+            <th data-i18n="adm_th_status">Statut</th>
+            <th data-i18n="adm_th_since">Depuis</th>
+            <th data-i18n="adm_th_actions">Actions</th>
           </tr>
         </thead>
         <tbody id="vols-tbody"></tbody>
@@ -355,7 +355,7 @@
           <div class="section-icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.5" fill="var(--sage-dark)"/></svg>
           </div>
-          <h2>Signalements</h2>
+          <h2 data-i18n="adm_reports_h2">Signalements</h2>
         </div>
         <span class="count-badge" id="badge-reports">—</span>
       </div>
@@ -371,7 +371,7 @@
           <div class="section-icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.6" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           </div>
-          <h2>Avis des utilisateurs</h2>
+          <h2 data-i18n="adm_reviews_h2">Avis des utilisateurs</h2>
         </div>
         <span class="count-badge" id="badge-avis">—</span>
       </div>
@@ -379,7 +379,7 @@
         <div class="ratings-summary" id="ratings-summary" style="display:none;">
           <div class="rating-big">
             <div class="rating-big-val" id="avg-display">—</div>
-            <div class="rating-big-lbl">Note moyenne</div>
+            <div class="rating-big-lbl" data-i18n="adm_avg_rating">Note moyenne</div>
           </div>
           <div style="flex:1;" id="ratings-bars"></div>
         </div>
@@ -394,29 +394,29 @@
           <div class="section-icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
           </div>
-          <h2>Mon compte</h2>
+          <h2 data-i18n="adm_account_h2">Mon compte</h2>
         </div>
       </div>
       <div style="padding:24px;max-width:480px;">
-        <p style="font-size:13px;color:var(--mist);margin-bottom:20px;">Modifiez vos identifiants de connexion à l'espace admin.</p>
+        <p style="font-size:13px;color:var(--mist);margin-bottom:20px;" data-i18n="adm_account_sub">Modifiez vos identifiants de connexion à l'espace admin.</p>
         <div class="login-field">
-          <label>Mot de passe actuel *</label>
+          <label data-i18n="adm_current_pass">Mot de passe actuel *</label>
           <input type="password" id="acc-current" placeholder="••••••••" autocomplete="current-password" />
         </div>
         <div class="login-field">
-          <label>Nouvel identifiant</label>
-          <input type="text" id="acc-login" placeholder="Laisser vide pour ne pas changer" autocomplete="username" />
+          <label data-i18n="adm_new_login">Nouvel identifiant</label>
+          <input type="text" id="acc-login" placeholder="Laisser vide pour ne pas changer" data-i18n-placeholder="adm_keep_ph" autocomplete="username" />
         </div>
         <div class="login-field">
-          <label>Nouveau mot de passe</label>
-          <input type="password" id="acc-new-pass" placeholder="Min. 6 caractères (vide = inchangé)" autocomplete="new-password" />
+          <label data-i18n="adm_new_pass">Nouveau mot de passe</label>
+          <input type="password" id="acc-new-pass" placeholder="Min. 6 caractères (vide = inchangé)" data-i18n-placeholder="adm_new_pass_ph" autocomplete="new-password" />
         </div>
         <div class="login-field">
-          <label>Confirmer le nouveau mot de passe</label>
-          <input type="password" id="acc-new-pass2" placeholder="Répéter" autocomplete="new-password" />
+          <label data-i18n="adm_confirm_new_pass">Confirmer le nouveau mot de passe</label>
+          <input type="password" id="acc-new-pass2" placeholder="Répéter" data-i18n-placeholder="adm_repeat_ph" autocomplete="new-password" />
         </div>
         <div id="acc-msg" style="display:none;font-size:13px;padding:10px 14px;border-radius:var(--radius-sm);margin-bottom:14px;"></div>
-        <button class="a-btn a-btn-primary" id="acc-save-btn" onclick="saveAccount()" style="padding:10px 24px;">Enregistrer</button>
+        <button class="a-btn a-btn-primary" id="acc-save-btn" onclick="saveAccount()" style="padding:10px 24px;" data-i18n="adm_save">Enregistrer</button>
       </div>
     </div>
 
@@ -429,51 +429,51 @@
     <h3>Ajouter un bénévole</h3>
     <p class="modal-sub">Le profil et les identifiants de connexion seront créés immédiatement.</p>
     <div class="login-field">
-      <label>Nom affiché *</label>
-      <input type="text" id="add-name" placeholder="ex : Marie" maxlength="60" />
+      <label data-i18n="adm_f_name">Nom affiché *</label>
+      <input type="text" id="add-name" placeholder="ex : Marie" data-i18n-placeholder="adm_f_name_ph" maxlength="60" />
     </div>
     <div class="login-field">
-      <label>Email</label>
-      <input type="email" id="add-email" placeholder="marie@exemple.com" />
+      <label data-i18n="adm_f_email">Email</label>
+      <input type="email" id="add-email" placeholder="marie@exemple.com" data-i18n-placeholder="adm_f_email_ph" />
     </div>
     <div class="login-field">
-      <label>Domaines (séparés par des virgules)</label>
-      <input type="text" id="add-tags" placeholder="Anxiété, Solitude, Général" />
+      <label data-i18n="adm_f_tags">Domaines (séparés par des virgules)</label>
+      <input type="text" id="add-tags" placeholder="Anxiété, Solitude, Général" data-i18n-placeholder="adm_f_tags_ph" />
     </div>
     <div class="login-field">
-      <label>Description courte (visible par les utilisateurs)</label>
-      <input type="text" id="add-description" placeholder="ex : Disponible pour une écoute douce et sans jugement." maxlength="120" />
+      <label data-i18n="adm_f_desc">Description courte (visible par les utilisateurs)</label>
+      <input type="text" id="add-description" placeholder="ex : Disponible pour une écoute douce et sans jugement." data-i18n-placeholder="adm_f_desc_ph" maxlength="120" />
     </div>
     <div class="login-field">
-      <label>Statut initial</label>
+      <label data-i18n="adm_f_status">Statut initial</label>
       <select id="add-status">
-        <option value="offline" selected>Hors ligne</option>
-        <option value="online">En ligne</option>
-        <option value="away">Absent·e</option>
+        <option value="offline" selected data-i18n="adm_st_offline">Hors ligne</option>
+        <option value="online" data-i18n="adm_st_online">En ligne</option>
+        <option value="away" data-i18n="adm_st_away">Absent·e</option>
       </select>
     </div>
     <hr style="border:none;border-top:1px solid var(--border);margin:16px 0 14px;" />
-    <p style="font-size:12px;color:var(--mist);margin-bottom:12px;">Identifiants de connexion à l'espace bénévole :</p>
+    <p style="font-size:12px;color:var(--mist);margin-bottom:12px;" data-i18n="adm_f_creds">Identifiants de connexion à l'espace bénévole :</p>
     <div class="login-field">
-      <label>Identifiant *</label>
-      <input type="text" id="add-login" placeholder="ex : marie.b" maxlength="40" autocomplete="off" />
+      <label data-i18n="adm_f_login">Identifiant *</label>
+      <input type="text" id="add-login" placeholder="ex : marie.b" data-i18n-placeholder="adm_f_login_ph" maxlength="40" autocomplete="off" />
     </div>
     <div id="add-password-section">
       <div class="login-field">
-        <label>Mot de passe *</label>
-        <input type="password" id="add-password" placeholder="Min. 6 caractères" autocomplete="new-password" />
+        <label data-i18n="adm_f_pass">Mot de passe *</label>
+        <input type="password" id="add-password" placeholder="Min. 6 caractères" data-i18n-placeholder="adm_pass_min_ph" autocomplete="new-password" />
       </div>
       <div class="login-field">
-        <label>Confirmer le mot de passe *</label>
-        <input type="password" id="add-password2" placeholder="Répéter le mot de passe" autocomplete="new-password" />
+        <label data-i18n="adm_f_pass2">Confirmer le mot de passe *</label>
+        <input type="password" id="add-password2" placeholder="Répéter le mot de passe" data-i18n-placeholder="adm_f_pass2_ph" autocomplete="new-password" />
       </div>
     </div>
-    <p class="modal-sub" id="add-setup-note" style="display:none;">
+    <p class="modal-sub" id="add-setup-note" style="display:none;" data-i18n="adm_setup_note">
       Aucun mot de passe à saisir : un lien pour en créer un sera envoyé par email au bénévole.
     </p>
     <div class="modal-error" id="add-error"></div>
     <div class="modal-actions">
-      <button class="modal-btn modal-btn-cancel" onclick="closeAddVolModal()">Annuler</button>
+      <button class="modal-btn modal-btn-cancel" onclick="closeAddVolModal()" data-i18n="adm_cancel">Annuler</button>
       <button class="modal-btn modal-btn-primary" id="add-submit-btn" onclick="submitAddVol()">Ajouter</button>
     </div>
   </div>
@@ -485,13 +485,13 @@
     <h3 id="app-detail-name">—</h3>
     <p class="modal-sub" id="app-detail-sub">—</p>
     <div style="font-size:13px;color:var(--stone);line-height:1.7;">
-      <p style="margin-bottom:14px;"><strong style="color:var(--stone-dark);">Motivations :</strong><br><span id="app-detail-motivation"></span></p>
-      <p><strong style="color:var(--stone-dark);">Description courte :</strong><br><span id="app-detail-description"></span></p>
+      <p style="margin-bottom:14px;"><strong style="color:var(--stone-dark);" data-i18n="adm_motivation">Motivations :</strong><br><span id="app-detail-motivation"></span></p>
+      <p><strong style="color:var(--stone-dark);" data-i18n="adm_short_desc">Description courte :</strong><br><span id="app-detail-description"></span></p>
     </div>
     <div class="modal-actions">
-      <button class="modal-btn modal-btn-cancel" onclick="closeAppDetail()">Fermer</button>
-      <button class="modal-btn" style="background:rgba(220,53,69,0.10);color:#DC3545;" onclick="rejectFromDetail()">Refuser</button>
-      <button class="modal-btn modal-btn-primary" onclick="acceptFromDetail()">Accepter</button>
+      <button class="modal-btn modal-btn-cancel" onclick="closeAppDetail()" data-i18n="adm_close">Fermer</button>
+      <button class="modal-btn" style="background:rgba(220,53,69,0.10);color:#DC3545;" onclick="rejectFromDetail()" data-i18n="adm_reject">Refuser</button>
+      <button class="modal-btn modal-btn-primary" onclick="acceptFromDetail()" data-i18n="adm_accept">Accepter</button>
     </div>
   </div>
 </div>
@@ -502,14 +502,286 @@
     <h3 id="confirm-title">Confirmer la suppression</h3>
     <p id="confirm-msg" style="font-size:14px;color:var(--stone);margin-bottom:0;line-height:1.7;"></p>
     <div class="modal-actions">
-      <button class="modal-btn modal-btn-cancel" onclick="closeConfirm()">Annuler</button>
-      <button class="modal-btn" id="confirm-ok-btn" style="background:#DC3545;color:#fff;">Supprimer</button>
+      <button class="modal-btn modal-btn-cancel" onclick="closeConfirm()" data-i18n="adm_cancel">Annuler</button>
+      <button class="modal-btn" id="confirm-ok-btn" style="background:#DC3545;color:#fff;" data-i18n="adm_delete">Supprimer</button>
     </div>
   </div>
 </div>
 
 <script src="shared-ui.js"></script>
 <script>
+// ── Textes FR / EN ───────────────────────────────
+// Ajoutés au dictionnaire de shared-ui.js : seule cette page en a besoin.
+// Le HTML les reçoit via data-i18n*, le JS via tr().
+Object.assign(LANG.fr, {
+  adm_login_h2: 'Espace administrateur',
+  adm_login_sub: "Accès réservé à l'équipe de gestion.",
+  adm_username: 'Identifiant',
+  adm_password: 'Mot de passe',
+  adm_login_btn: 'Se connecter',
+  adm_logout: 'Déconnexion',
+  adm_dash_label: 'Tableau de bord',
+  adm_h1: "Vue d'ensemble · <em>Gestion</em>",
+  adm_stat_vols: 'Bénévoles',
+  adm_stat_exchanges: 'Échanges',
+  adm_stat_reviews: 'Avis reçus',
+  adm_avg_rating: 'Note moyenne',
+  adm_apps_h2: 'Candidatures bénévoles',
+  adm_vols_h2: 'Bénévoles',
+  adm_reports_h2: 'Signalements',
+  adm_reviews_h2: 'Avis des utilisateurs',
+  adm_account_h2: 'Mon compte',
+  adm_th_name: 'Nom',
+  adm_th_email: 'Email',
+  adm_th_domain: 'Domaine',
+  adm_th_dispos: 'Disponibilités',
+  adm_th_received: 'Reçue le',
+  adm_th_actions: 'Actions',
+  adm_th_domains: 'Domaines',
+  adm_th_status: 'Statut',
+  adm_th_since: 'Depuis',
+  adm_add_btn: '+ Ajouter',
+  adm_account_sub: "Modifiez vos identifiants de connexion à l'espace admin.",
+  adm_current_pass: 'Mot de passe actuel *',
+  adm_new_login: 'Nouvel identifiant',
+  adm_keep_ph: 'Laisser vide pour ne pas changer',
+  adm_new_pass: 'Nouveau mot de passe',
+  adm_new_pass_ph: 'Min. 6 caractères (vide = inchangé)',
+  adm_confirm_new_pass: 'Confirmer le nouveau mot de passe',
+  adm_repeat_ph: 'Répéter',
+  adm_save: 'Enregistrer',
+  adm_add_h3: 'Ajouter un bénévole',
+  adm_add_sub: 'Le profil et les identifiants de connexion seront créés immédiatement.',
+  adm_add: 'Ajouter',
+  adm_accept_h3: 'Accepter la candidature',
+  adm_accept_sub: "Définissez l'identifiant de connexion de {name}. La candidature sera retirée de la liste une fois validée.",
+  adm_f_name: 'Nom affiché *',
+  adm_f_name_ph: 'ex : Marie',
+  adm_f_email: 'Email',
+  adm_f_email_ph: 'marie@exemple.com',
+  adm_f_tags: 'Domaines (séparés par des virgules)',
+  adm_f_tags_ph: 'Anxiété, Solitude, Général',
+  adm_f_desc: 'Description courte (visible par les utilisateurs)',
+  adm_f_desc_ph: 'ex : Disponible pour une écoute douce et sans jugement.',
+  adm_f_status: 'Statut initial',
+  adm_st_online: 'En ligne',
+  adm_st_away: 'Absent·e',
+  adm_st_offline: 'Hors ligne',
+  adm_f_creds: "Identifiants de connexion à l'espace bénévole :",
+  adm_f_login: 'Identifiant *',
+  adm_f_login_ph: 'ex : marie.b',
+  adm_f_pass: 'Mot de passe *',
+  adm_pass_min_ph: 'Min. 6 caractères',
+  adm_f_pass2: 'Confirmer le mot de passe *',
+  adm_f_pass2_ph: 'Répéter le mot de passe',
+  adm_setup_note: 'Aucun mot de passe à saisir : un lien pour en créer un sera envoyé par email au bénévole.',
+  adm_cancel: 'Annuler',
+  adm_motivation: 'Motivations :',
+  adm_short_desc: 'Description courte :',
+  adm_close: 'Fermer',
+  adm_reject: 'Refuser',
+  adm_accept: 'Accepter',
+  adm_delete: 'Supprimer',
+  // Contenu généré en JS
+  adm_err_server: 'Erreur serveur',
+  adm_loading: 'Chargement…',
+  adm_err_fill: 'Veuillez renseigner vos identifiants.',
+  adm_signing_in: 'Connexion…',
+  adm_bad_login: 'Identifiants incorrects.',
+  adm_badge_vols_1: '{n} bénévole',
+  adm_badge_vols_n: '{n} bénévoles',
+  adm_badge_reviews_1: '{n} avis',
+  adm_badge_reviews_n: '{n} avis',
+  adm_badge_avg: ' · Moy. {avg}/5',
+  adm_badge_apps_1: '{n} candidature',
+  adm_badge_apps_n: '{n} candidatures',
+  adm_badge_reports_1: '{n} signalement',
+  adm_badge_reports_n: '{n} signalements',
+  adm_reason_argent: "A demandé de l'argent",
+  adm_reason_info: 'A demandé des informations personnelles',
+  adm_reason_hors: 'A proposé un contact hors plateforme',
+  adm_reason_comportement: 'Comportement inapproprié',
+  adm_reason_menace: 'Menaces ou violence verbale',
+  adm_reason_harcel: 'Harcèlement',
+  adm_reason_inapp: 'Contenu inapproprié',
+  adm_reason_autre: 'Autre motif',
+  adm_reports_empty: 'Aucun signalement pour le moment.',
+  adm_reported_by: 'Signalé par :',
+  adm_by_vol: 'Un·e bénévole',
+  adm_by_user: 'Un·e utilisateur·ice',
+  adm_about: 'Concerne :',
+  adm_dismiss: 'Classer sans suite',
+  adm_dispo_matin: 'Matin',
+  adm_dispo_apres_midi: 'Après-midi',
+  adm_dispo_soir: 'Soir',
+  adm_dispo_weekend: 'Week-end',
+  adm_vols_empty: 'Aucun bénévole enregistré. Ajoutez-en un ci-dessus.',
+  adm_apps_empty: 'Aucune candidature en attente.',
+  adm_view: 'Voir',
+  adm_reviews_empty: 'Aucun avis enregistré.',
+  adm_pseudo: 'Pseudo :',
+  adm_volunteer: 'Bénévole :',
+  adm_detail_pseudo: 'Pseudo souhaité : {pseudo}',
+  adm_reject_title: 'Refuser la candidature',
+  adm_reject_msg: 'Refuser définitivement la candidature de "{name}" ? Un email de notification lui sera envoyé.',
+  adm_err_name: 'Le nom affiché est requis.',
+  adm_err_login: "L'identifiant de connexion est requis.",
+  adm_err_pass: 'Un mot de passe est requis.',
+  adm_err_pass_min: 'Le mot de passe doit faire au moins 6 caractères.',
+  adm_err_pass_mismatch: 'Les mots de passe ne correspondent pas.',
+  adm_validating: 'Validation…',
+  adm_adding: 'Ajout en cours…',
+  adm_del_vol_title: 'Supprimer le bénévole',
+  adm_del_vol_msg: 'Supprimer définitivement "{name}" ? Cette action est irréversible.',
+  adm_del_review_title: "Supprimer l'avis",
+  adm_del_review_msg: 'Supprimer l\'avis de "{pseudo}" ?',
+  adm_dismiss_title: 'Classer le signalement',
+  adm_dismiss_msg: 'Classer ce signalement sans suite ? Il sera définitivement supprimé de la liste.',
+  adm_acc_need_current: 'Le mot de passe actuel est requis.',
+  adm_acc_min: 'Le nouveau mot de passe doit faire au moins 6 caractères.',
+  adm_acc_mismatch: 'Les nouveaux mots de passe ne correspondent pas.',
+  adm_acc_nothing: 'Aucune modification à enregistrer.',
+  adm_saving: 'Enregistrement…',
+  adm_acc_ok: 'Identifiants mis à jour avec succès.',
+});
+Object.assign(LANG.en, {
+  adm_login_h2: 'Admin area',
+  adm_login_sub: 'Restricted to the management team.',
+  adm_username: 'Username',
+  adm_password: 'Password',
+  adm_login_btn: 'Sign in',
+  adm_logout: 'Sign out',
+  adm_dash_label: 'Dashboard',
+  adm_h1: 'Overview · <em>Management</em>',
+  adm_stat_vols: 'Volunteers',
+  adm_stat_exchanges: 'Conversations',
+  adm_stat_reviews: 'Reviews received',
+  adm_avg_rating: 'Average rating',
+  adm_apps_h2: 'Volunteer applications',
+  adm_vols_h2: 'Volunteers',
+  adm_reports_h2: 'Reports',
+  adm_reviews_h2: 'User reviews',
+  adm_account_h2: 'My account',
+  adm_th_name: 'Name',
+  adm_th_email: 'Email',
+  adm_th_domain: 'Area',
+  adm_th_dispos: 'Availability',
+  adm_th_received: 'Received',
+  adm_th_actions: 'Actions',
+  adm_th_domains: 'Areas',
+  adm_th_status: 'Status',
+  adm_th_since: 'Since',
+  adm_add_btn: '+ Add',
+  adm_account_sub: 'Change your admin sign-in credentials.',
+  adm_current_pass: 'Current password *',
+  adm_new_login: 'New username',
+  adm_keep_ph: 'Leave empty to keep it',
+  adm_new_pass: 'New password',
+  adm_new_pass_ph: 'At least 6 characters (empty = unchanged)',
+  adm_confirm_new_pass: 'Confirm new password',
+  adm_repeat_ph: 'Repeat',
+  adm_save: 'Save',
+  adm_add_h3: 'Add a volunteer',
+  adm_add_sub: 'The profile and sign-in credentials will be created right away.',
+  adm_add: 'Add',
+  adm_accept_h3: 'Accept the application',
+  adm_accept_sub: 'Choose a username for {name}. The application will be removed from the list once accepted.',
+  adm_f_name: 'Display name *',
+  adm_f_name_ph: 'e.g. Marie',
+  adm_f_email: 'Email',
+  adm_f_email_ph: 'marie@example.com',
+  adm_f_tags: 'Areas (comma-separated)',
+  adm_f_tags_ph: 'Anxiety, Loneliness, General',
+  adm_f_desc: 'Short description (shown to users)',
+  adm_f_desc_ph: 'e.g. Here to listen gently and without judgement.',
+  adm_f_status: 'Initial status',
+  adm_st_online: 'Online',
+  adm_st_away: 'Away',
+  adm_st_offline: 'Offline',
+  adm_f_creds: 'Volunteer area sign-in credentials:',
+  adm_f_login: 'Username *',
+  adm_f_login_ph: 'e.g. marie.b',
+  adm_f_pass: 'Password *',
+  adm_pass_min_ph: 'At least 6 characters',
+  adm_f_pass2: 'Confirm password *',
+  adm_f_pass2_ph: 'Repeat the password',
+  adm_setup_note: 'No password to enter: the volunteer will get an email with a link to create one.',
+  adm_cancel: 'Cancel',
+  adm_motivation: 'Motivation:',
+  adm_short_desc: 'Short description:',
+  adm_close: 'Close',
+  adm_reject: 'Reject',
+  adm_accept: 'Accept',
+  adm_delete: 'Delete',
+  adm_err_server: 'Server error',
+  adm_loading: 'Loading…',
+  adm_err_fill: 'Please enter your username and password.',
+  adm_signing_in: 'Signing in…',
+  adm_bad_login: 'Incorrect username or password.',
+  adm_badge_vols_1: '{n} volunteer',
+  adm_badge_vols_n: '{n} volunteers',
+  adm_badge_reviews_1: '{n} review',
+  adm_badge_reviews_n: '{n} reviews',
+  adm_badge_avg: ' · Avg. {avg}/5',
+  adm_badge_apps_1: '{n} application',
+  adm_badge_apps_n: '{n} applications',
+  adm_badge_reports_1: '{n} report',
+  adm_badge_reports_n: '{n} reports',
+  adm_reason_argent: 'Asked for money',
+  adm_reason_info: 'Asked for personal information',
+  adm_reason_hors: 'Suggested contact outside the platform',
+  adm_reason_comportement: 'Inappropriate behaviour',
+  adm_reason_menace: 'Threats or verbal abuse',
+  adm_reason_harcel: 'Harassment',
+  adm_reason_inapp: 'Inappropriate content',
+  adm_reason_autre: 'Other reason',
+  adm_reports_empty: 'No reports at the moment.',
+  adm_reported_by: 'Reported by:',
+  adm_by_vol: 'A volunteer',
+  adm_by_user: 'A user',
+  adm_about: 'About:',
+  adm_dismiss: 'Dismiss',
+  adm_dispo_matin: 'Morning',
+  adm_dispo_apres_midi: 'Afternoon',
+  adm_dispo_soir: 'Evening',
+  adm_dispo_weekend: 'Weekend',
+  adm_vols_empty: 'No volunteers yet. Add one above.',
+  adm_apps_empty: 'No pending applications.',
+  adm_view: 'View',
+  adm_reviews_empty: 'No reviews yet.',
+  adm_pseudo: 'Nickname:',
+  adm_volunteer: 'Volunteer:',
+  adm_detail_pseudo: 'Preferred nickname: {pseudo}',
+  adm_reject_title: 'Reject the application',
+  adm_reject_msg: 'Permanently reject the application from "{name}"? They will be notified by email.',
+  adm_err_name: 'The display name is required.',
+  adm_err_login: 'The username is required.',
+  adm_err_pass: 'A password is required.',
+  adm_err_pass_min: 'The password must be at least 6 characters long.',
+  adm_err_pass_mismatch: 'The passwords do not match.',
+  adm_validating: 'Accepting…',
+  adm_adding: 'Adding…',
+  adm_del_vol_title: 'Delete the volunteer',
+  adm_del_vol_msg: 'Permanently delete "{name}"? This cannot be undone.',
+  adm_del_review_title: 'Delete the review',
+  adm_del_review_msg: 'Delete the review from "{pseudo}"?',
+  adm_dismiss_title: 'Dismiss the report',
+  adm_dismiss_msg: 'Dismiss this report? It will be permanently removed from the list.',
+  adm_acc_need_current: 'Your current password is required.',
+  adm_acc_min: 'The new password must be at least 6 characters long.',
+  adm_acc_mismatch: 'The new passwords do not match.',
+  adm_acc_nothing: 'No changes to save.',
+  adm_saving: 'Saving…',
+  adm_acc_ok: 'Your credentials have been updated.',
+});
+
+// Clé au singulier ou au pluriel selon n (règle française : 0 et 1 au
+// singulier ; anglaise : seul 1 au singulier).
+function trCount(base, n, vars) {
+  const many = currentLang === 'en' ? n !== 1 : n > 1;
+  return tr(`${base}_${many ? 'n' : '1'}`, { n, ...vars });
+}
+
 const API = '/api';
 
 // ── State ────────────────────────────────────────
@@ -520,6 +792,7 @@ let applications  = [];
 let reports       = [];
 let _acceptingAppId = null;
 let _detailAppId    = null;
+let dataLoaded      = false;   // données chargées : à réafficher au changement de langue
 
 // ── Helpers ──────────────────────────────────────
 function escHtml(s) {
@@ -534,13 +807,13 @@ async function apiFetch(path, opts = {}) {
   });
   if (res.status === 204) return null;
   const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+  if (!res.ok) throw new Error(apiErrorText(data.error) || tr('adm_err_server'));
   return data;
 }
 
 function fmtDate(iso) {
   if (!iso) return '—';
-  return new Date(iso).toLocaleDateString('fr-FR', { day:'2-digit', month:'2-digit', year:'numeric' });
+  return new Date(iso).toLocaleDateString(uiLocale(), { day:'2-digit', month:'2-digit', year:'numeric' });
 }
 
 function starsHtml(n) {
@@ -555,12 +828,12 @@ function starsHtml(n) {
 }
 
 function statusPillHtml(s) {
-  const labels = { online:'En ligne', away:'Absent·e', offline:'Hors ligne' };
-  return `<span class="status-pill pill-${s}">${labels[s] || s}</span>`;
+  const label = ['online', 'away', 'offline'].includes(s) ? tr(`adm_st_${s}`) : escHtml(s);
+  return `<span class="status-pill pill-${s}">${label}</span>`;
 }
 
 function loadingRow(cols) {
-  return `<tr class="loading-row"><td colspan="${cols}"><span class="spinner"></span>Chargement…</td></tr>`;
+  return `<tr class="loading-row"><td colspan="${cols}"><span class="spinner"></span>${tr('adm_loading')}</td></tr>`;
 }
 
 function emptyRow(cols, msg) {
@@ -579,7 +852,7 @@ function emptyRow(cols, msg) {
 // ── Clock ─────────────────────────────────────────
 function updateClock() {
   const el = document.getElementById('admin-clock');
-  if (el) el.textContent = new Date().toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+  if (el) el.textContent = new Date().toLocaleTimeString(uiLocale(), { hour:'2-digit', minute:'2-digit' });
 }
 setInterval(updateClock, 1000);
 
@@ -591,9 +864,9 @@ async function doLogin() {
   const btn = document.getElementById('login-btn');
 
   err.style.display = 'none';
-  if (!u || !p) { err.style.display = 'block'; err.textContent = 'Veuillez renseigner vos identifiants.'; return; }
+  if (!u || !p) { err.style.display = 'block'; err.textContent = tr('adm_err_fill'); return; }
 
-  btn.disabled = true; btn.textContent = 'Connexion…';
+  btn.disabled = true; btn.textContent = tr('adm_signing_in');
   try {
     await apiFetch('/auth/admin', { method: 'POST', body: JSON.stringify({ login: u, password: p }) });
     document.getElementById('login-screen').style.display = 'none';
@@ -601,10 +874,10 @@ async function doLogin() {
     updateClock();
     loadAll();
   } catch (e) {
-    err.textContent = e.message || 'Identifiants incorrects.';
+    err.textContent = e.message || tr('adm_bad_login');
     err.style.display = 'block';
   } finally {
-    btn.disabled = false; btn.textContent = 'Se connecter';
+    btn.disabled = false; btn.textContent = tr('adm_login_btn');
   }
 }
 
@@ -628,6 +901,7 @@ async function loadAll() {
   } catch (e) {
     console.error('Erreur chargement données :', e);
   }
+  dataLoaded = true;
   updateStats();
   renderVolunteers();
   renderReviews();
@@ -638,8 +912,8 @@ async function loadAll() {
 function renderLoadingStates() {
   document.getElementById('vols-tbody').innerHTML  = loadingRow(6);
   document.getElementById('apps-tbody').innerHTML  = loadingRow(6);
-  document.getElementById('admin-reviews-list').innerHTML = '<div style="text-align:center;padding:32px;color:var(--mist);"><span class="spinner"></span>Chargement…</div>';
-  document.getElementById('admin-reports-list').innerHTML = '<div style="text-align:center;padding:32px;color:var(--mist);"><span class="spinner"></span>Chargement…</div>';
+  document.getElementById('admin-reviews-list').innerHTML = '<div style="text-align:center;padding:32px;color:var(--mist);"><span class="spinner"></span>' + tr('adm_loading') + '</div>';
+  document.getElementById('admin-reports-list').innerHTML = '<div style="text-align:center;padding:32px;color:var(--mist);"><span class="spinner"></span>' + tr('adm_loading') + '</div>';
 }
 
 // ── Stats ─────────────────────────────────────────
@@ -653,18 +927,13 @@ function updateStats() {
   document.getElementById('stat-avis').textContent  = reviews.length;
   document.getElementById('stat-note').textContent  = avg;
 
-  document.getElementById('badge-vols').textContent  = volunteers.length + ' bénévole' + (volunteers.length > 1 ? 's' : '');
-  document.getElementById('badge-avis').textContent  = reviews.length + ' avis' + (reviews.length > 0 ? ` · Moy. ${avg}/5` : '');
-  document.getElementById('badge-apps').textContent  = applications.length + ' candidature' + (applications.length > 1 ? 's' : '');
-  document.getElementById('badge-reports').textContent = reports.length + ' signalement' + (reports.length > 1 ? 's' : '');
+  document.getElementById('badge-vols').textContent  = trCount('adm_badge_vols', volunteers.length);
+  document.getElementById('badge-avis').textContent  = trCount('adm_badge_reviews', reviews.length) + (reviews.length > 0 ? tr('adm_badge_avg', { avg }) : '');
+  document.getElementById('badge-apps').textContent  = trCount('adm_badge_apps', applications.length);
+  document.getElementById('badge-reports').textContent = trCount('adm_badge_reports', reports.length);
 }
 
-const REPORT_REASON_LABEL = {
-  argent: 'A demandé de l\'argent', info: 'A demandé des informations personnelles',
-  hors: 'A proposé un contact hors plateforme', comportement: 'Comportement inapproprié',
-  menace: 'Menaces ou violence verbale', harcel: 'Harcèlement', inapp: 'Contenu inapproprié',
-  autre: 'Autre motif',
-};
+const REPORT_REASONS = ['argent', 'info', 'hors', 'comportement', 'menace', 'harcel', 'inapp', 'autre'];
 
 // ── Render reports ────────────────────────────────
 function renderReports() {
@@ -677,37 +946,37 @@ function renderReports() {
             <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.5" fill="var(--mist)"/>
           </svg>
         </div>
-        Aucun signalement pour le moment.
+        ${tr('adm_reports_empty')}
       </div>`;
     return;
   }
   list.innerHTML = reports.map(r => `
     <div class="review-card">
       <p style="font-size:13px;color:var(--stone-dark);font-weight:500;">
-        ${REPORT_REASON_LABEL[r.reason] || escHtml(r.reason)}
+        ${REPORT_REASONS.includes(r.reason) ? tr(`adm_reason_${r.reason}`) : escHtml(r.reason)}
       </p>
       <div class="review-meta">
         <div class="review-meta-left">
-          <span>Signalé par : <strong style="color:var(--stone)">${r.reporter_role === 'vol' ? 'Un·e bénévole' : 'Un·e utilisateur·ice'}</strong></span>
-          ${r.reported_name ? `<span>Concerne : <strong style="color:var(--stone)">${escHtml(r.reported_name)}</strong></span>` : ''}
+          <span>${tr('adm_reported_by')} <strong style="color:var(--stone)">${tr(r.reporter_role === 'vol' ? 'adm_by_vol' : 'adm_by_user')}</strong></span>
+          ${r.reported_name ? `<span>${tr('adm_about')} <strong style="color:var(--stone)">${escHtml(r.reported_name)}</strong></span>` : ''}
           <span>${fmtDate(r.created_at)}</span>
         </div>
-        <button class="a-btn a-btn-danger" style="font-size:11px;padding:4px 10px;" onclick="confirmDeleteReport(${r.id})">Classer sans suite</button>
+        <button class="a-btn a-btn-danger" style="font-size:11px;padding:4px 10px;" onclick="confirmDeleteReport(${r.id})">${tr('adm_dismiss')}</button>
       </div>
     </div>
   `).join('');
 }
 
 function dispoLabel(d) {
-  const labels = { matin: 'Matin', 'apres-midi': 'Après-midi', soir: 'Soir', weekend: 'Week-end' };
-  return labels[d] || d;
+  const keys = { matin: 'adm_dispo_matin', 'apres-midi': 'adm_dispo_apres_midi', soir: 'adm_dispo_soir', weekend: 'adm_dispo_weekend' };
+  return keys[d] ? tr(keys[d]) : d;
 }
 
 // ── Render volunteers ─────────────────────────────
 function renderVolunteers() {
   const tbody = document.getElementById('vols-tbody');
   if (!volunteers.length) {
-    tbody.innerHTML = emptyRow(6, 'Aucun bénévole enregistré. Ajoutez-en un ci-dessus.');
+    tbody.innerHTML = emptyRow(6, tr('adm_vols_empty'));
     return;
   }
   tbody.innerHTML = volunteers.map(v => `
@@ -721,7 +990,7 @@ function renderVolunteers() {
       <td style="font-size:12px;color:var(--mist);">${fmtDate(v.created_at)}</td>
       <td>
         <div class="action-btns">
-          <button class="a-btn a-btn-danger" onclick="confirmDeleteVol(${v.id})">Supprimer</button>
+          <button class="a-btn a-btn-danger" onclick="confirmDeleteVol(${v.id})">${tr('adm_delete')}</button>
         </div>
       </td>
     </tr>
@@ -732,7 +1001,7 @@ function renderVolunteers() {
 function renderApplications() {
   const tbody = document.getElementById('apps-tbody');
   if (!applications.length) {
-    tbody.innerHTML = emptyRow(6, 'Aucune candidature en attente.');
+    tbody.innerHTML = emptyRow(6, tr('adm_apps_empty'));
     return;
   }
   tbody.innerHTML = applications.map(a => `
@@ -747,9 +1016,9 @@ function renderApplications() {
       <td style="font-size:12px;color:var(--mist);">${fmtDate(a.created_at)}</td>
       <td>
         <div class="action-btns">
-          <button class="a-btn a-btn-ghost" onclick="openAppDetail(${a.id})">Voir</button>
-          <button class="a-btn a-btn-primary" onclick="acceptApplication(${a.id})">Accepter</button>
-          <button class="a-btn a-btn-danger" onclick="confirmRejectApp(${a.id})">Refuser</button>
+          <button class="a-btn a-btn-ghost" onclick="openAppDetail(${a.id})">${tr('adm_view')}</button>
+          <button class="a-btn a-btn-primary" onclick="acceptApplication(${a.id})">${tr('adm_accept')}</button>
+          <button class="a-btn a-btn-danger" onclick="confirmRejectApp(${a.id})">${tr('adm_reject')}</button>
         </div>
       </td>
     </tr>
@@ -770,7 +1039,7 @@ function renderReviews() {
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
           </svg>
         </div>
-        Aucun avis enregistré.
+        ${tr('adm_reviews_empty')}
       </div>`;
     return;
   }
@@ -800,22 +1069,30 @@ function renderReviews() {
       <p style="font-size:13px;color:var(--stone);line-height:1.65;font-style:italic;margin:8px 0 0;">"${escHtml(r.text)}"</p>
       <div class="review-meta">
         <div class="review-meta-left">
-          <span>Pseudo : <strong style="color:var(--stone)">${escHtml(r.pseudo)}</strong></span>
-          ${r.vol_name ? `<span>Bénévole : <strong style="color:var(--stone)">${escHtml(r.vol_name)}</strong></span>` : ''}
+          <span>${tr('adm_pseudo')} <strong style="color:var(--stone)">${escHtml(r.pseudo)}</strong></span>
+          ${r.vol_name ? `<span>${tr('adm_volunteer')} <strong style="color:var(--stone)">${escHtml(r.vol_name)}</strong></span>` : ''}
           <span>${fmtDate(r.created_at)}</span>
         </div>
-        <button class="a-btn a-btn-danger" style="font-size:11px;padding:4px 10px;" onclick="confirmDeleteReview(${r.id})">Supprimer</button>
+        <button class="a-btn a-btn-danger" style="font-size:11px;padding:4px 10px;" onclick="confirmDeleteReview(${r.id})">${tr('adm_delete')}</button>
       </div>
     </div>
   `).join('');
 }
 
 // ── Add volunteer modal ───────────────────────────
+// Titre, sous-titre et bouton de la modale selon le mode (ajout direct ou
+// acceptation de la candidature _acceptingAppId).
+function setAddVolTexts() {
+  const a = _acceptingAppId != null && applications.find(x => x.id === _acceptingAppId);
+  document.querySelector('#add-vol-modal h3').textContent = tr(a ? 'adm_accept_h3' : 'adm_add_h3');
+  document.querySelector('#add-vol-modal .modal-sub').textContent =
+    a ? tr('adm_accept_sub', { name: a.prenom }) : tr('adm_add_sub');
+  document.getElementById('add-submit-btn').textContent = tr(a ? 'adm_accept' : 'adm_add');
+}
+
 function openAddVolModal() {
   _acceptingAppId = null;
-  document.querySelector('#add-vol-modal h3').textContent = 'Ajouter un bénévole';
-  document.querySelector('#add-vol-modal .modal-sub').textContent = 'Le profil et les identifiants de connexion seront créés immédiatement.';
-  document.getElementById('add-submit-btn').textContent = 'Ajouter';
+  setAddVolTexts();
   document.getElementById('add-password-section').style.display = '';
   document.getElementById('add-setup-note').style.display = 'none';
   ['add-name','add-email','add-tags','add-description','add-login','add-password','add-password2'].forEach(id => {
@@ -837,7 +1114,7 @@ function openAppDetail(id) {
   _detailAppId = id;
   document.getElementById('app-detail-name').textContent = `${a.prenom} ${a.nom}`;
   document.getElementById('app-detail-sub').textContent =
-    `${a.email} · Pseudo souhaité : ${a.pseudo}${a.domaine ? ' · ' + a.domaine : ''}`;
+    `${a.email} · ${tr('adm_detail_pseudo', { pseudo: a.pseudo })}${a.domaine ? ' · ' + a.domaine : ''}`;
   document.getElementById('app-detail-motivation').textContent = a.motivation;
   document.getElementById('app-detail-description').textContent = a.description;
   document.getElementById('app-detail-modal').classList.add('open');
@@ -861,10 +1138,7 @@ function acceptApplication(id) {
   const a = applications.find(x => x.id === id);
   if (!a) return;
   _acceptingAppId = id;
-  document.querySelector('#add-vol-modal h3').textContent = 'Accepter la candidature';
-  document.querySelector('#add-vol-modal .modal-sub').textContent =
-    `Définissez l'identifiant de connexion de ${a.prenom}. La candidature sera retirée de la liste une fois validée.`;
-  document.getElementById('add-submit-btn').textContent = 'Accepter';
+  setAddVolTexts();
   document.getElementById('add-password-section').style.display = 'none';
   document.getElementById('add-setup-note').style.display = '';
   document.getElementById('add-name').value  = `${a.prenom} ${a.nom}`;
@@ -884,8 +1158,8 @@ function confirmRejectApp(id) {
   const a = applications.find(a => a.id === id);
   const name = a ? `${a.prenom} ${a.nom}` : '';
   openConfirm(
-    'Refuser la candidature',
-    `Refuser définitivement la candidature de "${name}" ? Un email de notification lui sera envoyé.`,
+    tr('adm_reject_title'),
+    tr('adm_reject_msg', { name }),
     async () => {
       await apiFetch(`/applications/${id}/reject`, { method: 'POST' });
       applications = applications.filter(a => a.id !== id);
@@ -909,17 +1183,17 @@ async function submitAddVol() {
   const wasAccepting = _acceptingAppId;
 
   errEl.style.display = 'none';
-  if (!name)  return showModalError(errEl, 'Le nom affiché est requis.');
-  if (!login) return showModalError(errEl, 'L\'identifiant de connexion est requis.');
+  if (!name)  return showModalError(errEl, tr('adm_err_name'));
+  if (!login) return showModalError(errEl, tr('adm_err_login'));
   if (!wasAccepting) {
-    if (!password) return showModalError(errEl, 'Un mot de passe est requis.');
-    if (password.length < 6) return showModalError(errEl, 'Le mot de passe doit faire au moins 6 caractères.');
-    if (password !== password2) return showModalError(errEl, 'Les mots de passe ne correspondent pas.');
+    if (!password) return showModalError(errEl, tr('adm_err_pass'));
+    if (password.length < 6) return showModalError(errEl, tr('adm_err_pass_min'));
+    if (password !== password2) return showModalError(errEl, tr('adm_err_pass_mismatch'));
   }
 
   const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
 
-  btn.disabled = true; btn.textContent = wasAccepting ? 'Validation…' : 'Ajout en cours…';
+  btn.disabled = true; btn.textContent = tr(wasAccepting ? 'adm_validating' : 'adm_adding');
 
   try {
     let newVol;
@@ -946,7 +1220,7 @@ async function submitAddVol() {
   } catch (e) {
     showModalError(errEl, e.message);
   } finally {
-    btn.disabled = false; btn.textContent = wasAccepting ? 'Accepter' : 'Ajouter';
+    btn.disabled = false; btn.textContent = tr(wasAccepting ? 'adm_accept' : 'adm_add');
   }
 }
 
@@ -971,8 +1245,8 @@ function closeConfirm() {
 function confirmDeleteVol(id) {
   const name = volunteers.find(v => v.id === id)?.name || '';
   openConfirm(
-    'Supprimer le bénévole',
-    `Supprimer définitivement "${name}" ? Cette action est irréversible.`,
+    tr('adm_del_vol_title'),
+    tr('adm_del_vol_msg', { name }),
     async () => {
       await apiFetch(`/volunteers/${id}`, { method: 'DELETE' });
       volunteers = volunteers.filter(v => v.id !== id);
@@ -985,8 +1259,8 @@ function confirmDeleteVol(id) {
 function confirmDeleteReview(id) {
   const pseudo = reviews.find(r => r.id === id)?.pseudo || '';
   openConfirm(
-    'Supprimer l\'avis',
-    `Supprimer l'avis de "${pseudo}" ?`,
+    tr('adm_del_review_title'),
+    tr('adm_del_review_msg', { pseudo }),
     async () => {
       await apiFetch(`/reviews/${id}`, { method: 'DELETE' });
       reviews = reviews.filter(r => r.id !== id);
@@ -998,8 +1272,8 @@ function confirmDeleteReview(id) {
 
 function confirmDeleteReport(id) {
   openConfirm(
-    'Classer le signalement',
-    'Classer ce signalement sans suite ? Il sera définitivement supprimé de la liste.',
+    tr('adm_dismiss_title'),
+    tr('adm_dismiss_msg'),
     async () => {
       await apiFetch(`/reports/${id}`, { method: 'DELETE' });
       reports = reports.filter(r => r.id !== id);
@@ -1024,12 +1298,12 @@ async function saveAccount() {
   const btn       = document.getElementById('acc-save-btn');
 
   msgEl.style.display = 'none';
-  if (!current) return showAccMsg('Le mot de passe actuel est requis.', false);
-  if (newPass && newPass.length < 6) return showAccMsg('Le nouveau mot de passe doit faire au moins 6 caractères.', false);
-  if (newPass && newPass !== newPass2) return showAccMsg('Les nouveaux mots de passe ne correspondent pas.', false);
-  if (!newLogin && !newPass) return showAccMsg('Aucune modification à enregistrer.', false);
+  if (!current) return showAccMsg(tr('adm_acc_need_current'), false);
+  if (newPass && newPass.length < 6) return showAccMsg(tr('adm_acc_min'), false);
+  if (newPass && newPass !== newPass2) return showAccMsg(tr('adm_acc_mismatch'), false);
+  if (!newLogin && !newPass) return showAccMsg(tr('adm_acc_nothing'), false);
 
-  btn.disabled = true; btn.textContent = 'Enregistrement…';
+  btn.disabled = true; btn.textContent = tr('adm_saving');
   try {
     await apiFetch('/auth/admin', {
       method: 'PATCH',
@@ -1043,11 +1317,11 @@ async function saveAccount() {
     document.getElementById('acc-login').value     = '';
     document.getElementById('acc-new-pass').value  = '';
     document.getElementById('acc-new-pass2').value = '';
-    showAccMsg('Identifiants mis à jour avec succès.', true);
+    showAccMsg(tr('adm_acc_ok'), true);
   } catch (e) {
     showAccMsg(e.message, false);
   } finally {
-    btn.disabled = false; btn.textContent = 'Enregistrer';
+    btn.disabled = false; btn.textContent = tr('adm_save');
   }
 }
 
@@ -1078,9 +1352,18 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
   });
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  // nothing to pre-render — data loads after login
-});
+// Appelé par shared-ui.js après chaque changement de langue : réaffiche
+// tout ce qui est généré en JS.
+window.onLangChange = () => {
+  updateClock();
+  if (!dataLoaded) return;
+  updateStats();
+  renderVolunteers();
+  renderReviews();
+  renderApplications();
+  renderReports();
+  if (document.getElementById('add-vol-modal').classList.contains('open')) setAddVolTexts();
+};
 </script>
 </body>
 </html>
