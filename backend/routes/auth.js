@@ -152,7 +152,7 @@ router.patch('/volunteer', rateLimitLogin, ah(async (req, res) => {
     if (new_password)
       await db.run('UPDATE volunteers SET password_hash = ? WHERE id = ?', [bcrypt.hashSync(new_password, 10), id]);
   } catch (e) {
-    if (e.message.includes('duplicate key'))
+    if (db.isUniqueViolation(e, 'login'))
       return res.status(409).json({ error: 'Cet identifiant est déjà utilisé.' });
     throw e;
   }

@@ -129,6 +129,15 @@ const db = {
       lastInsertRowid: idColumn ? result.rows[0]?.[idColumn] : undefined,
     };
   },
+  // Vrai si `e` vient d'une contrainte UNIQUE violée (code Postgres 23505),
+  // sur `column` si elle est donnée (Postgres nomme ces contraintes
+  // <table>_<colonne>_key). On ne lit pas le texte du message : il suit la
+  // langue du serveur Postgres (« clé dupliquée » sur une installation
+  // française), ce qui faisait répondre 500 au lieu de 409.
+  isUniqueViolation(e, column) {
+    if (e?.code !== '23505') return false;
+    return !column || (e.constraint || '').endsWith(`_${column}_key`);
+  },
 };
 
 module.exports = db;

@@ -50,7 +50,7 @@ router.post('/', ah(async (req, res) => {
       await db.get(`SELECT ${PUBLIC_COLUMNS} FROM reviews WHERE id = ?`, [info.lastInsertRowid])
     );
   } catch (e) {
-    if (e.message.includes('duplicate key'))
+    if (db.isUniqueViolation(e, 'chat_request_id'))
       return res.status(409).json({ error: 'Un avis a déjà été laissé pour cet échange.' });
     throw e;
   }

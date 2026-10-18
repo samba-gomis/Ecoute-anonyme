@@ -70,10 +70,8 @@ router.post('/:id/accept', requireAdmin, ah(async (req, res) => {
     `, [finalName, finalEmail, tagsJson, safeStatus, login.trim(), finalDescription, setupToken, setupExpires], 'id');
     volunteer = await db.get('SELECT * FROM volunteers WHERE id = ?', [info.lastInsertRowid]);
   } catch (e) {
-    if (e.message.includes('duplicate key')) {
-      if (e.message.includes('email')) return res.status(409).json({ error: 'Cet email est déjà utilisé par un autre bénévole.' });
-      if (e.message.includes('login')) return res.status(409).json({ error: 'Cet identifiant est déjà utilisé.' });
-    }
+    if (db.isUniqueViolation(e, 'email')) return res.status(409).json({ error: 'Cet email est déjà utilisé par un autre bénévole.' });
+    if (db.isUniqueViolation(e, 'login')) return res.status(409).json({ error: 'Cet identifiant est déjà utilisé.' });
     throw e;
   }
 

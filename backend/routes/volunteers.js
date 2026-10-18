@@ -75,10 +75,8 @@ router.post('/', requireAdmin, ah(async (req, res) => {
       await db.get('SELECT * FROM volunteers WHERE id = ?', [info.lastInsertRowid])
     ));
   } catch (e) {
-    if (e.message.includes('duplicate key')) {
-      if (e.message.includes('email')) return res.status(409).json({ error: 'Cet email est déjà utilisé.' });
-      if (e.message.includes('login')) return res.status(409).json({ error: 'Cet identifiant est déjà utilisé.' });
-    }
+    if (db.isUniqueViolation(e, 'email')) return res.status(409).json({ error: 'Cet email est déjà utilisé.' });
+    if (db.isUniqueViolation(e, 'login')) return res.status(409).json({ error: 'Cet identifiant est déjà utilisé.' });
     throw e;
   }
 }));
@@ -118,7 +116,7 @@ router.patch('/:id', requireAdmin, ah(async (req, res) => {
       await db.get('SELECT * FROM volunteers WHERE id = ?', [req.params.id])
     ));
   } catch (e) {
-    if (e.message.includes('duplicate key'))
+    if (db.isUniqueViolation(e, 'email'))
       return res.status(409).json({ error: 'Cet email est déjà utilisé.' });
     throw e;
   }
