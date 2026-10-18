@@ -8,6 +8,11 @@
   to = "https://ecoute-anonyme-ouz9.onrender.com/api/:splat"
   status = 200
   force = true
+  # Netlify signe chaque requête relayée (en-tête X-Nf-Sign) avec la valeur
+  # de la variable d'environnement NETLIFY_PROXY_SECRET, définie aussi sur
+  # Render : le backend sait alors que la requête vient bien de Netlify et
+  # peut croire l'IP du visiteur transmise par Netlify (backend/clientIp.js).
+  signed = "NETLIFY_PROXY_SECRET"
 
 # Les pages ci-dessous vivent dans html/ mais sont liées avec des URLs
 # propres (ex. /espace-benevole) qui correspondent au routage fait par

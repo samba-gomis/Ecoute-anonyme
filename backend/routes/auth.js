@@ -4,6 +4,7 @@ const bcrypt  = require('bcryptjs');
 const crypto  = require('crypto');
 const db      = require('../database');
 const ah      = require('../asyncHandler');
+const clientIp = require('../clientIp');
 
 const SESSION_COOKIE = 'ea_admin_session';
 const SESSION_MAX_AGE = 12 * 60 * 60 * 1000; // 12h
@@ -30,20 +31,21 @@ setInterval(() => {
 
 // Anti brute-force sur les routes de connexion : n'importe quel appelant
 // (pas de whitelist par utilisateur) est bloqué après quelques échecs par
-// fenêtre de temps et par IP (req.ip = adresse vue par le proxy Render, cf.
-// `trust proxy` dans server.js). Seuls les échecs (400/401) comptent : avant,
-// chaque connexion réussie comptait aussi, et un·e bénévole qui se
-// reconnectait souvent finissait bloqué·e.
+// fenêtre de temps et par IP (l'IP réelle du visiteur, cf. clientIp.js :
+// req.ip n'est que l'adresse interne du proxy Render). Seuls les échecs
+// (400/401) comptent : avant, chaque connexion réussie comptait aussi, et
+// un·e bénévole qui se reconnectait souvent finissait bloqué·e.
 const loginAttempts = new Map(); // ip -> { count, resetAt }
 const LOGIN_WINDOW_MS = 15 * 60 * 1000;
 const LOGIN_MAX_ATTEMPTS = 10;
 
 function rateLimitLogin(req, res, next) {
   const now = Date.now();
-  let entry = loginAttempts.get(req.ip);
+  const ip = clientIp(req);
+  let entry = loginAttempts.get(ip);
   if (!entry || entry.resetAt < now) {
     entry = { count: 0, resetAt: now + LOGIN_WINDOW_MS };
-    loginAttempts.set(req.ip, entry);
+    loginAttempts.set(ip, entry);
   }
   if (entry.count >= LOGIN_MAX_ATTEMPTS)
     return res.status(429).json({ error: 'Trop de tentatives de connexion. Réessayez plus tard.' });
